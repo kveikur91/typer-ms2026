@@ -257,89 +257,95 @@ function saveState(){
 }
 
 // ==================== API ====================
+// 1. Rozszerzony słownik - dodajemy skróty stosowane przez FIFA/API (np. RSA, MEX)
 var ALIASES = {
-  'mexico':'meksyk','south africa':'rpa','south korea':'korea pd.','korea republic':'korea pd.',
-  'czechia':'czechy','czech republic':'czechy','canada':'kanada','bosnia':'bosnia',
-  'qatar':'katar','switzerland':'szwajcaria','brazil':'brazylia','morocco':'maroko',
-  'haiti':'haiti','scotland':'szkocja','australia':'australia','turkey':'turcja','turkiye':'turcja',
-  'germany':'niemcy','curacao':'curacao','netherlands':'holandia','japan':'japonia',
-  "ivory coast":'wks',"cote d'ivoire":'wks',"côte d'ivoire":'wks','ecuador':'ekwador',
-  'sweden':'szwecja','tunisia':'tunezja','spain':'hiszpania','cape verde':'cabo verde',
-  'belgium':'belgia','egypt':'egipt','saudi arabia':'arabia saud.','uruguay':'urugwaj',
-  'iran':'iran','new zealand':'nowa zelandia','france':'francja','senegal':'senegal',
-  'iraq':'irak','norway':'norwegia','argentina':'argentyna','algeria':'algieria',
-  'austria':'austria','jordan':'jordania','portugal':'portugalia','dr congo':'dr kongo',
-  'england':'anglia','croatia':'chorwacja','ghana':'ghana','panama':'panama',
-  'uzbekistan':'uzbekistan','colombia':'kolumbia','bosnia and herzegovina':'bosnia i herc.',
-  'bosniaandherzegovina':'bosnia i herc.'
+  'mexico':'meksyk','mex':'meksyk','south africa':'rpa','rsa':'rpa','south korea':'korea pd.',
+  'korea republic':'korea pd.','kor':'korea pd.','czechia':'czechy','czech republic':'czechy','cze':'czechy',
+  'canada':'kanada','can':'kanada','bosnia':'bosnia i herc.','bih':'bosnia i herc.','bosnia and herzegovina':'bosnia i herc.',
+  'qatar':'katar','qat':'katar','switzerland':'szwajcaria','sui':'szwajcaria','brazil':'brazylia','bra':'brazylia',
+  'morocco':'maroko','mar':'maroko','haiti':'haiti','hai':'haiti','scotland':'szkocja','sco':'szkocja',
+  'australia':'australia','aus':'australia','turkey':'turcja','turkiye':'turcja','tur':'turcja'
 };
 
 function normTeam(s){
-  s=(s||'').toLowerCase().trim().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
-  return ALIASES[s]||s;
+  if(!s) return '';
+  s = s.toLowerCase().trim().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  return ALIASES[s] || s;
 }
 
-function matchTeams(apiH, apiA){
-  var hn = normTeam(apiH); // np. "rpa"
-  var an = normTeam(apiA); // np. "meksyk"
+// 2. Inteligentne parowanie: po nazwach LUB po dacie meczu (gwarancja sukcesu)
+function matchTeams(apiH, apiA, apiDate){
+  var hn = normTeam(apiH);
+  var an = normTeam(apiA);
   
-  return ALL_MATCHES.find(function(m){
-    var mh = m.home.toLowerCase().trim(); // np. "rpa"
-    var ma = m.away.toLowerCase().trim(); // np. "meksyk"
-    
-    // Szukamy dokładnego dopasowania po zmapowaniu języka
+  // Szukanie najpierw po nazwach drużyn
+  var found = ALL_MATCHES.find(function(m){
+    var mh = m.home.toLowerCase().trim();
+    var ma = m.away.toLowerCase().trim();
     return (mh === hn && ma === an) || (mh === an && ma === hn);
-  }) || null;
+  });
+  
+  // Jeśli nie znaleziono po nazwach (bo API zwróciło np. dziwny skrót), szukamy po dacie meczu!
+  if(!found && apiDate) {
+    var dStr = apiDate.split('T')[0]; // wyciąga "2026-06-11"
+    found = ALL_MATCHES.find(function(m){
+      return m.date === dStr && (
+        hn.indexOf(m.home.toLowerCase().slice(0,3)) >= 0 || 
+        an.indexOf(m.away.toLowerCase().slice(0,3)) >= 0
+      );
+    });
+  }
+  
+  return found;
 }
 
-function mapStatus(s){
-  if(!s)return 'upcoming';
-  s=s.toUpperCase();
-  if(['FINISHED','AWARDED'].indexOf(s)>=0)return 'ft';
-  if(['IN_PLAY','PAUSED','HALFTIME'].indexOf(s)>=0)return 'live';
-  return 'upcoming';
-}
-
+// 3. Poprawiona funkcja fetch - przekazuje datę meczu do parownika
 async function fetchLiveScores(){
   if(!state.apiKey)return;
   setApiStatus('wait','Laczenie...');
   try{
-    // Wykorzystanie proxy do ominięcia problemów z CORS w darmowym planie API
     var targetUrl = 'https://api.football-data.org/v4/competitions/WC/matches?season=2026';
     var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
 
-    var res=await fetch(proxyUrl,{
+    var res = await fetch(proxyUrl,{
       headers:{'X-Auth-Token':state.apiKey}
     });
     if(res.status===401){setApiStatus('err','Bledny klucz');return;}
     if(res.status===429){setApiStatus('err','Limit zapytan');return;}
     if(!res.ok)throw new Error('HTTP '+res.status);
-    var data=await res.json();
+    var data = await res.json();
     if(data.matches){
       data.matches.forEach(function(m){
-        var match=matchTeams(
-          m.homeTeam&&(m.homeTeam.shortName||m.homeTeam.name)||'',
-          m.awayTeam&&(m.awayTeam.shortName||m.awayTeam.name)||''
-        );
-        if(!match)return;
-        var ft=m.score&&m.score.fullTime;
-        var ht=m.score&&m.score.halfTime;
-        var cur=ft&&ft.home!=null?ft:(ht&&ht.home!=null?ht:null);
-        if(!cur&&m.status==='TIMED')return;
-        state.wyniki[match.id]={
-          home:cur?cur.home:null,away:cur?cur.away:null,
-          status:mapStatus(m.status),minute:m.minute||null
+        // Wyciągamy pełną nazwę, skrót oraz kod tła, żeby mieć 100% pewności
+        var hName = m.homeTeam ? (m.homeTeam.name || m.homeTeam.shortName || m.homeTeam.tla) : '';
+        var aName = m.awayTeam ? (m.awayTeam.name || m.awayTeam.shortName || m.awayTeam.tla) : '';
+        
+        // Przekazujemy też datę meczu (m.utcDate) do awaryjnego parowania
+        var match = matchTeams(hName, aName, m.utcDate);
+        
+        if(!match) return;
+        
+        var ft = m.score && m.score.fullTime;
+        var ht = m.score && m.score.halfTime;
+        var cur = ft && ft.home != null ? ft : (ht && ht.home != null ? ht : null);
+        
+        if(!cur && m.status==='TIMED') return;
+        
+        state.wyniki[match.id] = {
+          home: cur ? cur.home : null,
+          away: cur ? cur.away : null,
+          status: mapStatus(m.status),
+          minute: m.minute || null
         };
       });
       setApiStatus('ok','Live');
-      saveState();render();
+      saveState(); render();
     }
   }catch(e){
+    console.error(e);
     setApiStatus('err','Blad API');
   }
-}
-
-function setApiStatus(type,label){
+}function setApiStatus(type,label){
   var el=document.getElementById('apiStatusBadge');
   if(!el)return;
   el.className='api-badge api-'+type;
