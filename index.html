@@ -76,7 +76,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .page.active{display:block}
 .back-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--muted);cursor:pointer;margin-bottom:16px;padding:6px 0;transition:color .15s;background:none;border:none}
 .back-btn:hover{color:var(--text)}
-.match-row-mini{padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.match-row-mini{padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .admin-toggle{position:fixed;bottom:16px;right:16px;background:var(--accent);color:#000;border:none;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;z-index:200;box-shadow:0 4px 16px rgba(34,211,168,.3)}
@@ -84,7 +84,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .admin-panel.open{display:block}
 .admin-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:14px;color:var(--accent)}
 .admin-section-title{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;border-top:1px solid var(--border);padding-top:10px;margin-top:10px;margin-bottom:8px}
-.admin-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px}
+.admin-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px}
 .admin-input:focus{outline:none;border-color:var(--accent)}
 .admin-btn{width:100%;background:var(--accent);color:#000;border:none;padding:9px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-top:4px}
 .admin-btn:hover{background:#1eb897}
@@ -96,6 +96,10 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 .player-row .pname{flex:1;font-size:13px;color:var(--text)}
 .del-btn{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;padding:2px 6px;border-radius:4px;transition:color .15s;line-height:1}
 .del-btn:hover{color:var(--red)}
+.form-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; background: var(--surface2); padding: 6px; border-radius: 6px; }
+.form-row span { font-weight: 600; font-size: 13px; }
+.form-scores { display: flex; gap: 4px; align-items: center; }
+.form-scores input { width: 40px; text-align: center; }
 </style>
 </head>
 <body>
@@ -120,7 +124,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 <div id="pageRound" class="page">
   <div class="container">
-    <button class="back-btn" onclick="showMain()">&#8592; WRÓC</button>
+    <button class="back-btn" onclick="showMain()">&#8592; WRÓĆ DO EKRANU GŁÓWNEGO</button>
     <div id="roundPageContent"></div>
   </div>
 </div>
@@ -218,7 +222,7 @@ var ALL_MATCHES = [
   {id:'r3m08',round:3,group:'D',home:'Paragwaj',away:'Australia',hf:'PY',af:'AU',date:'2026-06-26',time:'04:00',venue:'San Francisco'},
   {id:'r3m09',round:3,group:'L',home:'Anglia',away:'Panama',hf:'ENG',af:'PA',date:'2026-06-28',time:'04:00',venue:'New York NJ'},
   {id:'r3m10',round:3,group:'L',home:'Ghana',away:'Chorwacja',hf:'GH',af:'HR',date:'2026-06-28',time:'04:00',venue:'Los Angeles'},
-  // FAZA PUCHAROWA (placeholder - beda uzupelniane)
+  // FAZA PUCHAROWA
   {id:'r16m01',round:16,group:'1/16',home:'TBD',away:'TBD',hf:'',af:'',date:'2026-07-04',time:'21:00',venue:'TBD'},
   {id:'r16m02',round:16,group:'1/16',home:'TBD',away:'TBD',hf:'',af:'',date:'2026-07-05',time:'00:00',venue:'TBD'},
 ];
@@ -297,7 +301,11 @@ async function fetchLiveScores(){
   if(!state.apiKey)return;
   setApiStatus('wait','Laczenie...');
   try{
-    var res=await fetch('https://api.football-data.org/v4/competitions/WC/matches?season=2026',{
+    // Wykorzystanie proxy do ominięcia problemów z CORS w darmowym planie API
+    var targetUrl = 'https://api.football-data.org/v4/competitions/WC/matches?season=2026';
+    var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+
+    var res=await fetch(proxyUrl,{
       headers:{'X-Auth-Token':state.apiKey}
     });
     if(res.status===401){setApiStatus('err','Bledny klucz');return;}
@@ -338,7 +346,8 @@ function setApiStatus(type,label){
 // ==================== PUNKTACJA ====================
 function calcPoints(typ,wynik){
   if(!wynik||wynik.home===null||wynik.away===null||!typ)return null;
-  var wH=wynik.home,wA=wynik.away,tH=typ.home,tA=typ.away,pts;
+  var wH=wynik.home,wA=wynik.away,tH=parseInt(typ.home),tA=parseInt(typ.away),pts;
+  if(isNaN(tH) || isNaN(tA)) return null;
   if(tH===wH&&tA===wA)pts=4;
   else if(tH-tA===wH-wA)pts=3;
   else if((tH>tA&&wH>wA)||(tH<tA&&wH<wA)||(tH===tA&&wH===wA))pts=2;
@@ -432,7 +441,7 @@ function renderTypy(m){
       var cls=base===4?'pts-4':base===3?'pts-3':base===2?'pts-2':pts<0?'pts-neg':'pts-0';
       ptsH='<span class="pts-badge '+cls+'">'+(pts>0?'+':'')+pts+'</span>';
     }
-    var ts=typ?typ.home+':'+typ.away+(typ.x2?'<span class="x2-badge">X2</span>':''):'&mdash;';
+    var ts=typ && typ.home!=="" ?typ.home+':'+typ.away+(typ.x2?'<span class="x2-badge">X2</span>':''):'&mdash;';
     return '<tr><td><span class="player-name">'+p+'</span></td>'+
       '<td><span class="typ-score">'+ts+'</span></td>'+
       '<td style="text-align:center">'+(icon?'<span class="result-icon">'+icon+'</span>':'')+'</td>'+
@@ -506,153 +515,136 @@ function showMain(){
   document.getElementById('pageRound').classList.remove('active');
   document.getElementById('pageMain').classList.add('active');
 }
+
 function renderRoundPage(r){
-  var rname=r<=3?('RUNDA '+r):(r===16?'1/16 FINALU':r===8?'CWIERC.:':r===4?'POL.:':'FINAL');
-  var matches=ALL_MATCHES.filter(function(m){return m.round===r;});
-  var scores=state.players.map(function(p){return{n:p,pts:totalPts(p,r)};});
-  scores.sort(function(a,b){return b.pts-a.pts;});
-
-  var lbRows=scores.map(function(s,i){
-    var rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
-    var medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
-    return '<li class="leaderboard-row"><span class="rank '+rc+'">'+(medal||i+1)+'</span><span class="lb-name">'+s.n+'</span><span class="lb-pts">'+s.pts+'<span class="lb-pts-label">pkt</span></span></li>';
-  }).join('');
-
-  var matchHtml=matches.map(function(m){
-    var w=state.wyniki[m.id];
-    var hasScore=w&&w.home!==null&&w.away!==null;
-    var scoreStr=hasScore?w.home+':'+w.away:'&mdash;';
-    var statusStr=w&&w.status==='ft'?'FT':w&&w.status==='live'?'🔴':m.time;
-    var typRows=state.players.map(function(p){
-      var typ=(state.typy[m.id]||{})[p];if(!typ)return '';
-      var pts=hasScore?calcPoints(typ,w):null;
-      var icon=hasScore?getIcon(typ,w):'⏳';
-      var ptsTxt=pts!==null?(pts>0?'+'+pts:''+pts):'';
-      var ptsColor=pts!==null&&pts>0?'var(--accent)':'var(--red)';
-      return '<span style="font-size:12px;color:var(--muted);margin-right:10px">'+p+': <strong style="color:var(--text)">'+typ.home+':'+typ.away+(typ.x2?'x2':'')+'</strong> '+icon+(ptsTxt?' <span style="color:'+ptsColor+'">'+ptsTxt+'</span>':'')+'</span>';
-    }).filter(Boolean).join('');
-    return '<div class="match-row-mini">'+
-      '<div style="display:flex;align-items:center;gap:8px;width:100%">'+
-      '<span style="font-size:11px;color:var(--muted);font-family:Barlow Condensed,sans-serif;letter-spacing:1px;width:50px">Gr.'+m.group+'</span>'+
-      '<span style="flex:1;font-weight:600;font-size:13px">'+flag(m.hf)+' '+m.home+' &ndash; '+m.away+' '+flag(m.af)+'</span>'+
-      '<span style="font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:900;color:var(--text);min-width:38px;text-align:center">'+scoreStr+'</span>'+
-      '<span style="font-size:11px;color:var(--muted);min-width:36px;text-align:right">'+statusStr+'</span>'+
-      '</div>'+
-      (typRows?'<div style="padding-left:58px;margin-top:5px">'+typRows+'</div>':'')+
+  var roundMatches = ALL_MATCHES.filter(m => m.round === r);
+  var html = '<div class="section-label" style="margin-top:10px">MECZE RUNDY ' + r + '</div>';
+  
+  roundMatches.forEach(function(m){
+    var w = state.wyniki[m.id] || {};
+    var scoreStr = w.home !== null && w.home !== undefined ? w.home + ' : ' + w.away : 'vs';
+    html += '<div class="match-row-mini">' +
+      '<span>' + flag(m.hf) + ' ' + m.home + ' <b>' + scoreStr + '</b> ' + m.away + ' ' + flag(m.af) + '</span>' +
+      '<span style="color:var(--muted); font-size:11px;">' + m.date + ' ' + m.time + '</span>' +
       '</div>';
-  }).join('');
-
-  document.getElementById('roundPageContent').innerHTML=
-    '<div class="section-label">PUNKTACJA – '+rname+'</div>'+
-    '<ul class="leaderboard" style="margin-bottom:24px">'+lbRows+'</ul>'+
-    '<div class="section-label">MECZE – '+rname+'</div>'+
-    matchHtml;
+  });
+  
+  html += '<div style="margin-top:20px;">' + renderLeaderboard(r) + '</div>';
+  document.getElementById('roundPageContent').innerHTML = html;
 }
 
-// ==================== ADMIN ====================
-function toggleAdmin(){document.getElementById('adminPanel').classList.toggle('open');}
+// ==================== ADMIN PANEL FUNCTIONS ====================
+function toggleAdmin(){ document.getElementById('adminPanel').classList.toggle('open'); }
 
 function saveApiKey(){
-  var k=(document.getElementById('apiKeyInput')||{}).value;
-  if(k)k=k.trim();
-  if(!k)return;
-  state.apiKey=k;saveState();fetchLiveScores();
+  var key = document.getElementById('apiKeyInput').value.trim();
+  if(!key) return;
+  state.apiKey = key;
+  saveState();
+  fetchLiveScores();
+  alert("Klucz API został zapisany!");
+}
+
+function buildAdminSelect(){
+  var sel = document.getElementById('adminMatchSelect');
+  if(sel) {
+    sel.innerHTML = ALL_MATCHES.map(m => '<option value="'+m.id+'">R'+m.round+' | '+m.home+' vs '+m.away+'</option>').join('');
+  }
 }
 
 function rebuildAdminForm(){
-  // Match select
-  var sel=document.getElementById('adminMatchSelect');
-  if(!sel)return;
-  var cur=getCurrentOrNext();
-  var defId=(cur.live||cur.next||ALL_MATCHES[0]).id;
-  if(!sel.value)sel.innerHTML=ALL_MATCHES.map(function(m){
-    return '<option value="'+m.id+'"'+(m.id===defId?' selected':'')+'>R'+m.round+' '+m.home+' vs '+m.away+'</option>';
+  var sel = document.getElementById('adminMatchSelect');
+  if(!sel) return;
+  var mid = sel.value;
+  if(!mid && ALL_MATCHES.length > 0) mid = ALL_MATCHES[0].id;
+  var form = document.getElementById('adminTypyForm');
+  if(!form) return;
+  
+  var matchTypy = state.typy[mid] || {};
+  
+  var html = state.players.map(function(p){
+    var t = matchTypy[p] || {home:'', away:'', x2:false};
+    return '<div class="form-row">' +
+      '<span>' + p + '</span>' +
+      '<div class="form-scores">' +
+        '<input class="admin-input" id="cfg_h_'+p+'" value="'+t.home+'" placeholder="H" style="width:35px; text-align:center; padding:4px;"/>' +
+        '<span>:</span>' +
+        '<input class="admin-input" id="cfg_a_'+p+'" value="'+t.away+'" placeholder="A" style="width:35px; text-align:center; padding:4px;"/>' +
+        '<label style="font-size:11px; margin-left:6px;"><input type="checkbox" id="cfg_x2_'+p+'" '+(t.x2?'checked':'')+'/> X2</label>' +
+      '</div>' +
+    '</div>';
   }).join('');
-  // Players list
-  var pl=document.getElementById('playersList');
-  if(pl)pl.innerHTML=state.players.map(function(p,i){
-    return '<div class="player-row"><span class="pname">'+p+'</span><button class="del-btn" onclick="deletePlayer('+i+')" title="Usun">🗑</button></div>';
-  }).join('');
-  // API key field
-  var ai=document.getElementById('apiKeyInput');
-  if(ai&&!ai.value&&state.apiKey)ai.value=state.apiKey;
-  // Form
-  var m=ALL_MATCHES.find(function(x){return x.id===sel.value;});
-  if(m)renderAdminForm(m);
+  
+  html += '<button class="admin-btn" onclick="saveMatchTypy()">Zapisz typy dla tego meczu</button>';
+  form.innerHTML = html;
 }
 
 function onAdminMatchChange(){
-  var sel=document.getElementById('adminMatchSelect');
-  var m=ALL_MATCHES.find(function(x){return x.id===sel.value;});
-  if(m)renderAdminForm(m);
+  rebuildAdminForm();
 }
 
-function renderAdminForm(m){
-  var f=document.getElementById('adminTypyForm');if(!f)return;
-  var w=state.wyniki[m.id]||{};
-  var typy=state.typy[m.id]||{};
-  var html='<div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px">'+flag(m.hf)+' '+m.home+' vs '+m.away+' '+flag(m.af)+'</div>';
-  html+='<div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Wynik oficjalny</div>';
-  html+='<div style="display:flex;align-items:center;gap:5px;margin-bottom:8px">'+
-    '<input class="admin-input" id="wH" value="'+(w.home!=null?w.home:'')+'" placeholder="?" style="width:42px;text-align:center">'+
-    '<span style="color:var(--muted)">:</span>'+
-    '<input class="admin-input" id="wA" value="'+(w.away!=null?w.away:'')+'" placeholder="?" style="width:42px;text-align:center">'+
-    '<select class="admin-select" id="wSt" style="flex:1">'+
-    '<option value="upcoming"'+((!w.status||w.status==='upcoming')?' selected':'')+'>Nadchodzacy</option>'+
-    '<option value="live"'+(w.status==='live'?' selected':'')+'>Live</option>'+
-    '<option value="ft"'+(w.status==='ft'?' selected':'')+'>FT</option>'+
-    '</select></div>'+
-    '<button class="admin-btn" style="margin-bottom:10px" onclick="saveWynik(\''+m.id+'\')">Zapisz wynik</button>';
-  html+='<div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy</div>';
+function saveMatchTypy(){
+  var mid = document.getElementById('adminMatchSelect').value;
+  if(!state.typy[mid]) state.typy[mid] = {};
+  
   state.players.forEach(function(p){
-    var t=typy[p]||{};
-    html+='<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">'+
-      '<span style="width:62px;font-size:12px;overflow:hidden;white-space:nowrap">'+p+'</span>'+
-      '<input class="admin-input" id="t_'+p+'_h" value="'+(t.home!=null?t.home:'')+'" placeholder="D" style="width:34px;text-align:center">'+
-      '<span style="color:var(--muted)">:</span>'+
-      '<input class="admin-input" id="t_'+p+'_a" value="'+(t.away!=null?t.away:'')+'" placeholder="G" style="width:34px;text-align:center">'+
-      '<label style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:3px;cursor:pointer">'+
-      '<input type="checkbox" id="t_'+p+'_x2"'+(t.x2?' checked':'')+'>X2</label></div>';
+    var hVal = document.getElementById('cfg_h_'+p).value;
+    var aVal = document.getElementById('cfg_a_'+p).value;
+    state.typy[mid][p] = {
+      home: hVal,
+      away: aVal,
+      x2: document.getElementById('cfg_x2_'+p).checked
+    };
   });
-  html+='<button class="admin-btn" onclick="saveTypy(\''+m.id+'\')">Zapisz typy</button>';
-  f.innerHTML=html;
+  
+  saveState();
+  render();
+  alert("Typy zostały zapisane!");
 }
 
-function saveWynik(id){
-  var h=document.getElementById('wH').value,a=document.getElementById('wA').value,st=document.getElementById('wSt').value;
-  state.wyniki[id]={home:h!==''?parseInt(h):null,away:a!==''?parseInt(a):null,status:st,minute:null};
-  saveState();render();
-  if(document.getElementById('pageRound').classList.contains('active'))renderRoundPage(currentRoundPage);
-}
-
-function saveTypy(id){
-  if(!state.typy[id])state.typy[id]={};
-  state.players.forEach(function(p){
-    var h=document.getElementById('t_'+p+'_h'),a=document.getElementById('t_'+p+'_a'),x=(document.getElementById('t_'+p+'_x2')||{});
-    if(h&&a&&h.value!==''&&a.value!=='')state.typy[id][p]={home:parseInt(h.value),away:parseInt(a.value),x2:!!x.checked};
-  });
-  saveState();render();
-}
-
-function deletePlayer(i){
-  if(!confirm('Usunac gracza "'+state.players[i]+'"?'))return;
-  state.players.splice(i,1);saveState();render();
+function renderPlayersAdmin(){
+  var div = document.getElementById('playersList');
+  if(div) {
+    div.innerHTML = state.players.map(p => '<div class="player-row"><span class="pname">'+p+'</span><button class="del-btn" onclick="deletePlayer(\''+p+'\')">×</button></div>').join('');
+  }
 }
 
 function addPlayer(){
-  var n=(document.getElementById('newPlayerName')||{}).value;
-  if(n)n=n.trim();
-  if(!n||state.players.indexOf(n)>=0)return;
-  state.players.push(n);
-  document.getElementById('newPlayerName').value='';
-  saveState();render();
+  var inp = document.getElementById('newPlayerName');
+  var name = inp.value.trim();
+  if(!name) return;
+  if(state.players.indexOf(name) === -1){
+    state.players.push(name);
+    saveState();
+    renderPlayersAdmin();
+    rebuildAdminForm();
+    render();
+  }
+  inp.value = '';
 }
 
-// ==================== INIT ====================
+function deletePlayer(name){
+  state.players = state.players.filter(p => p !== name);
+  saveState();
+  renderPlayersAdmin();
+  rebuildAdminForm();
+  render();
+}
+
+// Init systemu
 loadState();
+if(state.apiKey) {
+  document.getElementById('apiKeyInput').value = state.apiKey;
+}
+buildAdminSelect();
+renderPlayersAdmin();
 render();
-if(state.apiKey){fetchLiveScores();}else{setApiStatus('err','Brak klucza');}
-setInterval(function(){if(state.apiKey)fetchLiveScores();else render();},60000);
+
+// Integracja crona pobierania (co 60 sekund)
+if(state.apiKey) {
+  fetchLiveScores();
+}
+setInterval(fetchLiveScores, 60000);
 </script>
 </body>
 </html>
