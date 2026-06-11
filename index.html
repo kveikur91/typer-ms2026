@@ -279,14 +279,17 @@ function normTeam(s){
   return ALIASES[s]||s;
 }
 
-function matchTeams(apiH,apiA){
-  var hn=normTeam(apiH),an=normTeam(apiA);
+function matchTeams(apiH, apiA){
+  var hn = normTeam(apiH); // np. "rpa"
+  var an = normTeam(apiA); // np. "meksyk"
+  
   return ALL_MATCHES.find(function(m){
-    var mh=m.home.toLowerCase(),ma=m.away.toLowerCase();
-    var matchH=(mh===hn||hn.indexOf(mh.slice(0,4))>=0||mh.indexOf(hn.slice(0,4))>=0);
-    var matchA=(ma===an||an.indexOf(ma.slice(0,4))>=0||ma.indexOf(an.slice(0,4))>=0);
-    return matchH&&matchA;
-  })||null;
+    var mh = m.home.toLowerCase().trim(); // np. "rpa"
+    var ma = m.away.toLowerCase().trim(); // np. "meksyk"
+    
+    // Szukamy dokładnego dopasowania po zmapowaniu języka
+    return (mh === hn && ma === an) || (mh === an && ma === hn);
+  }) || null;
 }
 
 function mapStatus(s){
