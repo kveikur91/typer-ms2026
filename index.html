@@ -487,10 +487,12 @@ async function fetchScores() {
       const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
       // API zwraca null dla przyszłych meczy, 0:0 dla trwających
-      const cur = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
+      const cur = (ft && ft.home !== null && ft.home !== undefined) ? ft
+                 : (ht && ht.home !== null && ht.home !== undefined) ? ht
+                 : null;
       const newW = {
-        home:   cur ? cur.home : null,
-        away:   cur ? cur.away : null,
+        home:   cur && cur.home != null ? cur.home : null,
+        away:   cur && cur.away != null ? cur.away : null,
         status: mapSt(m.status),
         minute: m.minute || null,
       };
@@ -555,7 +557,7 @@ function mapSt(s) {
 // SCORING
 // =====================================================
 function pts(typ, w) {
-  if (!w||w.home===null||w.away===null||!typ) return null;
+  if (!w||w.home==null||w.away==null||!typ) return null;
   if (w.status!=='live' && w.status!=='ft') return null;
   const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
   let p;
@@ -567,7 +569,7 @@ function pts(typ, w) {
 }
 
 function icon(typ, w) {
-  if (!w||w.home===null||!typ) return '';
+  if (!w||w.home==null||!typ) return '';
   const p = pts(typ,w); if (p===null) return '';
   const base = typ.x2 ? Math.abs(p/2) : Math.abs(p);
   if (base===4) return '🟢🎉';
@@ -634,7 +636,7 @@ function render() {
 
 function renderHero(m, isLive) {
   const w = S.wyniki[m.id]||{};
-  const hasScore = w.home!==null && w.home!==undefined;
+  const hasScore = w.home!=null;
   let badge = '';
   if      (w.status==='live') badge=`<span class="tbadge live">&#128308; LIVE ${w.minute?w.minute+"'":''}  </span>`;
   else if (w.status==='ft')   badge=`<span class="tbadge">FT</span>`;
@@ -654,7 +656,7 @@ function renderHero(m, isLive) {
 
 function renderTypy(m) {
   const w = S.wyniki[m.id];
-  const hasR = w && w.home!==null && w.away!==null;
+  const hasR = w && w.home!=null && w.away!=null;
   const rows = S.players.map(p => {
     const typ = (S.typy[m.id]||{})[p];
     const p2  = hasR ? pts(typ,w) : null;
@@ -806,7 +808,7 @@ function renderRoundPage(r) {
   // Matches – collapsible
   const mRows = rMatches.map(m=>{
     const w = S.wyniki[m.id];
-    const hasScore = w && w.home!==null && w.away!==null;
+    const hasScore = w && w.home!=null && w.away!=null;
     const scoreStr = hasScore ? `${w.home}:${w.away}` : '&ndash;';
     const stBadge  = w?.status==='ft'  ? '<span style="font-size:11px;color:var(--grn)">FT</span>'
                    : w?.status==='live'? '<span style="font-size:11px;color:var(--red)">LIVE</span>'
