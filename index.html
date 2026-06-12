@@ -346,9 +346,24 @@ const F = c => FLAGS[c]||'🏳️';
 // =====================================================
 // LOCAL STATE (mirrors Firebase, updated by listeners)
 // =====================================================
+// =====================================================
+// Bezpieczne ID (dla pol formularzy graczy z dziwnymi znakami)
+// =====================================================
+function safeId(name) {
+  return String(name).replace(/[^a-zA-Z0-9_-]/g, '_');
+}
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// =====================================================
+// LOCAL STATE (mirrors Firebase, updated by listeners)
+// =====================================================
 let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'', koTeams:{} };
 let currentRound = 1;
 let fbLoaded = false;
+let _pendingSaves = 0;
+let _lastFetch = 0;
 
 // =====================================================
 // FIREBASE LISTENERS – real-time sync
@@ -357,6 +372,18 @@ function initFirebase() {
   // Watch entire state
   onValue(ref(db,'state'), snap => {
     const d = snap.val();
+
+    // Jezeli to echo naszego wlasnego zapisu - nie nadpisuj lokalnego stanu
+    // (zapobiega "wyscigom" gdzie lokalna zmiana jest natychmiast zastapiona starszymi danymi)
+    if (_pendingSaves > 0) {
+      _pendingSaves--;
+      fbLoaded = true;
+      setFbBadge('ok','Firebase OK');
+      handleHash();
+      rebuildAdmin();
+      return;
+    }
+
     if (d) {
       S.players  = d.players  || [];
       S.typy     = d.typy     || {};
@@ -374,22 +401,30 @@ function initFirebase() {
       S.players = ['Gracz 1','Gracz 2','Gracz 3','Gracz 4','Gracz 5','Gracz 6','Gracz 7','Gracz 8'];
       fbSave();
     }
+    const wasLoaded = fbLoaded;
     fbLoaded = true;
     setFbBadge('ok','Firebase OK');
     handleHash();
     rebuildAdmin();
-    if (S.apiKey) { fetchScores(); }
-    else { setApiBadge('err','Brak klucza API'); }
+    if (!wasLoaded) {
+      if (S.apiKey) { _lastFetch = Date.now(); fetchScores(); }
+      else { setApiBadge('err','Brak klucza API'); }
+    }
   }, err => {
+    console.error('Firebase error:', err);
     setFbBadge('err','Blad Firebase');
+    fbLoaded = true;
+    handleHash();
   });
 }
 
 function fbSave() {
+  _pendingSaves++;
   // Firebase odrzuca wartosci "undefined" - usuwamy je rekurencyjnie przed zapisem
   const clean = JSON.parse(JSON.stringify({ players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey, proxyUrl:S.proxyUrl||'', koTeams:S.koTeams||{} }));
   set(ref(db,'state'), clean).catch(err => {
     console.error('fbSave error:', err);
+    _pendingSaves--;
     alert('Blad zapisu do Firebase: ' + (err && err.message ? err.message : err));
   });
 }
@@ -889,15 +924,18 @@ window.saveWynik = function(id) {
     minute: null,
   };
   fbSave();
-  render();
+  handleHash();
+  const btn = document.getElementById('btnWynik_'+id);
+  if (btn) { btn.textContent = '✅ Zapisano!'; setTimeout(()=>{ btn.textContent = '💾 Zapisz wynik'; },1500); }
 };
 
 window.saveTypy = function(id) {
   if (!S.typy[id]) S.typy[id] = {};
   S.players.forEach(p => {
-    const hEl = document.getElementById('th_' + p);
-    const aEl = document.getElementById('ta_' + p);
-    const xEl = document.getElementById('tx_' + p);
+    const sid = safeId(p);
+    const hEl = document.getElementById('th_' + sid);
+    const aEl = document.getElementById('ta_' + sid);
+    const xEl = document.getElementById('tx_' + sid);
     const h = hEl ? hEl.value.trim() : '';
     const a = aEl ? aEl.value.trim() : '';
     const x = xEl ? xEl.checked : false;
@@ -906,9 +944,9 @@ window.saveTypy = function(id) {
     }
   });
   fbSave();
-  render();
+  handleHash();
   // Wizualny feedback
-  const btn = document.querySelector('[onclick="saveTypy(\''+id+'\')"]');
+  const btn = document.getElementById('btnTypy_'+id);
   if (btn) { btn.textContent = '✅ Zapisano!'; setTimeout(()=>{ btn.textContent = '💾 Zapisz typy'; },1500); }
 };
 
@@ -953,21 +991,22 @@ function renderAdminForm(m) {
       <option value="ft"${w.status==='ft'?' selected':''}>&#9989; FT</option>
     </select>
   </div>
-  <button class="abtn" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">Zapisz wynik</button>`;
+  <button class="abtn" id="btnWynik_${m.id}" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">Zapisz wynik</button>`;
   html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy</div>`;
   S.players.forEach(p=>{
+    const sid = safeId(p);
     const t=ty[p]||{};
     html+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
-      <span style="width:65px;font-size:12px;overflow:hidden;white-space:nowrap">${p}</span>
-      <input class="ainp" id="th_${p}" value="${t.home!=null?t.home:''}" placeholder="D" style="width:34px;text-align:center">
+      <span style="width:65px;font-size:12px;overflow:hidden;white-space:nowrap" title="${escapeHtml(p)}">${escapeHtml(p)}</span>
+      <input class="ainp" id="th_${sid}" value="${t.home!=null?t.home:''}" placeholder="D" style="width:34px;text-align:center">
       <span style="color:var(--mut)">:</span>
-      <input class="ainp" id="ta_${p}" value="${t.away!=null?t.away:''}" placeholder="G" style="width:34px;text-align:center">
+      <input class="ainp" id="ta_${sid}" value="${t.away!=null?t.away:''}" placeholder="G" style="width:34px;text-align:center">
       <label style="font-size:11px;color:var(--mut);display:flex;align-items:center;gap:3px;cursor:pointer">
-        <input type="checkbox" id="tx_${p}"${t.x2?' checked':''}> X2
+        <input type="checkbox" id="tx_${sid}"${t.x2?' checked':''}> X2
       </label>
     </div>`;
   });
-  html+=`<button class="abtn" onclick="saveTypy('${m.id}')">&#128190; Zapisz typy</button>`;
+  html+=`<button class="abtn" id="btnTypy_${m.id}" onclick="saveTypy('${m.id}')">&#128190; Zapisz typy</button>`;
   f.innerHTML=html;
 }
 
@@ -1056,8 +1095,13 @@ window.saveKoTeams = function(matchId) {
 // INIT
 // =====================================================
 initFirebase();
-// Auto-fetch scores co 60s
-setInterval(()=>{ if(S.apiKey) fetchScores(); }, 60000);
+// Auto-fetch scores co ~60s, ale tylko jesli nie czekamy na echo zapisu
+setInterval(()=>{
+  if (S.apiKey && _pendingSaves === 0 && fbLoaded) {
+    const now = Date.now();
+    if (now - _lastFetch >= 55000) { _lastFetch = now; fetchScores(); }
+  }
+}, 60000);
 </script>
 </body>
 </html>
