@@ -437,43 +437,110 @@ function mapSt(s) {
 // =====================================================
 // SCORING
 // =====================================================
+
 function pts(typ, w) {
-  if (!w||w.home===null||w.away===null||!typ||typ.home===undefined||typ.away===undefined) return null;
-  const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
+  if (
+    !w ||
+    w.home === null ||
+    w.away === null ||
+    !typ ||
+    typ.home === undefined ||
+    typ.away === undefined
+  ) return null;
+
+  const wH = w.home;
+  const wA = w.away;
+  const tH = typ.home;
+  const tA = typ.away;
+
   let p;
-  if (tH===wH&&tA===wA) p=4;
-  else if (tH-tA===wH-wA) p=3;
-  else if ((tH>tA&&wH>wA)||(tH<tA&&wH<wA)||(tH===tA&&wH===wA)) p=2;
-  else p=-1;
-  return typ.x2 ? p*2 : p;
+
+  if (tH === wH && tA === wA) {
+    p = 4;
+  }
+  else if ((tH - tA) === (wH - wA)) {
+    p = 3;
+  }
+  else if (
+    (tH > tA && wH > wA) ||
+    (tH < tA && wH < wA) ||
+    (tH === tA && wH === wA)
+  ) {
+    p = 2;
+  }
+  else {
+    p = -1;
+  }
+
+  return typ.x2 ? p * 2 : p;
 }
 
 function icon(typ, w) {
-  if (!w||w.home===null||!typ) return '';
-  const p = pts(typ,w); if (p===null) return '';
-  const base = typ.x2 ? Math.abs(p/2) : Math.abs(p);
-  if (base===4) return '🟢🎉';
-  if (base===3) return '🟢❕';
-  if (base===2) return '🟢';
+  if (!w || w.home === null || !typ) return '';
+
+  const p = pts(typ, w);
+
+  if (p === null) return '';
+
+  const base = typ.x2 ? Math.abs(p / 2) : Math.abs(p);
+
+  if (base === 4) return '🟢🎉';
+  if (base === 3) return '🟢❕';
+  if (base === 2) return '🟢';
+
   return '🔴';
 }
 
 function ptsClass(typ, w) {
-  const p = pts(typ,w); if (p===null) return '';
-  const base = typ?.x2 ? Math.abs(p/2) : Math.abs(p);
-  if (base===4) return 'p4';
-  if (base===3) return 'p3';
-  if (base===2) return 'p2';
-  if (p<0) return 'pn';
+  const p = pts(typ, w);
+
+  if (p === null) return '';
+
+  const base = typ?.x2 ? Math.abs(p / 2) : Math.abs(p);
+
+  if (base === 4) return 'p4';
+  if (base === 3) return 'p3';
+  if (base === 2) return 'p2';
+
+  if (p < 0) return 'pn';
+
   return 'p0';
 }
 
-function totalPts(player, roundFilter) {
-  return MATCHES.reduce((sum,m) => {
-    if (roundFilter && m.r!==roundFilter) return sum;
-    const p = pts((S.typy[m.id]||{})[player], S.wyniki[m.id]);
-    return sum + (p||0);
-  },0);
+// =====================================================
+// PUNKTY ZA JEDNĄ RUNDĘ
+// =====================================================
+
+function roundPts(player, roundNo) {
+  return MATCHES.reduce((sum, m) => {
+
+    if (m.r !== roundNo) return sum;
+
+    const p = pts(
+      (S.typy[m.id] || {})[player],
+      S.wyniki[m.id]
+    );
+
+    return sum + (p || 0);
+
+  }, 0);
+}
+
+// =====================================================
+// ŁĄCZNA TABELA LIVE
+// =====================================================
+
+function totalPts(player) {
+  return MATCHES.reduce((sum, m) => {
+
+    const p = pts(
+      (S.typy[m.id] || {})[player],
+      S.wyniki[m.id]
+    );
+
+    return sum + (p || 0);
+
+  }, 0);
 }
 
 // =====================================================
@@ -568,7 +635,10 @@ function renderTypy(m) {
 function renderLB(rf) {
   const label = rf ? `TABELA LIVE &ndash; RUNDA ${rf}` : 'TABELA LIVE &ndash; LACZNIE';
   const sc = S.players
-    .map(p => ({n:p, pts:totalPts(p,rf)}))
+    .map(p => ({
+      n: p,
+      pts: rf ? roundPts(p, rf) : totalPts(p)
+    }))
     .sort((a,b)=>b.pts-a.pts);
   const rows = sc.map((s,i)=>{
     const rc = i===0?'r1':i===1?'r2':i===2?'r3':'';
@@ -644,7 +714,10 @@ window.goMain = function() {
 function renderRoundPage(r) {
   const rMatches = MATCHES.filter(m=>m.r===r);
   const sc = S.players
-    .map(p=>({n:p,pts:totalPts(p,r)}))
+    .map(p => ({
+      n: p,
+      pts: roundPts(p, r)
+    }))
     .sort((a,b)=>b.pts-a.pts);
 
   const lbRows = sc.map((s,i)=>{
