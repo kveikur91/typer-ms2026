@@ -13,7 +13,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
-/* HEADER */
 .hdr{background:linear-gradient(135deg,#0a0f1e,#0d1b35);border-bottom:1px solid var(--brd);padding:14px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
 .hdr-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:1px}
 .hdr-title span{color:var(--acc)}
@@ -23,16 +22,12 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .b-ok{background:rgba(34,211,168,.15);color:var(--acc)}
 .b-err{background:rgba(239,68,68,.15);color:var(--red)}
 .b-wait{background:rgba(100,116,139,.15);color:var(--mut)}
-/* LAYOUT */
 .page{display:none}.page.on{display:block}
 .wrap{max-width:800px;margin:0 auto;padding:16px}
 .gap{margin-bottom:24px}
-/* SECTION */
 .slabel{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .slabel::after{content:'';flex:1;height:1px;background:var(--brd)}
-/* CARDS */
 .card{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:16px}
-/* MATCH HERO */
 .mhero{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
 .mhero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .mmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -46,7 +41,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .tname{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;text-align:center}
 .score{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;line-height:1;letter-spacing:2px}
 .score.up{font-size:32px;color:var(--mut)}
-/* TYPY TABLE */
 .tt{width:100%;border-collapse:collapse}
 .tt th{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--mut);text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--brd)}
 .tt td{padding:9px 8px;border-bottom:1px solid var(--brd);font-size:13px}
@@ -61,7 +55,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .p2{background:rgba(251,191,36,.12);color:var(--gld)}
 .pn{background:rgba(239,68,68,.12);color:var(--red)}
 .p0{color:var(--mut)}
-/* LEADERBOARD */
 .lb-list{list-style:none}
 .lb-row{display:flex;align-items:center;padding:10px 12px;border-radius:8px;margin-bottom:6px;background:var(--sur2);border:1px solid var(--brd);transition:transform .15s}
 .lb-row:hover{transform:translateX(2px)}
@@ -70,27 +63,21 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .lb-n{flex:1;font-weight:600;font-size:14px}
 .lb-p{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--acc)}
 .lb-pl{font-size:10px;color:var(--mut);margin-left:3px;font-weight:500}
-/* UPCOMING */
 .ulist{display:flex;flex-direction:column;gap:8px}
 .urow{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;font-size:13px}
 .utime{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--acc2);width:55px;flex-shrink:0}
-/* FOOTER */
 .footer{text-align:center;padding:20px 0 40px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .flink{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--acc2);cursor:pointer;border-bottom:1px solid rgba(245,158,11,.3);padding-bottom:2px}
 .flink:hover{border-color:var(--acc2)}
-/* BACK BTN */
 .back{display:inline-flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--mut);cursor:pointer;margin-bottom:16px;background:none;border:none;padding:6px 0}
 .back:hover{color:var(--txt)}
-/* ROUND PAGE */
 .mrow{padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
 .mrow:hover{border-color:var(--acc)}
 .mrow-header{display:flex;align-items:center;gap:8px}
 .mrow-body{display:none;padding-top:10px;padding-left:50px}
 .mrow.open .mrow-body{display:block}
-/* SPINNER */
 .sp{display:inline-block;width:16px;height:16px;border:2px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* ADMIN PANEL */
 .afab{position:fixed;bottom:16px;right:16px;background:var(--acc);color:#000;border:none;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;z-index:200;box-shadow:0 4px 16px rgba(34,211,168,.3)}
 .apanel{position:fixed;bottom:72px;right:16px;width:340px;background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px;z-index:200;display:none;box-shadow:0 8px 32px rgba(0,0,0,.6);max-height:80vh;overflow-y:auto}
 .apanel.on{display:block}
@@ -114,7 +101,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="hdr">
   <span style="font-size:22px">&#9917;</span>
   <span class="hdr-title">MS <span>2026</span> TYPER</span>
@@ -124,7 +110,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   <div class="live-dot" style="margin-left:6px"></div>
 </div>
 
-<!-- MAIN PAGE -->
 <div id="pageMain" class="page on">
   <div class="wrap">
     <div id="app"><div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Laczenie z Firebase...</div></div>
@@ -136,7 +121,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   </div>
 </div>
 
-<!-- ROUND SUBPAGE -->
 <div id="pageRound" class="page">
   <div class="wrap">
     <button class="back" onclick="goMain()">&#8592; WRÓC</button>
@@ -144,7 +128,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   </div>
 </div>
 
-<!-- ADMIN FAB -->
 <button class="afab" onclick="toggleAdmin()">&#9881;</button>
 <div class="apanel" id="adminPanel">
   <div class="atitle">&#9881; PANEL ADMINA</div>
@@ -184,11 +167,8 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 </div>
 
 <script type="module">
-// =====================================================
-// FIREBASE CONFIG
-// =====================================================
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, onValue, set, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
 const FB_CONFIG = {
   databaseURL: 'https://typer-ms2026-d3b1c-default-rtdb.europe-west1.firebasedatabase.app'
@@ -198,7 +178,6 @@ const db = getDatabase(fbApp);
 
 // =====================================================
 // MATCHES DATA
-// English names match football-data.org API exactly
 // =====================================================
 const MATCHES = [
   // ROUND 1
@@ -275,17 +254,28 @@ const FLAGS = {
 const F = c => FLAGS[c]||'🏳️';
 
 // =====================================================
-// LOCAL STATE (mirrors Firebase, updated by listeners)
+// BUGFIX #1: Bezpieczne ID dla HTML – zamienia wszystko
+// poza [a-zA-Z0-9_-] na '_', żeby getElementById działał
 // =====================================================
-let S = { players:[], typy:{}, wyniki:{}, apiKey:'' };
+function safeId(name) {
+  return name.replace(/[^a-zA-Z0-9_-]/g, '_');
+}
+
+// =====================================================
+// STATE
+// =====================================================
+let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'' };
 let currentRound = 1;
 let fbLoaded = false;
 
+// BUGFIX #2: Flaga blokująca fetchScores podczas zapisu z admina
+// Zapobiega pętli: fbSave → onValue → fetchScores → fbSave → ...
+let _suppressFetch = false;
+
 // =====================================================
-// FIREBASE LISTENERS – real-time sync
+// FIREBASE
 // =====================================================
 function initFirebase() {
-  // Watch entire state
   onValue(ref(db,'state'), snap => {
     const d = snap.val();
     if (d) {
@@ -295,7 +285,6 @@ function initFirebase() {
       S.apiKey   = d.apiKey   || '';
       S.proxyUrl = d.proxyUrl || '';
     } else {
-      // First run – seed default players
       S.players = ['Gracz 1','Gracz 2','Gracz 3','Gracz 4','Gracz 5','Gracz 6','Gracz 7','Gracz 8'];
       fbSave();
     }
@@ -303,15 +292,29 @@ function initFirebase() {
     setFbBadge('ok','Firebase OK');
     render();
     rebuildAdmin();
-    if (S.apiKey) { fetchScores(); }
-    else { setApiBadge('err','Brak klucza API'); }
+
+    // BUGFIX #2: fetchScores tylko przy pierwszym załadowaniu lub jeśli
+    // zmiana nie pochodzi z naszego własnego zapisu
+    if (!_suppressFetch) {
+      if (S.apiKey) fetchScores();
+      else setApiBadge('err','Brak klucza API');
+    }
+    _suppressFetch = false;
   }, err => {
     setFbBadge('err','Blad Firebase');
   });
 }
 
-function fbSave() {
-  set(ref(db,'state'), { players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey, proxyUrl:S.proxyUrl||'' });
+function fbSave(suppressFetch = true) {
+  // BUGFIX #2: domyślnie blokujemy fetchScores po własnym zapisie
+  _suppressFetch = suppressFetch;
+  set(ref(db,'state'), {
+    players:  S.players,
+    typy:     S.typy,
+    wyniki:   S.wyniki,
+    apiKey:   S.apiKey,
+    proxyUrl: S.proxyUrl || ''
+  });
 }
 
 function setFbBadge(t,l) {
@@ -324,41 +327,29 @@ function setApiBadge(t,l) {
 }
 
 // =====================================================
-// FOOTBALL-DATA.ORG – live scores
-// Names must match API exactly (English)
+// FOOTBALL-DATA.ORG
 // =====================================================
 async function fetchScores() {
   if (!S.apiKey) return;
   setApiBadge('wait','Ladowanie...');
   try {
-    // Używamy Cloudflare Worker jako proxy (omija CORS)
-    // Jeśli nie ma skonfigurowanego workera - próbuje bezpośrednio (działa np. z localhost)
     const PROXY = S.proxyUrl || '';
-    let url, headers;
-    if (PROXY) {
-      url = PROXY + '/v4/competitions/WC/matches';
-      headers = { 'X-Auth-Token': S.apiKey };
-    } else {
-      url = 'https://api.football-data.org/v4/competitions/WC/matches';
-      headers = { 'X-Auth-Token': S.apiKey };
-    }
-    const r = await fetch(url, { headers });
-
-    // Pobierz treść błędu żeby wiedzieć co nie gra
+    const url = PROXY
+      ? PROXY + '/v4/competitions/WC/matches'
+      : 'https://api.football-data.org/v4/competitions/WC/matches';
+    const r = await fetch(url, { headers: { 'X-Auth-Token': S.apiKey } });
     const text = await r.text();
     let data;
     try { data = JSON.parse(text); } catch(_) { data = {}; }
 
     if (r.status === 401) { setApiBadge('err','401 Bledny klucz'); return; }
     if (r.status === 403) {
-      // 403 = plan nie obejmuje tej ligi LUB brak dostępu
       const msg = data.message || data.detail || '';
       setApiBadge('err', msg.includes('permission') ? '403 Plan nie obejmuje WC' : '403 Brak dostepu');
-      console.error('API 403:', text);
       return;
     }
     if (r.status === 429) { setApiBadge('err','429 Limit zapytan'); return; }
-    if (!r.ok) { setApiBadge('err','Blad '+r.status); console.error('API error:', text); return; }
+    if (!r.ok) { setApiBadge('err','Blad '+r.status); return; }
 
     let changed = false;
     (data.matches||[]).forEach(m => {
@@ -369,7 +360,6 @@ async function fetchScores() {
       if (!match) return;
       const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
-      // API zwraca null dla przyszłych meczy, 0:0 dla trwających
       const cur = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
       const newW = {
         home:   cur ? cur.home : null,
@@ -385,20 +375,16 @@ async function fetchScores() {
     });
     const count = (data.matches||[]).length;
     setApiBadge('ok', `Live (${count} meczy)`);
-    if (changed) { fbSave(); render(); }
-    else render(); // zawsze odswiezamy widok
+    if (changed) fbSave(false); // false = nie blokuj fetchScores po zapisie wyników API
+    else render();
   } catch(e) {
-    // Network error (CORS, brak sieci itp)
     setApiBadge('err', 'Blad sieci/CORS');
     console.error('fetchScores error:', e);
   }
 }
 
-// Match API name to our match object
 function findByEnglishNames(hn, an) {
-  const norm = s => (s||'').toLowerCase()
-    .replace(/[^\w\s]/g,'').replace(/\s+/g,' ').trim();
-  // Build alias map for short names the API might return
+  const norm = s => (s||'').toLowerCase().replace(/[^\w\s]/g,'').replace(/\s+/g,' ').trim();
   const ALIAS = {
     'usa':'united states','us':'united states','türkiye':'turkey','turkiye':'turkey',
     'ir iran':'iran','côte divoire':'ivory coast',"cote divoire":'ivory coast',
@@ -428,7 +414,7 @@ function mapSt(s) {
 // SCORING
 // =====================================================
 function pts(typ, w) {
-  if (!w||w.home===null||w.away===null||!typ) return null;
+  if (!w||w.home===null||w.away===null||!typ||typ.home===undefined||typ.away===undefined) return null;
   const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
   let p;
   if (tH===wH&&tA===wA) p=4;
@@ -504,7 +490,7 @@ function render() {
   document.getElementById('app').innerHTML = html;
 }
 
-function renderHero(m, isLive) {
+function renderHero(m) {
   const w = S.wyniki[m.id]||{};
   const hasScore = w.home!==null && w.home!==undefined;
   let badge = '';
@@ -636,14 +622,12 @@ function renderRoundPage(r) {
     .map(p=>({n:p,pts:totalPts(p,r)}))
     .sort((a,b)=>b.pts-a.pts);
 
-  // Leaderboard
   const lbRows = sc.map((s,i)=>{
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
     return `<li class="lb-row"><span class="rnk ${rc}">${medal||i+1}</span><span class="lb-n">${s.n}</span><span class="lb-p">${s.pts}<span class="lb-pl">pkt</span></span></li>`;
   }).join('');
 
-  // Matches – collapsible
   const mRows = rMatches.map(m=>{
     const w = S.wyniki[m.id];
     const hasScore = w && w.home!==null && w.away!==null;
@@ -710,9 +694,7 @@ window.diagApi = async function() {
     const apiUrl = PROXY
       ? PROXY + '/v4/competitions/WC/matches'
       : 'https://api.football-data.org/v4/competitions/WC/matches';
-    const r = await fetch(apiUrl, {
-      headers: { 'X-Auth-Token': key }
-    });
+    const r = await fetch(apiUrl, { headers: { 'X-Auth-Token': key } });
     const text = await r.text();
     let parsed;
     try { parsed = JSON.parse(text); } catch(_) { parsed = null; }
@@ -728,7 +710,7 @@ window.diagApi = async function() {
     }
   } catch(e) {
     el.style.color = 'var(--red)';
-    el.textContent = 'Blad sieci: ' + e.message + '. Sprawdz czy strona jest na HTTPS (GitHub Pages jest OK).';
+    el.textContent = 'Blad sieci: ' + e.message;
   }
 };
 
@@ -738,8 +720,7 @@ window.saveApiKey = function() {
   if (!k) return;
   S.apiKey = k;
   S.proxyUrl = p;
-  fbSave();
-  fetchScores();
+  fbSave(false); // po zapisaniu klucza API chcemy żeby fetchScores się odpaliło
 };
 
 window.onMatchChange = function() {
@@ -774,30 +755,35 @@ window.saveWynik = function(id) {
   };
   fbSave();
   render();
+  const btn = document.getElementById('btnWynik_'+id);
+  if (btn) { btn.textContent = '✅ Zapisano!'; setTimeout(()=>{ btn.textContent = '💾 Zapisz wynik'; },1500); }
 };
 
+// BUGFIX #1: używamy safeId() do generowania i odczytu inputów
 window.saveTypy = function(id) {
   if (!S.typy[id]) S.typy[id] = {};
+  let saved = 0;
   S.players.forEach(p => {
-    const hEl = document.getElementById('th_' + p);
-    const aEl = document.getElementById('ta_' + p);
-    const xEl = document.getElementById('tx_' + p);
-    const h = hEl ? hEl.value.trim() : '';
-    const a = aEl ? aEl.value.trim() : '';
+    const sid = safeId(p);
+    const hEl = document.getElementById('th_' + sid);
+    const aEl = document.getElementById('ta_' + sid);
+    const xEl = document.getElementById('tx_' + sid);
+    if (!hEl || !aEl) { console.warn('Nie znaleziono inputu dla gracza:', p, sid); return; }
+    const h = hEl.value.trim();
+    const a = aEl.value.trim();
     const x = xEl ? xEl.checked : false;
     if (h !== '' && a !== '' && !isNaN(parseInt(h)) && !isNaN(parseInt(a))) {
       S.typy[id][p] = { home: parseInt(h), away: parseInt(a), x2: !!x };
+      saved++;
     }
   });
   fbSave();
   render();
-  // Wizualny feedback
-  const btn = document.querySelector('[onclick="saveTypy(\''+id+'\')"]');
-  if (btn) { btn.textContent = '✅ Zapisano!'; setTimeout(()=>{ btn.textContent = '💾 Zapisz typy'; },1500); }
+  const btn = document.getElementById('btnTypy_'+id);
+  if (btn) { btn.textContent = `✅ Zapisano ${saved} typów!`; setTimeout(()=>{ btn.textContent = '💾 Zapisz typy'; },2000); }
 };
 
 function rebuildAdmin() {
-  // Match selector
   const sel = document.getElementById('adminSel');
   if (sel && !sel.options.length) {
     const {live,next}=curNext(), defId=(live||next||MATCHES[0]).id;
@@ -805,22 +791,20 @@ function rebuildAdmin() {
       `<option value="${m.id}"${m.id===defId?' selected':''}>R${m.r} ${m.hpl} vs ${m.apl}</option>`
     ).join('');
   }
-  // Players
   const pl = document.getElementById('playersList');
   if (pl) pl.innerHTML = S.players.map((p,i)=>
     `<div class="prow"><span class="pn">${p}</span><button class="delbtn" onclick="deletePlayer(${i})">&#128465;</button></div>`
   ).join('');
-  // API key
   const ai = document.getElementById('apiKeyInp');
   if (ai && !ai.value && S.apiKey) ai.value = S.apiKey;
   const pi = document.getElementById('proxyUrlInp');
   if (pi && !pi.value && S.proxyUrl) pi.value = S.proxyUrl;
-  // Form
   const id = document.getElementById('adminSel')?.value;
   const m = MATCHES.find(x=>x.id===id);
   if (m) renderAdminForm(m);
 }
 
+// BUGFIX #1: wszystkie id inputów generowane przez safeId(p)
 function renderAdminForm(m) {
   const f = document.getElementById('adminForm'); if(!f) return;
   const w = S.wyniki[m.id]||{};
@@ -837,21 +821,22 @@ function renderAdminForm(m) {
       <option value="ft"${w.status==='ft'?' selected':''}>&#9989; FT</option>
     </select>
   </div>
-  <button class="abtn" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">Zapisz wynik</button>`;
+  <button class="abtn" id="btnWynik_${m.id}" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">&#128190; Zapisz wynik</button>`;
   html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy</div>`;
   S.players.forEach(p=>{
+    const sid = safeId(p); // BUGFIX #1: bezpieczne ID
     const t=ty[p]||{};
     html+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
-      <span style="width:65px;font-size:12px;overflow:hidden;white-space:nowrap">${p}</span>
-      <input class="ainp" id="th_${p}" value="${t.home!=null?t.home:''}" placeholder="D" style="width:34px;text-align:center">
+      <span style="width:65px;font-size:12px;overflow:hidden;white-space:nowrap" title="${p}">${p}</span>
+      <input class="ainp" id="th_${sid}" value="${t.home!=null?t.home:''}" placeholder="D" style="width:34px;text-align:center">
       <span style="color:var(--mut)">:</span>
-      <input class="ainp" id="ta_${p}" value="${t.away!=null?t.away:''}" placeholder="G" style="width:34px;text-align:center">
+      <input class="ainp" id="ta_${sid}" value="${t.away!=null?t.away:''}" placeholder="G" style="width:34px;text-align:center">
       <label style="font-size:11px;color:var(--mut);display:flex;align-items:center;gap:3px;cursor:pointer">
-        <input type="checkbox" id="tx_${p}"${t.x2?' checked':''}> X2
+        <input type="checkbox" id="tx_${sid}"${t.x2?' checked':''}> X2
       </label>
     </div>`;
   });
-  html+=`<button class="abtn" onclick="saveTypy('${m.id}')">&#128190; Zapisz typy</button>`;
+  html+=`<button class="abtn" id="btnTypy_${m.id}" onclick="saveTypy('${m.id}')">&#128190; Zapisz typy</button>`;
   f.innerHTML=html;
 }
 
@@ -859,7 +844,6 @@ function renderAdminForm(m) {
 // INIT
 // =====================================================
 initFirebase();
-// Auto-fetch scores co 60s
 setInterval(()=>{ if(S.apiKey) fetchScores(); }, 60000);
 </script>
 </body>
