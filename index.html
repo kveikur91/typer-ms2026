@@ -157,13 +157,15 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   <div class="apibox">
     <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:1px;margin-bottom:4px">&#128273; KLUCZ API – WYNIKI LIVE</div>
     <input class="ainp" id="apiKeyInp" placeholder="Klucz z football-data.org..." />
+    <div style="font-size:11px;color:var(--gld);font-weight:700;letter-spacing:1px;margin:8px 0 4px">&#127760; URL CLOUDFLARE WORKER (proxy)</div>
+    <input class="ainp" id="proxyUrlInp" placeholder="https://twoj-worker.workers.dev" />
     <button class="abtn" style="margin-top:6px" onclick="saveApiKey()">Zapisz i polacz</button>
-    <button class="abtn" style="margin-top:4px;background:var(--sur2);color:var(--txt);border:1px solid var(--brd)" onclick="diagApi()">&#128270; Diagnostyka API</button>
+    <button class="abtn" style="margin-top:4px;background:var(--sur2);color:var(--txt);border:1px solid var(--brd)" onclick="diagApi()">&#128270; Diagnostyka</button>
     <div id="diagResult" style="font-size:11px;color:var(--mut);margin-top:6px;word-break:break-all;display:none;background:var(--bg);padding:8px;border-radius:6px;border:1px solid var(--brd)"></div>
     <div class="apiinfo">
-      Darmowy klucz: <a href="https://www.football-data.org/client/register" target="_blank">football-data.org/client/register</a><br>
-      <strong style="color:var(--acc)">To INNY klucz niz Firebase!</strong><br>
-      Blad 403 = WC nie jest w Twoim planie (zaloguj sie na football-data.org i sprawdz subskrypcje).
+      Klucz: <a href="https://www.football-data.org/client/register" target="_blank">football-data.org/client/register</a><br>
+      Worker (proxy): <a href="https://workers.cloudflare.com" target="_blank">workers.cloudflare.com</a> – darmowy, bez karty<br>
+      <strong style="color:var(--gld)">Bez workera = blad CORS. Instrukcja nizej.</strong>
     </div>
   </div>
 
@@ -287,10 +289,11 @@ function initFirebase() {
   onValue(ref(db,'state'), snap => {
     const d = snap.val();
     if (d) {
-      S.players = d.players || [];
-      S.typy    = d.typy    || {};
-      S.wyniki  = d.wyniki  || {};
-      S.apiKey  = d.apiKey  || '';
+      S.players  = d.players  || [];
+      S.typy     = d.typy     || {};
+      S.wyniki   = d.wyniki   || {};
+      S.apiKey   = d.apiKey   || '';
+      S.proxyUrl = d.proxyUrl || '';
     } else {
       // First run – seed default players
       S.players = ['Gracz 1','Gracz 2','Gracz 3','Gracz 4','Gracz 5','Gracz 6','Gracz 7','Gracz 8'];
@@ -308,7 +311,7 @@ function initFirebase() {
 }
 
 function fbSave() {
-  set(ref(db,'state'), { players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey });
+  set(ref(db,'state'), { players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey, proxyUrl:S.proxyUrl||'' });
 }
 
 function setFbBadge(t,l) {
@@ -328,12 +331,18 @@ async function fetchScores() {
   if (!S.apiKey) return;
   setApiBadge('wait','Ladowanie...');
   try {
-    // Nie wysyłamy season=2026 w free tier - API może to blokować
-    // Zamiast tego pobieramy mecze z ostatnich dni (today i +7 dni)
-    const url = 'https://api.football-data.org/v4/competitions/WC/matches';
-    const r = await fetch(url, {
-      headers: { 'X-Auth-Token': S.apiKey }
-    });
+    // Używamy Cloudflare Worker jako proxy (omija CORS)
+    // Jeśli nie ma skonfigurowanego workera - próbuje bezpośrednio (działa np. z localhost)
+    const PROXY = S.proxyUrl || '';
+    let url, headers;
+    if (PROXY) {
+      url = PROXY + '/v4/competitions/WC/matches';
+      headers = { 'X-Auth-Token': S.apiKey };
+    } else {
+      url = 'https://api.football-data.org/v4/competitions/WC/matches';
+      headers = { 'X-Auth-Token': S.apiKey };
+    }
+    const r = await fetch(url, { headers });
 
     // Pobierz treść błędu żeby wiedzieć co nie gra
     const text = await r.text();
@@ -697,7 +706,11 @@ window.diagApi = async function() {
   const key = document.getElementById('apiKeyInp').value.trim() || S.apiKey;
   if (!key) { el.textContent = 'Brak klucza!'; return; }
   try {
-    const r = await fetch('https://api.football-data.org/v4/competitions/WC/matches', {
+    const PROXY = S.proxyUrl || '';
+    const apiUrl = PROXY
+      ? PROXY + '/v4/competitions/WC/matches'
+      : 'https://api.football-data.org/v4/competitions/WC/matches';
+    const r = await fetch(apiUrl, {
       headers: { 'X-Auth-Token': key }
     });
     const text = await r.text();
@@ -721,8 +734,10 @@ window.diagApi = async function() {
 
 window.saveApiKey = function() {
   const k = document.getElementById('apiKeyInp').value.trim();
+  const p = (document.getElementById('proxyUrlInp').value||'').trim().replace(/\/+$/,'');
   if (!k) return;
   S.apiKey = k;
+  S.proxyUrl = p;
   fbSave();
   fetchScores();
 };
@@ -783,6 +798,8 @@ function rebuildAdmin() {
   // API key
   const ai = document.getElementById('apiKeyInp');
   if (ai && !ai.value && S.apiKey) ai.value = S.apiKey;
+  const pi = document.getElementById('proxyUrlInp');
+  if (pi && !pi.value && S.proxyUrl) pi.value = S.proxyUrl;
   // Form
   const id = document.getElementById('adminSel')?.value;
   const m = MATCHES.find(x=>x.id===id);
