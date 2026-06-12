@@ -112,7 +112,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 
 <div id="pageMain" class="page on">
   <div class="wrap">
-    <div id="app"><div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Łączenie z Firebase...</div></div>
+    <div id="app"><div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Ładowanie danych z Firebase...</div></div>
     <div class="footer">
       <span class="flink" onclick="goRound(1)">📊 RUNDA 1</span>
       <span class="flink" onclick="goRound(2)">📊 RUNDA 2</span>
@@ -258,8 +258,8 @@ const F = c => FLAGS[c]||'🏳️';
 // =====================================================
 let S = { players: [], typy: {}, wyniki: {}, apiKey: '', proxyUrl: '' };
 let currentRound = 1;
-let isDataLoaded = false;      // czy dane z Firebase zostały już załadowane
-let isSaving = false;          // blokada przed zapętlaniem
+let isDataLoaded = false;
+let isInternalUpdate = false;  // Zapobiega zapętlaniu
 
 // =====================================================
 // SAFE ID
@@ -271,65 +271,10 @@ function safeId(name) {
 // =====================================================
 // FIREBASE – REALTIME SYNC
 // =====================================================
-function initFirebase() {
-  const stateRef = ref(db, 'state');
-  
-  onValue(stateRef, (snapshot) => {
-    const data = snapshot.val();
-    
-    // Pomijamy echo własnych zapisów
-    if (isSaving) {
-      isSaving = false;
-      setFbBadge('ok', 'Firebase OK');
-      render();
-      rebuildAdmin();
-      return;
-    }
-    
-    if (data && typeof data === 'object') {
-      // Załadowanie danych z Firebase
-      S.players = Array.isArray(data.players) ? data.players : [];
-      S.typy = data.typy || {};
-      S.wyniki = data.wyniki || {};
-      S.apiKey = data.apiKey || '';
-      S.proxyUrl = data.proxyUrl || '';
-      
-      // Inicjalizacja domyślnych graczy tylko jeśli pusta baza
-      if (S.players.length === 0) {
-        S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
-        saveToFirebase();
-      }
-    } else {
-      // Pusta baza – pierwsze uruchomienie
-      S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
-      S.typy = {};
-      S.wyniki = {};
-      saveToFirebase();
-    }
-    
-    setFbBadge('ok', 'Firebase OK');
-    isDataLoaded = true;
-    render();
-    rebuildAdmin();
-    
-    // Pierwsze pobranie wyników live jeśli mamy klucz API
-    if (S.apiKey && !isSaving) {
-      fetchScores();
-    } else if (!S.apiKey) {
-      setApiBadge('err', 'Brak klucza API');
-    }
-    
-  }, (error) => {
-    console.error('Firebase error:', error);
-    setFbBadge('err', 'Błąd Firebase');
-    // Nawet przy błędzie pokaż pustą stronę
-    isDataLoaded = true;
-    render();
-  });
-}
-
 function saveToFirebase() {
-  isSaving = true;
+  if (isInternalUpdate) return;
+  
+  isInternalUpdate = true;
   set(ref(db, 'state'), {
     players: S.players,
     typy: S.typy,
@@ -338,7 +283,8 @@ function saveToFirebase() {
     proxyUrl: S.proxyUrl || ''
   }).catch(err => {
     console.error('Save error:', err);
-    isSaving = false;
+  }).finally(() => {
+    setTimeout(() => { isInternalUpdate = false; }, 100);
   });
 }
 
@@ -408,7 +354,7 @@ async function fetchScores() {
       
       const oldResult = S.wyniki[localMatch.id];
       
-      // Nie nadpisuj ręcznie wprowadzonych wyników
+      // Nie nadpisuj ręcznie wprowadzonych wyników FT lub LIVE
       if (oldResult && (oldResult.status === 'ft' || oldResult.status === 'live')) {
         if (newResult.home === null && newResult.away === null && status === 'upcoming') {
           continue;
@@ -430,6 +376,7 @@ async function fetchScores() {
       saveToFirebase();
     } else {
       render();
+      rebuildAdmin();
     }
     
   } catch (error) {
@@ -477,11 +424,11 @@ function findMatchByNames(homeName, awayName) {
     const matchAway = getNormalized(match.an);
     
     const homeMatch = matchHome === normHome || 
-                      matchHome.startsWith(normHome.slice(0,5)) || 
-                      normHome.startsWith(matchHome.slice(0,5));
+                      matchHome.includes(normHome.substring(0, 5)) || 
+                      normHome.includes(matchHome.substring(0, 5));
     const awayMatch = matchAway === normAway || 
-                      matchAway.startsWith(normAway.slice(0,5)) || 
-                      normAway.startsWith(matchAway.slice(0,5));
+                      matchAway.includes(normAway.substring(0, 5)) || 
+                      normAway.includes(matchAway.substring(0, 5));
     
     return homeMatch && awayMatch;
   }) || null;
@@ -507,15 +454,15 @@ function calculatePoints(typ, wynik) {
   let basePoints = 0;
   
   if (typ.home === wynik.home && typ.away === wynik.away) {
-    basePoints = 4;  // dokładny wynik
+    basePoints = 4;
   } else if (diffTyp === diffWyn) {
-    basePoints = 3;  // poprawna różnica
+    basePoints = 3;
   } else if ((typ.home > typ.away && wynik.home > wynik.away) ||
              (typ.home < typ.away && wynik.home < wynik.away) ||
              (typ.home === typ.away && wynik.home === wynik.away)) {
-    basePoints = 2;  // poprawny zwycięzca/remis
+    basePoints = 2;
   } else {
-    basePoints = -1; // błędny typ
+    basePoints = -1;
   }
   
   return typ.x2 ? basePoints * 2 : basePoints;
@@ -606,7 +553,7 @@ function escapeHtml(str) {
 
 function render() {
   if (!isDataLoaded) {
-    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Ładowanie danych...</div>';
+    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Ładowanie danych z Firebase...</div>';
     return;
   }
   
@@ -682,7 +629,7 @@ function renderTipsTable(match) {
     const hasTip = typ && typ.home !== null && typ.home !== undefined && typ.away !== null && typ.away !== undefined;
     const tipDisplay = hasTip ? `${typ.home}:${typ.away}${typ.x2 ? '<span class="x2b">X2</span>' : ''}` : '—';
     
-    return `</tr>
+    return `<tr>
       <td><span class="pname">${escapeHtml(player)}</span></td>
       <td><span class="tscore">${tipDisplay}</span></td>
       <td style="text-align:center">${icon ? `<span style="font-size:16px">${icon}</span>` : ''}</td>
@@ -744,7 +691,7 @@ function renderUpcomingMatches(currentMatch) {
       <span class="utime">${match.time}</span>
       <div style="flex:1">
         <div style="font-weight:500">${F(match.hf)} ${escapeHtml(match.hpl)} vs ${escapeHtml(match.apl)} ${F(match.af)}</div>
-        <div style="font-size:11px;color:var(--mut);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:1px">R${match.r} · Gr.${match.g} · ${match.venue}</div>
+        <div style="font-size:11px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">R${match.r} · Gr.${match.g} · ${match.venue}</div>
       </div>
     </div>
   `).join('');
@@ -892,8 +839,9 @@ window.toggleMrow = function(id) {
 // ADMIN PANEL
 // =====================================================
 window.toggleAdmin = function() {
-  document.getElementById('adminPanel').classList.toggle('on');
-  if (document.getElementById('adminPanel').classList.contains('on')) {
+  const panel = document.getElementById('adminPanel');
+  panel.classList.toggle('on');
+  if (panel.classList.contains('on')) {
     rebuildAdmin();
   }
 };
@@ -1106,9 +1054,58 @@ function renderAdminForm(match) {
 // =====================================================
 // INITIALIZATION
 // =====================================================
-initFirebase();
+// Nasłuchuj zmian z Firebase
+const stateRef = ref(db, 'state');
+onValue(stateRef, (snapshot) => {
+  const data = snapshot.val();
+  
+  // Pomijamy echo własnych zapisów
+  if (isInternalUpdate) {
+    return;
+  }
+  
+  if (data && typeof data === 'object') {
+    // Załaduj dane z Firebase
+    S.players = Array.isArray(data.players) ? data.players : [];
+    S.typy = data.typy || {};
+    S.wyniki = data.wyniki || {};
+    S.apiKey = data.apiKey || '';
+    S.proxyUrl = data.proxyUrl || '';
+    
+    // Inicjalizuj domyślnych graczy tylko jeśli baza jest pusta
+    if (S.players.length === 0) {
+      S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
+      saveToFirebase();
+    }
+  } else {
+    // Pusta baza – pierwsze uruchomienie
+    S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
+    S.typy = {};
+    S.wyniki = {};
+    saveToFirebase();
+  }
+  
+  setFbBadge('ok', 'Firebase OK');
+  isDataLoaded = true;
+  render();
+  rebuildAdmin();
+  
+  // Pobierz wyniki live jeśli mamy klucz API
+  if (S.apiKey) {
+    fetchScores();
+  } else {
+    setApiBadge('err', 'Brak klucza API');
+  }
+}, (error) => {
+  console.error('Firebase error:', error);
+  setFbBadge('err', 'Błąd Firebase');
+  // Nawet przy błędzie pokaż pustą stronę z domyślnymi danymi
+  S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
+  isDataLoaded = true;
+  render();
+});
 
-// Auto-refresh every 60 seconds
+// Auto-refresh co 60 sekund
 setInterval(() => {
   if (S.apiKey && isDataLoaded) {
     fetchScores();
