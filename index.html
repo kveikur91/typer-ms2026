@@ -350,6 +350,19 @@ let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'', koTeams:{} };
 let currentRound = 1;
 let fbLoaded = false;
 
+
+function cleanScoreValue(v) {
+  if (v === null || v === undefined) return null;
+  if (typeof v === 'string') {
+    const t = v.trim().toLowerCase();
+    if (t === '' || t === 'undefined' || t === 'null' || t === 'nan') return null;
+  }
+  const n = parseInt(v, 10);
+  return isNaN(n) ? null : n;
+}
+
+
+
 // =====================================================
 // FIREBASE LISTENERS – real-time sync
 // =====================================================
@@ -361,6 +374,15 @@ function initFirebase() {
       S.players  = d.players  || [];
       S.typy     = d.typy     || {};
       S.wyniki   = d.wyniki   || {};
+      Object.keys(S.wyniki).forEach(k => {
+        const w = S.wyniki[k] || {};
+        S.wyniki[k] = {
+          home: cleanScoreValue(w.home),
+          away: cleanScoreValue(w.away),
+          status: w.status || 'upcoming',
+          minute: w.minute || null
+        };
+      });
       S.apiKey   = d.apiKey   || '';
       S.proxyUrl = d.proxyUrl || '';
       S.koTeams  = d.koTeams  || {};
@@ -447,8 +469,8 @@ async function fetchScores() {
       // API zwraca null dla przyszłych meczy, 0:0 dla trwających
       const cur = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
       const newW = {
-        home:   cur ? cur.home : null,
-        away:   cur ? cur.away : null,
+        home:   cleanScoreValue(cur ? cur.home : null),
+        away:   cleanScoreValue(cur ? cur.away : null),
         status: mapSt(m.status),
         minute: m.minute || null,
       };
@@ -479,7 +501,9 @@ function findByEnglishNames(hn, an) {
     'ir iran':'iran','côte divoire':'ivory coast',"cote divoire":'ivory coast',
     'ivory coast':"côte d'ivoire",'south korea':'south korea','korea republic':'south korea',
     'czechia':'czech republic','bosnia':'bosnia and herzegovina',
-    'dr congo':'dr congo','congo dr':'dr congo'
+    'dr congo':'dr congo','congo dr':'dr congo',
+    'south africa republic':'south africa','republic of south africa':'south africa',
+    'bosnia herzegovina':'bosnia and herzegovina','mexico':'mexico'
   };
   const na = s => { const n=norm(s); return ALIAS[n]||n; };
   const h = na(hn), a = na(an);
@@ -581,7 +605,9 @@ function render() {
 
 function renderHero(m, isLive) {
   const w = S.wyniki[m.id]||{};
-  const hasScore = w.home!==null && w.home!==undefined;
+  w.home = cleanScoreValue(w.home);
+  w.away = cleanScoreValue(w.away);
+  const hasScore = cleanScoreValue(w.home)!==null && cleanScoreValue(w.away)!==null;
   let badge = '';
   if      (w.status==='live') badge=`<span class="tbadge live">&#128308; LIVE ${w.minute?w.minute+"'":''}  </span>`;
   else if (w.status==='ft')   badge=`<span class="tbadge">FT</span>`;
@@ -876,9 +902,13 @@ window.saveWynik = function(id) {
   const h = document.getElementById('wH').value.trim();
   const a = document.getElementById('wA').value.trim();
   const st = document.getElementById('wSt').value;
+
+  const homeVal = cleanScoreValue(h);
+  const awayVal = cleanScoreValue(a);
+
   S.wyniki[id] = {
-    home:   h !== '' && !isNaN(parseInt(h)) ? parseInt(h) : null,
-    away:   a !== '' && !isNaN(parseInt(a)) ? parseInt(a) : null,
+    home: homeVal,
+    away: awayVal,
     status: st,
     minute: null,
   };
