@@ -13,6 +13,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
+/* HEADER */
 .hdr{background:linear-gradient(135deg,#0a0f1e,#0d1b35);border-bottom:1px solid var(--brd);padding:14px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
 .hdr-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:1px}
 .hdr-title span{color:var(--acc)}
@@ -22,12 +23,16 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .b-ok{background:rgba(34,211,168,.15);color:var(--acc)}
 .b-err{background:rgba(239,68,68,.15);color:var(--red)}
 .b-wait{background:rgba(100,116,139,.15);color:var(--mut)}
+/* LAYOUT */
 .page{display:none}.page.on{display:block}
 .wrap{max-width:800px;margin:0 auto;padding:16px}
 .gap{margin-bottom:24px}
+/* SECTION */
 .slabel{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .slabel::after{content:'';flex:1;height:1px;background:var(--brd)}
+/* CARDS */
 .card{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:16px}
+/* MATCH HERO */
 .mhero{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
 .mhero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .mmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -41,6 +46,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .tname{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;text-align:center}
 .score{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;line-height:1;letter-spacing:2px}
 .score.up{font-size:32px;color:var(--mut)}
+/* TYPY TABLE */
 .tt{width:100%;border-collapse:collapse}
 .tt th{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--mut);text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--brd)}
 .tt td{padding:9px 8px;border-bottom:1px solid var(--brd);font-size:13px}
@@ -55,6 +61,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .p2{background:rgba(251,191,36,.12);color:var(--gld)}
 .pn{background:rgba(239,68,68,.12);color:var(--red)}
 .p0{color:var(--mut)}
+/* LEADERBOARD */
 .lb-list{list-style:none}
 .lb-row{display:flex;align-items:center;padding:10px 12px;border-radius:8px;margin-bottom:6px;background:var(--sur2);border:1px solid var(--brd);transition:transform .15s}
 .lb-row:hover{transform:translateX(2px)}
@@ -63,21 +70,27 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .lb-n{flex:1;font-weight:600;font-size:14px}
 .lb-p{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--acc)}
 .lb-pl{font-size:10px;color:var(--mut);margin-left:3px;font-weight:500}
+/* UPCOMING */
 .ulist{display:flex;flex-direction:column;gap:8px}
 .urow{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;font-size:13px}
 .utime{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--acc2);width:55px;flex-shrink:0}
+/* FOOTER */
 .footer{text-align:center;padding:20px 0 40px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .flink{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--acc2);cursor:pointer;border-bottom:1px solid rgba(245,158,11,.3);padding-bottom:2px}
 .flink:hover{border-color:var(--acc2)}
+/* BACK BTN */
 .back{display:inline-flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--mut);cursor:pointer;margin-bottom:16px;background:none;border:none;padding:6px 0}
 .back:hover{color:var(--txt)}
+/* ROUND PAGE */
 .mrow{padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
 .mrow:hover{border-color:var(--acc)}
 .mrow-header{display:flex;align-items:center;gap:8px}
 .mrow-body{display:none;padding-top:10px;padding-left:50px}
 .mrow.open .mrow-body{display:block}
+/* SPINNER */
 .sp{display:inline-block;width:16px;height:16px;border:2px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* ADMIN PANEL */
 .afab{position:fixed;bottom:16px;right:16px;background:var(--acc);color:#000;border:none;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;z-index:200;box-shadow:0 4px 16px rgba(34,211,168,.3)}
 .apanel{position:fixed;bottom:72px;right:16px;width:340px;background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px;z-index:200;display:none;box-shadow:0 8px 32px rgba(0,0,0,.6);max-height:80vh;overflow-y:auto}
 .apanel.on{display:block}
@@ -101,8 +114,9 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="hdr">
-  <span style="font-size:22px">⚽</span>
+  <span style="font-size:22px">&#9917;</span>
   <span class="hdr-title">MS <span>2026</span> TYPER</span>
   <span id="fbBadge" class="badge b-wait">Firebase...</span>
   <span id="apiBadge" class="badge b-wait" style="margin-left:4px">Scores...</span>
@@ -110,9 +124,10 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   <div class="live-dot" style="margin-left:6px"></div>
 </div>
 
+<!-- MAIN PAGE -->
 <div id="pageMain" class="page on">
   <div class="wrap">
-    <div id="app"><div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Ładowanie danych z Firebase...</div></div>
+    <div id="app"><div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Laczenie z Firebase...</div></div>
     <div class="footer">
       <span class="flink" onclick="goRound(1)">📊 RUNDA 1</span>
       <span class="flink" onclick="goRound(2)">📊 RUNDA 2</span>
@@ -127,41 +142,43 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   </div>
 </div>
 
+<!-- ROUND SUBPAGE -->
 <div id="pageRound" class="page">
   <div class="wrap">
-    <button class="back" onclick="goMain()">← WRÓC</button>
+    <button class="back" onclick="goMain()">&#8592; WRÓC</button>
     <div id="roundContent"></div>
   </div>
 </div>
 
 <div id="pageTypowania" class="page">
   <div class="wrap">
-    <button class="back" onclick="goMain()">← WRÓC</button>
+    <button class="back" onclick="goMain()">&#8592; WRÓC</button>
     <div id="typowaniaContent"></div>
   </div>
 </div>
 
-<button class="afab" onclick="toggleAdmin()">⚙</button>
+<!-- ADMIN FAB -->
+<button class="afab" onclick="toggleAdmin()">&#9881;</button>
 <div class="apanel" id="adminPanel">
-  <div class="atitle">⚙ PANEL ADMINA</div>
+  <div class="atitle">&#9881; PANEL ADMINA</div>
 
   <div class="fbbox">
-    <div style="font-size:11px;color:var(--gld);font-weight:700;letter-spacing:1px;margin-bottom:4px">🔥 FIREBASE POŁĄCZONY</div>
-    <div class="fbinfo">Dane są współdzielone między wszystkimi użytkownikami w czasie rzeczywistym.</div>
+    <div style="font-size:11px;color:var(--gld);font-weight:700;letter-spacing:1px;margin-bottom:4px">&#128293; FIREBASE POLACZONY</div>
+    <div class="fbinfo">Dane sa wspoldzielone miedzy wszystkimi uzytkownikami w czasie rzeczywistym.</div>
   </div>
 
   <div class="apibox">
-    <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:1px;margin-bottom:4px">🔑 KLUCZ API – WYNIKI LIVE</div>
+    <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:1px;margin-bottom:4px">&#128273; KLUCZ API – WYNIKI LIVE</div>
     <input class="ainp" id="apiKeyInp" placeholder="Klucz z football-data.org..." />
-    <div style="font-size:11px;color:var(--gld);font-weight:700;letter-spacing:1px;margin:8px 0 4px">🌐 URL CLOUDFLARE WORKER (proxy)</div>
+    <div style="font-size:11px;color:var(--gld);font-weight:700;letter-spacing:1px;margin:8px 0 4px">&#127760; URL CLOUDFLARE WORKER (proxy)</div>
     <input class="ainp" id="proxyUrlInp" placeholder="https://twoj-worker.workers.dev" />
-    <button class="abtn" style="margin-top:6px" onclick="saveApiKey()">Zapisz i połącz</button>
-    <button class="abtn" style="margin-top:4px;background:var(--sur2);color:var(--txt);border:1px solid var(--brd)" onclick="diagApi()">🔍 Diagnostyka</button>
+    <button class="abtn" style="margin-top:6px" onclick="saveApiKey()">Zapisz i polacz</button>
+    <button class="abtn" style="margin-top:4px;background:var(--sur2);color:var(--txt);border:1px solid var(--brd)" onclick="diagApi()">&#128270; Diagnostyka</button>
     <div id="diagResult" style="font-size:11px;color:var(--mut);margin-top:6px;word-break:break-all;display:none;background:var(--bg);padding:8px;border-radius:6px;border:1px solid var(--brd)"></div>
     <div class="apiinfo">
       Klucz: <a href="https://www.football-data.org/client/register" target="_blank">football-data.org/client/register</a><br>
       Worker (proxy): <a href="https://workers.cloudflare.com" target="_blank">workers.cloudflare.com</a> – darmowy, bez karty<br>
-      <strong style="color:var(--gld)">Bez workera = błąd CORS.</strong>
+      <strong style="color:var(--gld)">Bez workera = blad CORS. Instrukcja nizej.</strong>
     </div>
   </div>
 
@@ -174,29 +191,28 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   <div class="asect">GRACZE</div>
   <div id="playersList"></div>
   <div style="display:flex;gap:6px;margin-top:6px">
-    <input class="ainp" id="newPlayer" placeholder="Imię gracza" style="flex:1" onkeydown="if(event.key==='Enter')addPlayer()"/>
+    <input class="ainp" id="newPlayer" placeholder="Imie gracza" style="flex:1" onkeydown="if(event.key==='Enter')addPlayer()"/>
     <button class="abtn" style="width:auto;padding:9px 16px" onclick="addPlayer()">+</button>
   </div>
-  <div class="asect">EDYTUJ MECZE FAZY PUCHAROWEJ</div>
-  <div id="koEditorContent">
-    <select class="asel" id="koStageSel" onchange="renderKoEditor()" style="margin-bottom:8px">
-      <option value="4">1/16 finału</option>
-      <option value="5">1/8 finału</option>
-      <option value="6">1/4 finału</option>
-      <option value="7">1/2 finału</option>
-      <option value="8">Finał</option>
-    </select>
-    <div id="koMatchList"></div>
-  </div>
+
+  <div class="asect">FAZA PUCHAROWA – DRUŻYNY</div>
+  <select class="asel" id="koStageSel" onchange="renderKoEditor()" style="margin-bottom:8px">
+    <option value="4">1/16 finału</option>
+    <option value="5">1/8 finału</option>
+    <option value="6">1/4 finału</option>
+    <option value="7">1/2 finału</option>
+    <option value="8">Finał</option>
+  </select>
+  <div id="koMatchList"></div>
 </div>
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, onValue, set } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-
 // =====================================================
 // FIREBASE CONFIG
 // =====================================================
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, onValue, set, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
 const FB_CONFIG = {
   databaseURL: 'https://typer-ms2026-d3b1c-default-rtdb.europe-west1.firebasedatabase.app'
 };
@@ -205,80 +221,84 @@ const db = getDatabase(fbApp);
 
 // =====================================================
 // MATCHES DATA
+// English names match football-data.org API exactly
 // =====================================================
 const MATCHES = [
-  {id:'r1m01',r:1,g:'A',hn:'Mexico',an:'South Africa',hpl:'Meksyk',apl:'RPA',hf:'MX',af:'ZA',date:'2026-06-11',time:'21:00',venue:'Mexico City'},
-  {id:'r1m02',r:1,g:'A',hn:'South Korea',an:'Czech Republic',hpl:'Korea Pd.',apl:'Czechy',hf:'KR',af:'CZ',date:'2026-06-12',time:'04:00',venue:'Guadalajara'},
-  {id:'r1m03',r:1,g:'B',hn:'Canada',an:'Bosnia and Herzegovina',hpl:'Kanada',apl:'Bosnia i Herc.',hf:'CA',af:'BA',date:'2026-06-12',time:'21:00',venue:'Toronto'},
-  {id:'r1m04',r:1,g:'D',hn:'United States',an:'Paraguay',hpl:'USA',apl:'Paragwaj',hf:'US',af:'PY',date:'2026-06-13',time:'03:00',venue:'Los Angeles'},
-  {id:'r1m05',r:1,g:'B',hn:'Qatar',an:'Switzerland',hpl:'Katar',apl:'Szwajcaria',hf:'QA',af:'CH',date:'2026-06-13',time:'21:00',venue:'San Francisco'},
-  {id:'r1m06',r:1,g:'C',hn:'Brazil',an:'Morocco',hpl:'Brazylia',apl:'Maroko',hf:'BR',af:'MA',date:'2026-06-14',time:'00:00',venue:'New York/NJ'},
-  {id:'r1m07',r:1,g:'C',hn:'Haiti',an:'Scotland',hpl:'Haiti',apl:'Szkocja',hf:'HT',af:'SCT',date:'2026-06-14',time:'03:00',venue:'Boston'},
-  {id:'r1m08',r:1,g:'D',hn:'Australia',an:'Türkiye',hpl:'Australia',apl:'Turcja',hf:'AU',af:'TR',date:'2026-06-14',time:'06:00',venue:'Vancouver'},
-  {id:'r1m09',r:1,g:'E',hn:'Germany',an:'Curaçao',hpl:'Niemcy',apl:'Curacao',hf:'DE',af:'CW',date:'2026-06-14',time:'19:00',venue:'Houston'},
-  {id:'r1m10',r:1,g:'F',hn:'Netherlands',an:'Japan',hpl:'Holandia',apl:'Japonia',hf:'NL',af:'JP',date:'2026-06-14',time:'22:00',venue:'Dallas'},
-  {id:'r1m11',r:1,g:'E',hn:"Côte d'Ivoire",an:'Ecuador',hpl:'WKS',apl:'Ekwador',hf:'CI',af:'EC',date:'2026-06-15',time:'01:00',venue:'Philadelphia'},
-  {id:'r1m12',r:1,g:'F',hn:'Sweden',an:'Tunisia',hpl:'Szwecja',apl:'Tunezja',hf:'SE',af:'TN',date:'2026-06-15',time:'04:00',venue:'Monterrey'},
-  {id:'r1m13',r:1,g:'H',hn:'Spain',an:'Cabo Verde',hpl:'Hiszpania',apl:'Cabo Verde',hf:'ES',af:'CV',date:'2026-06-15',time:'18:00',venue:'Atlanta'},
-  {id:'r1m14',r:1,g:'G',hn:'Belgium',an:'Egypt',hpl:'Belgia',apl:'Egipt',hf:'BE',af:'EG',date:'2026-06-15',time:'21:00',venue:'Seattle'},
-  {id:'r1m15',r:1,g:'H',hn:'Saudi Arabia',an:'Uruguay',hpl:'Arabia Saud.',apl:'Urugwaj',hf:'SA',af:'UY',date:'2026-06-16',time:'00:00',venue:'Miami'},
-  {id:'r1m16',r:1,g:'G',hn:'IR Iran',an:'New Zealand',hpl:'Iran',apl:'Nowa Zelandia',hf:'IR',af:'NZ',date:'2026-06-16',time:'03:00',venue:'Los Angeles'},
-  {id:'r1m17',r:1,g:'I',hn:'France',an:'Senegal',hpl:'Francja',apl:'Senegal',hf:'FR',af:'SN',date:'2026-06-16',time:'21:00',venue:'New York/NJ'},
-  {id:'r1m18',r:1,g:'I',hn:'Iraq',an:'Norway',hpl:'Irak',apl:'Norwegia',hf:'IQ',af:'NO',date:'2026-06-17',time:'00:00',venue:'Boston'},
-  {id:'r1m19',r:1,g:'J',hn:'Argentina',an:'Algeria',hpl:'Argentyna',apl:'Algieria',hf:'AR',af:'DZ',date:'2026-06-17',time:'03:00',venue:'Kansas City'},
-  {id:'r1m20',r:1,g:'J',hn:'Austria',an:'Jordan',hpl:'Austria',apl:'Jordania',hf:'AT',af:'JO',date:'2026-06-17',time:'06:00',venue:'San Francisco'},
-  {id:'r1m21',r:1,g:'K',hn:'Portugal',an:'DR Congo',hpl:'Portugalia',apl:'DR Kongo',hf:'PT',af:'CD',date:'2026-06-17',time:'19:00',venue:'Houston'},
-  {id:'r1m22',r:1,g:'L',hn:'England',an:'Croatia',hpl:'Anglia',apl:'Chorwacja',hf:'ENG',af:'HR',date:'2026-06-17',time:'22:00',venue:'Dallas'},
-  {id:'r1m23',r:1,g:'L',hn:'Ghana',an:'Panama',hpl:'Ghana',apl:'Panama',hf:'GH',af:'PA',date:'2026-06-18',time:'01:00',venue:'Toronto'},
-  {id:'r1m24',r:1,g:'K',hn:'Uzbekistan',an:'Colombia',hpl:'Uzbekistan',apl:'Kolumbia',hf:'UZ',af:'CO',date:'2026-06-18',time:'04:00',venue:'Mexico City'},
-  {id:'r2m01',r:2,g:'A',hn:'Czech Republic',an:'South Africa',hpl:'Czechy',apl:'RPA',hf:'CZ',af:'ZA',date:'2026-06-18',time:'18:00',venue:'Atlanta'},
-  {id:'r2m02',r:2,g:'B',hn:'Switzerland',an:'Bosnia and Herzegovina',hpl:'Szwajcaria',apl:'Bosnia i Herc.',hf:'CH',af:'BA',date:'2026-06-18',time:'21:00',venue:'Los Angeles'},
-  {id:'r2m03',r:2,g:'B',hn:'Canada',an:'Qatar',hpl:'Kanada',apl:'Katar',hf:'CA',af:'QA',date:'2026-06-19',time:'00:00',venue:'Vancouver'},
-  {id:'r2m04',r:2,g:'A',hn:'Mexico',an:'South Korea',hpl:'Meksyk',apl:'Korea Pd.',hf:'MX',af:'KR',date:'2026-06-19',time:'03:00',venue:'Guadalajara'},
-  {id:'r2m05',r:2,g:'D',hn:'Türkiye',an:'Paraguay',hpl:'Turcja',apl:'Paragwaj',hf:'TR',af:'PY',date:'2026-06-19',time:'06:00',venue:'San Francisco'},
-  {id:'r2m06',r:2,g:'D',hn:'United States',an:'Australia',hpl:'USA',apl:'Australia',hf:'US',af:'AU',date:'2026-06-19',time:'21:00',venue:'Seattle'},
-  {id:'r2m07',r:2,g:'C',hn:'Scotland',an:'Morocco',hpl:'Szkocja',apl:'Maroko',hf:'SCT',af:'MA',date:'2026-06-20',time:'00:00',venue:'Boston'},
-  {id:'r2m08',r:2,g:'C',hn:'Brazil',an:'Haiti',hpl:'Brazylia',apl:'Haiti',hf:'BR',af:'HT',date:'2026-06-20',time:'02:30',venue:'Philadelphia'},
-  {id:'r2m09',r:2,g:'F',hn:'Netherlands',an:'Sweden',hpl:'Holandia',apl:'Szwecja',hf:'NL',af:'SE',date:'2026-06-20',time:'19:00',venue:'Houston'},
-  {id:'r2m10',r:2,g:'E',hn:'Germany',an:"Côte d'Ivoire",hpl:'Niemcy',apl:'WKS',hf:'DE',af:'CI',date:'2026-06-20',time:'22:00',venue:'Toronto'},
-  {id:'r2m11',r:2,g:'E',hn:'Ecuador',an:'Curaçao',hpl:'Ekwador',apl:'Curacao',hf:'EC',af:'CW',date:'2026-06-21',time:'02:00',venue:'Kansas City'},
-  {id:'r2m12',r:2,g:'F',hn:'Tunisia',an:'Japan',hpl:'Tunezja',apl:'Japonia',hf:'TN',af:'JP',date:'2026-06-21',time:'06:00',venue:'Monterrey'},
-  {id:'r2m13',r:2,g:'H',hn:'Spain',an:'Saudi Arabia',hpl:'Hiszpania',apl:'Arabia Saud.',hf:'ES',af:'SA',date:'2026-06-21',time:'18:00',venue:'Atlanta'},
-  {id:'r2m14',r:2,g:'G',hn:'Belgium',an:'IR Iran',hpl:'Belgia',apl:'Iran',hf:'BE',af:'IR',date:'2026-06-21',time:'21:00',venue:'Los Angeles'},
-  {id:'r2m15',r:2,g:'H',hn:'Uruguay',an:'Cabo Verde',hpl:'Urugwaj',apl:'Cabo Verde',hf:'UY',af:'CV',date:'2026-06-22',time:'00:00',venue:'Miami'},
-  {id:'r2m16',r:2,g:'G',hn:'New Zealand',an:'Egypt',hpl:'Nowa Zelandia',apl:'Egipt',hf:'NZ',af:'EG',date:'2026-06-22',time:'03:00',venue:'Vancouver'},
-  {id:'r2m17',r:2,g:'J',hn:'Argentina',an:'Austria',hpl:'Argentyna',apl:'Austria',hf:'AR',af:'AT',date:'2026-06-22',time:'19:00',venue:'Dallas'},
-  {id:'r2m18',r:2,g:'I',hn:'France',an:'Iraq',hpl:'Francja',apl:'Irak',hf:'FR',af:'IQ',date:'2026-06-22',time:'23:00',venue:'Philadelphia'},
-  {id:'r2m19',r:2,g:'I',hn:'Norway',an:'Senegal',hpl:'Norwegia',apl:'Senegal',hf:'NO',af:'SN',date:'2026-06-23',time:'02:00',venue:'New York/NJ'},
-  {id:'r2m20',r:2,g:'J',hn:'Jordan',an:'Algeria',hpl:'Jordania',apl:'Algieria',hf:'JO',af:'DZ',date:'2026-06-23',time:'05:00',venue:'San Francisco'},
-  {id:'r2m21',r:2,g:'K',hn:'Portugal',an:'Uzbekistan',hpl:'Portugalia',apl:'Uzbekistan',hf:'PT',af:'UZ',date:'2026-06-23',time:'19:00',venue:'Houston'},
-  {id:'r2m22',r:2,g:'L',hn:'England',an:'Ghana',hpl:'Anglia',apl:'Ghana',hf:'ENG',af:'GH',date:'2026-06-23',time:'22:00',venue:'Boston'},
-  {id:'r2m23',r:2,g:'L',hn:'Panama',an:'Croatia',hpl:'Panama',apl:'Chorwacja',hf:'PA',af:'HR',date:'2026-06-24',time:'01:00',venue:'Toronto'},
-  {id:'r2m24',r:2,g:'K',hn:'Colombia',an:'DR Congo',hpl:'Kolumbia',apl:'DR Kongo',hf:'CO',af:'CD',date:'2026-06-24',time:'04:00',venue:'Guadalajara'},
-  {id:'r3m01',r:3,g:'B',hn:'Switzerland',an:'Canada',hpl:'Szwajcaria',apl:'Kanada',hf:'CH',af:'CA',date:'2026-06-24',time:'21:00',venue:'Vancouver'},
-  {id:'r3m02',r:3,g:'B',hn:'Bosnia and Herzegovina',an:'Qatar',hpl:'Bosnia i Herc.',apl:'Katar',hf:'BA',af:'QA',date:'2026-06-24',time:'21:00',venue:'Seattle'},
-  {id:'r3m03',r:3,g:'C',hn:'Scotland',an:'Brazil',hpl:'Szkocja',apl:'Brazylia',hf:'SCT',af:'BR',date:'2026-06-25',time:'00:00',venue:'Miami'},
-  {id:'r3m04',r:3,g:'C',hn:'Morocco',an:'Haiti',hpl:'Maroko',apl:'Haiti',hf:'MA',af:'HT',date:'2026-06-25',time:'00:00',venue:'Atlanta'},
-  {id:'r3m05',r:3,g:'A',hn:'Czech Republic',an:'Mexico',hpl:'Czechy',apl:'Meksyk',hf:'CZ',af:'MX',date:'2026-06-25',time:'03:00',venue:'Mexico City'},
-  {id:'r3m06',r:3,g:'A',hn:'South Africa',an:'South Korea',hpl:'RPA',apl:'Korea Pd.',hf:'ZA',af:'KR',date:'2026-06-25',time:'03:00',venue:'Monterrey'},
-  {id:'r3m07',r:3,g:'D',hn:'Türkiye',an:'United States',hpl:'Turcja',apl:'USA',hf:'TR',af:'US',date:'2026-06-26',time:'04:00',venue:'Los Angeles'},
-  {id:'r3m08',r:3,g:'D',hn:'Paraguay',an:'Australia',hpl:'Paragwaj',apl:'Australia',hf:'PY',af:'AU',date:'2026-06-26',time:'04:00',venue:'San Francisco'},
-  {id:'r3m09',r:3,g:'L',hn:'England',an:'Panama',hpl:'Anglia',apl:'Panama',hf:'ENG',af:'PA',date:'2026-06-28',time:'04:00',venue:'New York/NJ'},
-  {id:'r3m10',r:3,g:'L',hn:'Ghana',an:'Croatia',hpl:'Ghana',apl:'Chorwacja',hf:'GH',af:'HR',date:'2026-06-28',time:'04:00',venue:'Los Angeles'},
-  {id:'r3m11',r:3,g:'E',hn:'Germany',an:'Ecuador',hpl:'Niemcy',apl:'Ekwador',hf:'DE',af:'EC',date:'2026-06-26',time:'21:00',venue:'Houston'},
-  {id:'r3m12',r:3,g:'E',hn:"Côte d'Ivoire",an:'Curaçao',hpl:'WKS',apl:'Curacao',hf:'CI',af:'CW',date:'2026-06-26',time:'21:00',venue:'Kansas City'},
-  {id:'r3m13',r:3,g:'F',hn:'Netherlands',an:'Tunisia',hpl:'Holandia',apl:'Tunezja',hf:'NL',af:'TN',date:'2026-06-27',time:'00:00',venue:'Dallas'},
-  {id:'r3m14',r:3,g:'F',hn:'Sweden',an:'Japan',hpl:'Szwecja',apl:'Japonia',hf:'SE',af:'JP',date:'2026-06-27',time:'00:00',venue:'Monterrey'},
-  {id:'r3m15',r:3,g:'G',hn:'Belgium',an:'New Zealand',hpl:'Belgia',apl:'Nowa Zelandia',hf:'BE',af:'NZ',date:'2026-06-27',time:'04:00',venue:'Seattle'},
-  {id:'r3m16',r:3,g:'G',hn:'IR Iran',an:'Egypt',hpl:'Iran',apl:'Egipt',hf:'IR',af:'EG',date:'2026-06-27',time:'04:00',venue:'Los Angeles'},
-  {id:'r3m17',r:3,g:'H',hn:'Spain',an:'Uruguay',hpl:'Hiszpania',apl:'Urugwaj',hf:'ES',af:'UY',date:'2026-06-27',time:'21:00',venue:'Atlanta'},
-  {id:'r3m18',r:3,g:'H',hn:'Saudi Arabia',an:'Cabo Verde',hpl:'Arabia Saud.',apl:'Cabo Verde',hf:'SA',af:'CV',date:'2026-06-27',time:'21:00',venue:'Miami'},
-  {id:'r3m19',r:3,g:'I',hn:'France',an:'Norway',hpl:'Francja',apl:'Norwegia',hf:'FR',af:'NO',date:'2026-06-28',time:'00:00',venue:'New York/NJ'},
-  {id:'r3m20',r:3,g:'I',hn:'Iraq',an:'Senegal',hpl:'Irak',apl:'Senegal',hf:'IQ',af:'SN',date:'2026-06-28',time:'00:00',venue:'Boston'},
-  {id:'r3m21',r:3,g:'J',hn:'Argentina',an:'Jordan',hpl:'Argentyna',apl:'Jordania',hf:'AR',af:'JO',date:'2026-06-28',time:'21:00',venue:'Kansas City'},
-  {id:'r3m22',r:3,g:'J',hn:'Algeria',an:'Austria',hpl:'Algieria',apl:'Austria',hf:'DZ',af:'AT',date:'2026-06-28',time:'21:00',venue:'San Francisco'},
-  {id:'r3m23',r:3,g:'K',hn:'Portugal',an:'Colombia',hpl:'Portugalia',apl:'Kolumbia',hf:'PT',af:'CO',date:'2026-06-29',time:'00:00',venue:'Houston'},
-  {id:'r3m24',r:3,g:'K',hn:'Uzbekistan',an:'DR Congo',hpl:'Uzbekistan',apl:'DR Kongo',hf:'UZ',af:'CD',date:'2026-06-29',time:'00:00',venue:'Guadalajara'},
+  // ROUND 1
+  {id:'r1m01',r:1,g:'A',hn:'Mexico',      an:'South Africa',   hpl:'Meksyk',      apl:'RPA',           hf:'MX', af:'ZA',  date:'2026-06-11',time:'21:00',venue:'Mexico City'},
+  {id:'r1m02',r:1,g:'A',hn:'South Korea', an:'Czech Republic', hpl:'Korea Pd.',   apl:'Czechy',         hf:'KR', af:'CZ',  date:'2026-06-12',time:'04:00',venue:'Guadalajara'},
+  {id:'r1m03',r:1,g:'B',hn:'Canada',      an:'Bosnia and Herzegovina',hpl:'Kanada',apl:'Bosnia i Herc.',hf:'CA', af:'BA',  date:'2026-06-12',time:'21:00',venue:'Toronto'},
+  {id:'r1m04',r:1,g:'D',hn:'United States',an:'Paraguay',      hpl:'USA',         apl:'Paragwaj',       hf:'US', af:'PY',  date:'2026-06-13',time:'03:00',venue:'Los Angeles'},
+  {id:'r1m05',r:1,g:'B',hn:'Qatar',       an:'Switzerland',    hpl:'Katar',       apl:'Szwajcaria',     hf:'QA', af:'CH',  date:'2026-06-13',time:'21:00',venue:'San Francisco'},
+  {id:'r1m06',r:1,g:'C',hn:'Brazil',      an:'Morocco',        hpl:'Brazylia',    apl:'Maroko',         hf:'BR', af:'MA',  date:'2026-06-14',time:'00:00',venue:'New York/NJ'},
+  {id:'r1m07',r:1,g:'C',hn:'Haiti',       an:'Scotland',       hpl:'Haiti',       apl:'Szkocja',        hf:'HT', af:'SCT', date:'2026-06-14',time:'03:00',venue:'Boston'},
+  {id:'r1m08',r:1,g:'D',hn:'Australia',   an:'Türkiye',        hpl:'Australia',   apl:'Turcja',         hf:'AU', af:'TR',  date:'2026-06-14',time:'06:00',venue:'Vancouver'},
+  {id:'r1m09',r:1,g:'E',hn:'Germany',     an:'Curaçao',        hpl:'Niemcy',      apl:'Curacao',        hf:'DE', af:'CW',  date:'2026-06-14',time:'19:00',venue:'Houston'},
+  {id:'r1m10',r:1,g:'F',hn:'Netherlands', an:'Japan',          hpl:'Holandia',    apl:'Japonia',        hf:'NL', af:'JP',  date:'2026-06-14',time:'22:00',venue:'Dallas'},
+  {id:'r1m11',r:1,g:'E',hn:"Côte d'Ivoire",an:'Ecuador',      hpl:'WKS',         apl:'Ekwador',        hf:'CI', af:'EC',  date:'2026-06-15',time:'01:00',venue:'Philadelphia'},
+  {id:'r1m12',r:1,g:'F',hn:'Sweden',      an:'Tunisia',        hpl:'Szwecja',     apl:'Tunezja',        hf:'SE', af:'TN',  date:'2026-06-15',time:'04:00',venue:'Monterrey'},
+  {id:'r1m13',r:1,g:'H',hn:'Spain',       an:'Cabo Verde',     hpl:'Hiszpania',   apl:'Cabo Verde',     hf:'ES', af:'CV',  date:'2026-06-15',time:'18:00',venue:'Atlanta'},
+  {id:'r1m14',r:1,g:'G',hn:'Belgium',     an:'Egypt',          hpl:'Belgia',      apl:'Egipt',          hf:'BE', af:'EG',  date:'2026-06-15',time:'21:00',venue:'Seattle'},
+  {id:'r1m15',r:1,g:'H',hn:'Saudi Arabia',an:'Uruguay',        hpl:'Arabia Saud.',apl:'Urugwaj',        hf:'SA', af:'UY',  date:'2026-06-16',time:'00:00',venue:'Miami'},
+  {id:'r1m16',r:1,g:'G',hn:'IR Iran',     an:'New Zealand',    hpl:'Iran',        apl:'Nowa Zelandia',  hf:'IR', af:'NZ',  date:'2026-06-16',time:'03:00',venue:'Los Angeles'},
+  {id:'r1m17',r:1,g:'I',hn:'France',      an:'Senegal',        hpl:'Francja',     apl:'Senegal',        hf:'FR', af:'SN',  date:'2026-06-16',time:'21:00',venue:'New York/NJ'},
+  {id:'r1m18',r:1,g:'I',hn:'Iraq',        an:'Norway',         hpl:'Irak',        apl:'Norwegia',       hf:'IQ', af:'NO',  date:'2026-06-17',time:'00:00',venue:'Boston'},
+  {id:'r1m19',r:1,g:'J',hn:'Argentina',   an:'Algeria',        hpl:'Argentyna',   apl:'Algieria',       hf:'AR', af:'DZ',  date:'2026-06-17',time:'03:00',venue:'Kansas City'},
+  {id:'r1m20',r:1,g:'J',hn:'Austria',     an:'Jordan',         hpl:'Austria',     apl:'Jordania',       hf:'AT', af:'JO',  date:'2026-06-17',time:'06:00',venue:'San Francisco'},
+  {id:'r1m21',r:1,g:'K',hn:'Portugal',    an:'DR Congo',       hpl:'Portugalia',  apl:'DR Kongo',       hf:'PT', af:'CD',  date:'2026-06-17',time:'19:00',venue:'Houston'},
+  {id:'r1m22',r:1,g:'L',hn:'England',     an:'Croatia',        hpl:'Anglia',      apl:'Chorwacja',      hf:'ENG',af:'HR',  date:'2026-06-17',time:'22:00',venue:'Dallas'},
+  {id:'r1m23',r:1,g:'L',hn:'Ghana',       an:'Panama',         hpl:'Ghana',       apl:'Panama',         hf:'GH', af:'PA',  date:'2026-06-18',time:'01:00',venue:'Toronto'},
+  {id:'r1m24',r:1,g:'K',hn:'Uzbekistan',  an:'Colombia',       hpl:'Uzbekistan',  apl:'Kolumbia',       hf:'UZ', af:'CO',  date:'2026-06-18',time:'04:00',venue:'Mexico City'},
+  // ROUND 2
+  {id:'r2m01',r:2,g:'A',hn:'Czech Republic',an:'South Africa', hpl:'Czechy',      apl:'RPA',            hf:'CZ', af:'ZA',  date:'2026-06-18',time:'18:00',venue:'Atlanta'},
+  {id:'r2m02',r:2,g:'B',hn:'Switzerland', an:'Bosnia and Herzegovina',hpl:'Szwajcaria',apl:'Bosnia i Herc.',hf:'CH',af:'BA',date:'2026-06-18',time:'21:00',venue:'Los Angeles'},
+  {id:'r2m03',r:2,g:'B',hn:'Canada',      an:'Qatar',          hpl:'Kanada',      apl:'Katar',          hf:'CA', af:'QA',  date:'2026-06-19',time:'00:00',venue:'Vancouver'},
+  {id:'r2m04',r:2,g:'A',hn:'Mexico',      an:'South Korea',    hpl:'Meksyk',      apl:'Korea Pd.',      hf:'MX', af:'KR',  date:'2026-06-19',time:'03:00',venue:'Guadalajara'},
+  {id:'r2m05',r:2,g:'D',hn:'Türkiye',     an:'Paraguay',       hpl:'Turcja',      apl:'Paragwaj',       hf:'TR', af:'PY',  date:'2026-06-19',time:'06:00',venue:'San Francisco'},
+  {id:'r2m06',r:2,g:'D',hn:'United States',an:'Australia',     hpl:'USA',         apl:'Australia',      hf:'US', af:'AU',  date:'2026-06-19',time:'21:00',venue:'Seattle'},
+  {id:'r2m07',r:2,g:'C',hn:'Scotland',    an:'Morocco',        hpl:'Szkocja',     apl:'Maroko',         hf:'SCT',af:'MA',  date:'2026-06-20',time:'00:00',venue:'Boston'},
+  {id:'r2m08',r:2,g:'C',hn:'Brazil',      an:'Haiti',          hpl:'Brazylia',    apl:'Haiti',          hf:'BR', af:'HT',  date:'2026-06-20',time:'02:30',venue:'Philadelphia'},
+  {id:'r2m09',r:2,g:'F',hn:'Netherlands', an:'Sweden',         hpl:'Holandia',    apl:'Szwecja',        hf:'NL', af:'SE',  date:'2026-06-20',time:'19:00',venue:'Houston'},
+  {id:'r2m10',r:2,g:'E',hn:'Germany',     an:"Côte d'Ivoire",  hpl:'Niemcy',      apl:'WKS',            hf:'DE', af:'CI',  date:'2026-06-20',time:'22:00',venue:'Toronto'},
+  {id:'r2m11',r:2,g:'E',hn:'Ecuador',     an:'Curaçao',        hpl:'Ekwador',     apl:'Curacao',        hf:'EC', af:'CW',  date:'2026-06-21',time:'02:00',venue:'Kansas City'},
+  {id:'r2m12',r:2,g:'F',hn:'Tunisia',     an:'Japan',          hpl:'Tunezja',     apl:'Japonia',        hf:'TN', af:'JP',  date:'2026-06-21',time:'06:00',venue:'Monterrey'},
+  {id:'r2m13',r:2,g:'H',hn:'Spain',       an:'Saudi Arabia',   hpl:'Hiszpania',   apl:'Arabia Saud.',   hf:'ES', af:'SA',  date:'2026-06-21',time:'18:00',venue:'Atlanta'},
+  {id:'r2m14',r:2,g:'G',hn:'Belgium',     an:'IR Iran',        hpl:'Belgia',      apl:'Iran',           hf:'BE', af:'IR',  date:'2026-06-21',time:'21:00',venue:'Los Angeles'},
+  {id:'r2m15',r:2,g:'H',hn:'Uruguay',     an:'Cabo Verde',     hpl:'Urugwaj',     apl:'Cabo Verde',     hf:'UY', af:'CV',  date:'2026-06-22',time:'00:00',venue:'Miami'},
+  {id:'r2m16',r:2,g:'G',hn:'New Zealand', an:'Egypt',          hpl:'Nowa Zelandia',apl:'Egipt',         hf:'NZ', af:'EG',  date:'2026-06-22',time:'03:00',venue:'Vancouver'},
+  {id:'r2m17',r:2,g:'J',hn:'Argentina',   an:'Austria',        hpl:'Argentyna',   apl:'Austria',        hf:'AR', af:'AT',  date:'2026-06-22',time:'19:00',venue:'Dallas'},
+  {id:'r2m18',r:2,g:'I',hn:'France',      an:'Iraq',           hpl:'Francja',     apl:'Irak',           hf:'FR', af:'IQ',  date:'2026-06-22',time:'23:00',venue:'Philadelphia'},
+  {id:'r2m19',r:2,g:'I',hn:'Norway',      an:'Senegal',        hpl:'Norwegia',    apl:'Senegal',        hf:'NO', af:'SN',  date:'2026-06-23',time:'02:00',venue:'New York/NJ'},
+  {id:'r2m20',r:2,g:'J',hn:'Jordan',      an:'Algeria',        hpl:'Jordania',    apl:'Algieria',       hf:'JO', af:'DZ',  date:'2026-06-23',time:'05:00',venue:'San Francisco'},
+  {id:'r2m21',r:2,g:'K',hn:'Portugal',    an:'Uzbekistan',     hpl:'Portugalia',  apl:'Uzbekistan',     hf:'PT', af:'UZ',  date:'2026-06-23',time:'19:00',venue:'Houston'},
+  {id:'r2m22',r:2,g:'L',hn:'England',     an:'Ghana',          hpl:'Anglia',      apl:'Ghana',          hf:'ENG',af:'GH',  date:'2026-06-23',time:'22:00',venue:'Boston'},
+  {id:'r2m23',r:2,g:'L',hn:'Panama',      an:'Croatia',        hpl:'Panama',      apl:'Chorwacja',      hf:'PA', af:'HR',  date:'2026-06-24',time:'01:00',venue:'Toronto'},
+  {id:'r2m24',r:2,g:'K',hn:'Colombia',    an:'DR Congo',       hpl:'Kolumbia',    apl:'DR Kongo',       hf:'CO', af:'CD',  date:'2026-06-24',time:'04:00',venue:'Guadalajara'},
+  // ROUND 3
+  {id:'r3m01',r:3,g:'B',hn:'Switzerland', an:'Canada',         hpl:'Szwajcaria',  apl:'Kanada',         hf:'CH', af:'CA',  date:'2026-06-24',time:'21:00',venue:'Vancouver'},
+  {id:'r3m02',r:3,g:'B',hn:'Bosnia and Herzegovina',an:'Qatar',hpl:'Bosnia i Herc.',apl:'Katar',        hf:'BA', af:'QA',  date:'2026-06-24',time:'21:00',venue:'Seattle'},
+  {id:'r3m03',r:3,g:'C',hn:'Scotland',    an:'Brazil',         hpl:'Szkocja',     apl:'Brazylia',       hf:'SCT',af:'BR',  date:'2026-06-25',time:'00:00',venue:'Miami'},
+  {id:'r3m04',r:3,g:'C',hn:'Morocco',     an:'Haiti',          hpl:'Maroko',      apl:'Haiti',          hf:'MA', af:'HT',  date:'2026-06-25',time:'00:00',venue:'Atlanta'},
+  {id:'r3m05',r:3,g:'A',hn:'Czech Republic',an:'Mexico',       hpl:'Czechy',      apl:'Meksyk',         hf:'CZ', af:'MX',  date:'2026-06-25',time:'03:00',venue:'Mexico City'},
+  {id:'r3m06',r:3,g:'A',hn:'South Africa',an:'South Korea',    hpl:'RPA',         apl:'Korea Pd.',      hf:'ZA', af:'KR',  date:'2026-06-25',time:'03:00',venue:'Monterrey'},
+  {id:'r3m07',r:3,g:'D',hn:'Türkiye',     an:'United States',  hpl:'Turcja',      apl:'USA',            hf:'TR', af:'US',  date:'2026-06-26',time:'04:00',venue:'Los Angeles'},
+  {id:'r3m08',r:3,g:'D',hn:'Paraguay',    an:'Australia',      hpl:'Paragwaj',    apl:'Australia',      hf:'PY', af:'AU',  date:'2026-06-26',time:'04:00',venue:'San Francisco'},
+  {id:'r3m09',r:3,g:'L',hn:'England',     an:'Panama',         hpl:'Anglia',      apl:'Panama',         hf:'ENG',af:'PA',  date:'2026-06-28',time:'04:00',venue:'New York/NJ'},
+  {id:'r3m10',r:3,g:'L',hn:'Ghana',       an:'Croatia',        hpl:'Ghana',       apl:'Chorwacja',      hf:'GH', af:'HR',  date:'2026-06-28',time:'04:00',venue:'Los Angeles'},
+  {id:'r3m11',r:3,g:'E',hn:'Germany',     an:'Ecuador',        hpl:'Niemcy',      apl:'Ekwador',        hf:'DE', af:'EC',  date:'2026-06-26',time:'21:00',venue:'Houston'},
+  {id:'r3m12',r:3,g:'E',hn:"Cote d'Ivoire",an:'Curaçao',      hpl:'WKS',         apl:'Curacao',        hf:'CI', af:'CW',  date:'2026-06-26',time:'21:00',venue:'Kansas City'},
+  {id:'r3m13',r:3,g:'F',hn:'Netherlands', an:'Tunisia',        hpl:'Holandia',    apl:'Tunezja',        hf:'NL', af:'TN',  date:'2026-06-27',time:'00:00',venue:'Dallas'},
+  {id:'r3m14',r:3,g:'F',hn:'Sweden',      an:'Japan',          hpl:'Szwecja',     apl:'Japonia',        hf:'SE', af:'JP',  date:'2026-06-27',time:'00:00',venue:'Monterrey'},
+  {id:'r3m15',r:3,g:'G',hn:'Belgium',     an:'New Zealand',    hpl:'Belgia',      apl:'Nowa Zelandia',  hf:'BE', af:'NZ',  date:'2026-06-27',time:'04:00',venue:'Seattle'},
+  {id:'r3m16',r:3,g:'G',hn:'IR Iran',     an:'Egypt',          hpl:'Iran',        apl:'Egipt',          hf:'IR', af:'EG',  date:'2026-06-27',time:'04:00',venue:'Los Angeles'},
+  {id:'r3m17',r:3,g:'H',hn:'Spain',       an:'Uruguay',        hpl:'Hiszpania',   apl:'Urugwaj',        hf:'ES', af:'UY',  date:'2026-06-27',time:'21:00',venue:'Atlanta'},
+  {id:'r3m18',r:3,g:'H',hn:'Saudi Arabia',an:'Cabo Verde',     hpl:'Arabia Saud.',apl:'Cabo Verde',     hf:'SA', af:'CV',  date:'2026-06-27',time:'21:00',venue:'Miami'},
+  {id:'r3m19',r:3,g:'I',hn:'France',      an:'Norway',         hpl:'Francja',     apl:'Norwegia',       hf:'FR', af:'NO',  date:'2026-06-28',time:'00:00',venue:'New York/NJ'},
+  {id:'r3m20',r:3,g:'I',hn:'Iraq',        an:'Senegal',        hpl:'Irak',        apl:'Senegal',        hf:'IQ', af:'SN',  date:'2026-06-28',time:'00:00',venue:'Boston'},
+  {id:'r3m21',r:3,g:'J',hn:'Argentina',   an:'Jordan',         hpl:'Argentyna',   apl:'Jordania',       hf:'AR', af:'JO',  date:'2026-06-28',time:'21:00',venue:'Kansas City'},
+  {id:'r3m22',r:3,g:'J',hn:'Algeria',     an:'Austria',        hpl:'Algieria',    apl:'Austria',        hf:'DZ', af:'AT',  date:'2026-06-28',time:'21:00',venue:'San Francisco'},
+  {id:'r3m23',r:3,g:'K',hn:'Portugal',    an:'Colombia',       hpl:'Portugalia',  apl:'Kolumbia',       hf:'PT', af:'CO',  date:'2026-06-29',time:'00:00',venue:'Houston'},
+  {id:'r3m24',r:3,g:'K',hn:'Uzbekistan',  an:'DR Congo',       hpl:'Uzbekistan',  apl:'DR Kongo',       hf:'UZ', af:'CD',  date:'2026-06-29',time:'00:00',venue:'Guadalajara'},
   {id:'ko16_01',r:4,g:'1/16',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-04',time:'19:00',venue:'TBD'},
   {id:'ko16_02',r:4,g:'1/16',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-04',time:'22:00',venue:'TBD'},
   {id:'ko16_03',r:4,g:'1/16',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-05',time:'01:00',venue:'TBD'},
@@ -309,7 +329,7 @@ const MATCHES = [
   {id:'ko4_04',r:6,g:'1/4',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-19',time:'00:00',venue:'TBD'},
   {id:'ko2_01',r:7,g:'1/2',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-21',time:'22:00',venue:'TBD'},
   {id:'ko2_02',r:7,g:'1/2',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-22',time:'22:00',venue:'TBD'},
-  {id:'ko_final',r:8,g:'FINAŁ',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-26',time:'22:00',venue:'MetLife Stadium'},
+  {id:'ko_final',r:8,g:'FINAL',hn:'TBD',an:'TBD',hpl:'TBD',apl:'TBD',hf:'__',af:'__',date:'2026-07-26',time:'22:00',venue:'MetLife Stadium'},
 ];
 
 const FLAGS = {
@@ -324,1031 +344,714 @@ const FLAGS = {
 const F = c => FLAGS[c]||'🏳️';
 
 // =====================================================
-// GLOBAL STATE
+// LOCAL STATE (mirrors Firebase, updated by listeners)
 // =====================================================
-let S = { players: [], typy: {}, wyniki: {}, apiKey: '', proxyUrl: '', koTeams: {} };
+let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'', koTeams:{} };
 let currentRound = 1;
-let isDataLoaded = false;
-let lastSaveTime = 0;
+let fbLoaded = false;
 
 // =====================================================
-// SAFE ID
+// FIREBASE LISTENERS – real-time sync
 // =====================================================
-function safeId(name) {
-  return name.replace(/[^a-zA-Z0-9_-]/g, '_');
-}
-
-// =====================================================
-// FIREBASE – REALTIME SYNC
-// =====================================================
-function saveToFirebase() {
-  lastSaveTime = Date.now();
-  set(ref(db, 'state'), {
-    players: S.players,
-    typy: S.typy,
-    wyniki: S.wyniki,
-    apiKey: S.apiKey,
-    proxyUrl: S.proxyUrl || '',
-    koTeams: S.koTeams || {}
-  }).catch(err => {
-    console.error('Save error:', err);
+function initFirebase() {
+  // Watch entire state
+  onValue(ref(db,'state'), snap => {
+    const d = snap.val();
+    if (d) {
+      S.players  = d.players  || [];
+      S.typy     = d.typy     || {};
+      S.wyniki   = d.wyniki   || {};
+      S.apiKey   = d.apiKey   || '';
+      S.proxyUrl = d.proxyUrl || '';
+      S.koTeams  = d.koTeams  || {};
+      // Zastosuj zapisane nazwy druzyn KO do tablicy MATCHES
+      Object.entries(S.koTeams||{}).forEach(([mid,t]) => {
+        const m = MATCHES.find(x=>x.id===mid);
+        if (m) { if(t.hpl) m.hpl=t.hpl; if(t.apl) m.apl=t.apl; }
+      });
+    } else {
+      // First run – seed default players
+      S.players = ['Gracz 1','Gracz 2','Gracz 3','Gracz 4','Gracz 5','Gracz 6','Gracz 7','Gracz 8'];
+      fbSave();
+    }
+    fbLoaded = true;
+    setFbBadge('ok','Firebase OK');
+    handleHash();
+    rebuildAdmin();
+    if (S.apiKey) { fetchScores(); }
+    else { setApiBadge('err','Brak klucza API'); }
+  }, err => {
+    setFbBadge('err','Blad Firebase');
   });
 }
 
-function setFbBadge(type, text) {
-  const el = document.getElementById('fbBadge');
-  if (el) {
-    el.className = `badge b-${type}`;
-    el.textContent = text;
-  }
+function fbSave() {
+  set(ref(db,'state'), { players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey, proxyUrl:S.proxyUrl||'', koTeams:S.koTeams||{} });
 }
 
-function setApiBadge(type, text) {
-  const el = document.getElementById('apiBadge');
-  if (el) {
-    el.className = `badge b-${type}`;
-    el.textContent = text;
-  }
+function setFbBadge(t,l) {
+  const el=document.getElementById('fbBadge');
+  el.className='badge b-'+t; el.textContent=l;
+}
+function setApiBadge(t,l) {
+  const el=document.getElementById('apiBadge');
+  el.className='badge b-'+t; el.textContent=l;
 }
 
 // =====================================================
-// FOOTBALL-DATA.ORG API
+// FOOTBALL-DATA.ORG – live scores
+// Names must match API exactly (English)
 // =====================================================
 async function fetchScores() {
   if (!S.apiKey) return;
-  
-  setApiBadge('wait', 'Ładowanie...');
-  
+  setApiBadge('wait','Ladowanie...');
   try {
-    const proxy = S.proxyUrl || '';
-    const url = proxy ? `${proxy}/v4/competitions/WC/matches` : 'https://api.football-data.org/v4/competitions/WC/matches';
-    
-    const response = await fetch(url, {
-      headers: { 'X-Auth-Token': S.apiKey }
-    });
-    
-    if (!response.ok) {
-      if (response.status === 401) setApiBadge('err', '401 Błędny klucz');
-      else if (response.status === 403) setApiBadge('err', '403 Brak dostępu do WC');
-      else if (response.status === 429) setApiBadge('err', '429 Limit zapytań');
-      else setApiBadge('err', `Błąd ${response.status}`);
+    // Używamy Cloudflare Worker jako proxy (omija CORS)
+    // Jeśli nie ma skonfigurowanego workera - próbuje bezpośrednio (działa np. z localhost)
+    const PROXY = S.proxyUrl || '';
+    let url, headers;
+    if (PROXY) {
+      url = PROXY + '/v4/competitions/WC/matches';
+      headers = { 'X-Auth-Token': S.apiKey };
+    } else {
+      url = 'https://api.football-data.org/v4/competitions/WC/matches';
+      headers = { 'X-Auth-Token': S.apiKey };
+    }
+    const r = await fetch(url, { headers });
+
+    // Pobierz treść błędu żeby wiedzieć co nie gra
+    const text = await r.text();
+    let data;
+    try { data = JSON.parse(text); } catch(_) { data = {}; }
+
+    if (r.status === 401) { setApiBadge('err','401 Bledny klucz'); return; }
+    if (r.status === 403) {
+      // 403 = plan nie obejmuje tej ligi LUB brak dostępu
+      const msg = data.message || data.detail || '';
+      setApiBadge('err', msg.includes('permission') ? '403 Plan nie obejmuje WC' : '403 Brak dostepu');
+      console.error('API 403:', text);
       return;
     }
-    
-    const data = await response.json();
-    const matches = data.matches || [];
+    if (r.status === 429) { setApiBadge('err','429 Limit zapytan'); return; }
+    if (!r.ok) { setApiBadge('err','Blad '+r.status); console.error('API error:', text); return; }
+
     let changed = false;
-    
-    for (const apiMatch of matches) {
-      const localMatch = findMatchByNames(
-        apiMatch.homeTeam?.shortName || apiMatch.homeTeam?.name || '',
-        apiMatch.awayTeam?.shortName || apiMatch.awayTeam?.name || ''
+    (data.matches||[]).forEach(m => {
+      const match = findByEnglishNames(
+        m.homeTeam?.shortName || m.homeTeam?.name || '',
+        m.awayTeam?.shortName || m.awayTeam?.name || ''
       );
-      
-      if (!localMatch) continue;
-      
-      const ft = apiMatch.score?.fullTime;
-      const ht = apiMatch.score?.halfTime;
-      const currentScore = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
-      const status = mapApiStatus(apiMatch.status);
-      
-      const newResult = {
-        home: currentScore ? currentScore.home : null,
-        away: currentScore ? currentScore.away : null,
-        status: status,
-        minute: apiMatch.minute || null
+      if (!match) return;
+      const ft  = m.score?.fullTime;
+      const ht  = m.score?.halfTime;
+      // API zwraca null dla przyszłych meczy, 0:0 dla trwających
+      const cur = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
+      const newW = {
+        home:   cur ? cur.home : null,
+        away:   cur ? cur.away : null,
+        status: mapSt(m.status),
+        minute: m.minute || null,
       };
-      
-      const oldResult = S.wyniki[localMatch.id];
-      
-      // Nie nadpisuj ręcznie wprowadzonych wyników FT lub LIVE
-      if (oldResult && (oldResult.status === 'ft' || oldResult.status === 'live')) {
-        if (newResult.home === null && newResult.away === null && status === 'upcoming') {
-          continue;
-        }
-      }
-      
-      if (!oldResult || 
-          oldResult.home !== newResult.home || 
-          oldResult.away !== newResult.away || 
-          oldResult.status !== newResult.status) {
-        S.wyniki[localMatch.id] = newResult;
+      const old = S.wyniki[match.id];
+      if (!old || old.home!==newW.home || old.away!==newW.away || old.status!==newW.status) {
+        S.wyniki[match.id] = newW;
         changed = true;
       }
-    }
-    
-    setApiBadge('ok', `Live (${matches.length} meczów)`);
-    
-    if (changed) {
-      saveToFirebase();
-    } else {
-      handleHash();
-      rebuildAdmin();
-    }
-    
-  } catch (error) {
-    console.error('Fetch scores error:', error);
-    setApiBadge('err', 'Błąd sieci/CORS');
+    });
+    const count = (data.matches||[]).length;
+    setApiBadge('ok', `Live (${count} meczy)`);
+    if (changed) { fbSave(); render(); }
+    else render(); // zawsze odswiezamy widok
+  } catch(e) {
+    // Network error (CORS, brak sieci itp)
+    setApiBadge('err', 'Blad sieci/CORS');
+    console.error('fetchScores error:', e);
   }
 }
 
-function findMatchByNames(homeName, awayName) {
-  const normalize = (s) => {
-    if (!s) return '';
-    return s.toLowerCase()
-      .replace(/[^\w\s]/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
+// Match API name to our match object
+function findByEnglishNames(hn, an) {
+  const norm = s => (s||'').toLowerCase()
+    .replace(/[^\w\s]/g,'').replace(/\s+/g,' ').trim();
+  // Build alias map for short names the API might return
+  const ALIAS = {
+    'usa':'united states','us':'united states','türkiye':'turkey','turkiye':'turkey',
+    'ir iran':'iran','côte divoire':'ivory coast',"cote divoire":'ivory coast',
+    'ivory coast':"côte d'ivoire",'south korea':'south korea','korea republic':'south korea',
+    'czechia':'czech republic','bosnia':'bosnia and herzegovina',
+    'dr congo':'dr congo','congo dr':'dr congo'
   };
-  
-  const aliases = {
-    'usa': 'united states',
-    'us': 'united states',
-    'türkiye': 'turkey',
-    'turkiye': 'turkey',
-    'ir iran': 'iran',
-    'côte divoire': 'ivory coast',
-    "cote d'ivoire": 'ivory coast',
-    'ivory coast': "côte d'ivoire",
-    'south korea': 'south korea',
-    'korea republic': 'south korea',
-    'czechia': 'czech republic',
-    'bosnia': 'bosnia and herzegovina',
-    'dr congo': 'dr congo',
-    'congo dr': 'dr congo'
-  };
-  
-  const getNormalized = (s) => {
-    const n = normalize(s);
-    return aliases[n] || n;
-  };
-  
-  const normHome = getNormalized(homeName);
-  const normAway = getNormalized(awayName);
-  
-  return MATCHES.find(match => {
-    const matchHome = getNormalized(match.hn);
-    const matchAway = getNormalized(match.an);
-    
-    const homeMatch = matchHome === normHome || 
-                      matchHome.includes(normHome.substring(0, 5)) || 
-                      normHome.includes(matchHome.substring(0, 5));
-    const awayMatch = matchAway === normAway || 
-                      matchAway.includes(normAway.substring(0, 5)) || 
-                      normAway.includes(matchAway.substring(0, 5));
-    
-    return homeMatch && awayMatch;
+  const na = s => { const n=norm(s); return ALIAS[n]||n; };
+  const h = na(hn), a = na(an);
+  return MATCHES.find(m => {
+    const mh = na(m.hn), ma = na(m.an);
+    const matchH = mh===h || mh.startsWith(h.slice(0,5)) || h.startsWith(mh.slice(0,5));
+    const matchA = ma===a || ma.startsWith(a.slice(0,5)) || a.startsWith(ma.slice(0,5));
+    return matchH && matchA;
   }) || null;
 }
 
-function mapApiStatus(status) {
-  if (!status) return 'upcoming';
-  const s = status.toUpperCase();
-  if (s === 'FINISHED' || s === 'AWARDED') return 'ft';
-  if (s === 'IN_PLAY' || s === 'PAUSED' || s === 'HALFTIME' || s === 'EXTRA_TIME' || s === 'PENALTY') return 'live';
+function mapSt(s) {
+  if (!s) return 'upcoming';
+  s = s.toUpperCase();
+  if (['FINISHED','AWARDED'].includes(s)) return 'ft';
+  if (['IN_PLAY','PAUSED','HALFTIME','EXTRA_TIME','PENALTY'].includes(s)) return 'live';
   return 'upcoming';
 }
 
 // =====================================================
-// SCORING SYSTEM
+// SCORING
 // =====================================================
-function calculatePoints(typ, wynik) {
-  if (!wynik || wynik.home === null || wynik.away === null) return null;
-  if (!typ || typ.home === undefined || typ.away === undefined) return null;
-  
-  const diffTyp = typ.home - typ.away;
-  const diffWyn = wynik.home - wynik.away;
-  let basePoints = 0;
-  
-  if (typ.home === wynik.home && typ.away === wynik.away) {
-    basePoints = 4;
-  } else if (diffTyp === diffWyn) {
-    basePoints = 3;
-  } else if ((typ.home > typ.away && wynik.home > wynik.away) ||
-             (typ.home < typ.away && wynik.home < wynik.away) ||
-             (typ.home === typ.away && wynik.home === wynik.away)) {
-    basePoints = 2;
-  } else {
-    basePoints = -1;
-  }
-  
-  return typ.x2 ? basePoints * 2 : basePoints;
+function pts(typ, w) {
+  if (!w||w.home===null||w.away===null||!typ) return null;
+  const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
+  let p;
+  if (tH===wH&&tA===wA) p=4;
+  else if (tH-tA===wH-wA) p=3;
+  else if ((tH>tA&&wH>wA)||(tH<tA&&wH<wA)||(tH===tA&&wH===wA)) p=2;
+  else p=-1;
+  return typ.x2 ? p*2 : p;
 }
 
-function getPointsIcon(typ, wynik) {
-  const pts = calculatePoints(typ, wynik);
-  if (pts === null) return '';
-  const base = typ?.x2 ? Math.abs(pts / 2) : Math.abs(pts);
-  if (base === 4) return '🟢🎉';
-  if (base === 3) return '🟢❕';
-  if (base === 2) return '🟢';
-  if (pts < 0) return '🔴';
-  return '';
+function icon(typ, w) {
+  if (!w||w.home===null||!typ) return '';
+  const p = pts(typ,w); if (p===null) return '';
+  const base = typ.x2 ? Math.abs(p/2) : Math.abs(p);
+  if (base===4) return '🟢🎉';
+  if (base===3) return '🟢❕';
+  if (base===2) return '🟢';
+  return '🔴';
 }
 
-function getPointsClass(typ, wynik) {
-  const pts = calculatePoints(typ, wynik);
-  if (pts === null) return '';
-  const base = typ?.x2 ? Math.abs(pts / 2) : Math.abs(pts);
-  if (base === 4) return 'p4';
-  if (base === 3) return 'p3';
-  if (base === 2) return 'p2';
-  if (pts < 0) return 'pn';
+function ptsClass(typ, w) {
+  const p = pts(typ,w); if (p===null) return '';
+  const base = typ?.x2 ? Math.abs(p/2) : Math.abs(p);
+  if (base===4) return 'p4';
+  if (base===3) return 'p3';
+  if (base===2) return 'p2';
+  if (p<0) return 'pn';
   return 'p0';
 }
 
-function getTotalPoints(player, roundFilter = null) {
-  let total = 0;
-  for (const match of MATCHES) {
-    if (roundFilter && match.r !== roundFilter) continue;
-    const typ = (S.typy[match.id] || {})[safeId(player)];
-    const wynik = S.wyniki[match.id];
-    const pts = calculatePoints(typ, wynik);
-    if (pts !== null) total += pts;
-  }
-  return total;
+function totalPts(player, roundFilter) {
+  return MATCHES.reduce((sum,m) => {
+    if (roundFilter && m.r!==roundFilter) return sum;
+    const p = pts((S.typy[m.id]||{})[player], S.wyniki[m.id]);
+    return sum + (p||0);
+  },0);
 }
 
 // =====================================================
-// CURRENT & NEXT MATCH
+// CURRENT / NEXT MATCH
 // =====================================================
-function getCurrentAndNextMatch() {
+function curNext() {
   const now = new Date();
-  let liveMatch = null;
-  let nextMatch = null;
-  let minDiff = Infinity;
-  
-  for (const match of MATCHES) {
-    const matchDate = new Date(`${match.date}T${match.time}:00`);
-    const matchEnd = new Date(matchDate.getTime() + 115 * 60000);
-    const wynik = S.wyniki[match.id];
-    
-    if (wynik?.status === 'live') {
-      liveMatch = match;
-      continue;
-    }
-    
-    if (wynik?.status === 'ft') continue;
-    
-    if (now >= matchDate && now <= matchEnd) {
-      liveMatch = match;
-      continue;
-    }
-    
-    const diff = matchDate - now;
-    if (diff > 0 && diff < minDiff) {
-      minDiff = diff;
-      nextMatch = match;
-    }
-  }
-  
-  return { liveMatch, nextMatch };
-}
-
-// =====================================================
-// RENDER FUNCTIONS
-// =====================================================
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, (m) => {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
+  let live=null, next=null, minD=Infinity;
+  MATCHES.forEach(m => {
+    const dt  = new Date(m.date+'T'+m.time+':00');
+    const end = new Date(dt.getTime()+115*60000);
+    const w   = S.wyniki[m.id];
+    if (w?.status==='live') { live=m; return; }
+    if (w?.status==='ft') return;
+    if (now>=dt && now<=end) { live=m; return; }
+    const d = dt-now;
+    if (d>0 && d<minD) { minD=d; next=m; }
   });
+  return {live,next};
 }
 
+// =====================================================
+// RENDER MAIN
+// =====================================================
 function render() {
-  if (!isDataLoaded) {
-    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Ładowanie danych z Firebase...</div>';
-    return;
-  }
-  
-  if (!S.players || S.players.length === 0) {
-    document.getElementById('app').innerHTML = '<div style="text-align:center;padding:40px;color:var(--mut)">Brak graczy. Dodaj ich w panelu admina.</div>';
-    return;
-  }
-  
-  const { liveMatch, nextMatch } = getCurrentAndNextMatch();
+  if (!fbLoaded) return;
+  const {live,next} = curNext();
   let html = '';
-  
-  if (liveMatch) {
-    html += renderMatchHero(liveMatch);
-    html += renderTipsTable(liveMatch);
-    html += renderLeaderboard(null);
-    html += renderUpcomingMatches(liveMatch);
+  if (live) {
+    html += renderHero(live,true);
+    html += renderTypy(live);
+    html += renderLB(null);
+    html += renderUpcoming(live);
   } else {
-    html += renderNoMatchInfo(nextMatch);
-    html += renderLeaderboard(null);
+    html += renderNoMatch(next);
+    html += renderLB(null);
   }
-  
   document.getElementById('app').innerHTML = html;
 }
 
-function renderMatchHero(match) {
-  const wynik = S.wyniki[match.id] || {};
-  const hasScore = wynik.home !== null && wynik.home !== undefined;
+function renderHero(m, isLive) {
+  const w = S.wyniki[m.id]||{};
+  const hasScore = w.home!==null && w.home!==undefined;
   let badge = '';
-  
-  if (wynik.status === 'live') {
-    badge = `<span class="tbadge live">🔴 LIVE ${wynik.minute ? wynik.minute + "'" : ''}</span>`;
-  } else if (wynik.status === 'ft') {
-    badge = `<span class="tbadge">FT</span>`;
-  } else {
-    badge = `<span class="tbadge">${match.time} CET</span>`;
-  }
-  
-  return `<div class="gap">
-    <div class="slabel">AKTUALNY MECZ</div>
-    <div class="mhero">
-      <div class="mmeta">
-        <span class="mgrp">GRUPA ${match.g} · ${match.venue}</span>
-        ${badge}
+  if      (w.status==='live') badge=`<span class="tbadge live">&#128308; LIVE ${w.minute?w.minute+"'":''}  </span>`;
+  else if (w.status==='ft')   badge=`<span class="tbadge">FT</span>`;
+  else                        badge=`<span class="tbadge">${m.time} CET</span>`;
+  return `<div class="gap"><div class="slabel">AKTUALNY MECZ</div>
+  <div class="mhero">
+    <div class="mmeta"><span class="mgrp">GRUPA ${m.g} &middot; ${m.venue}</span>${badge}</div>
+    <div class="mline">
+      <div class="tblock"><div class="tflag">${F(m.hf)}</div><div class="tname">${m.hpl}</div></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div class="score">${hasScore ? w.home+' : '+w.away : '&ndash; : &ndash;'}</div>
       </div>
-      <div class="mline">
-        <div class="tblock">
-          <div class="tflag">${F(match.hf)}</div>
-          <div class="tname">${escapeHtml(match.hpl)}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-          <div class="score">${hasScore ? `${wynik.home} : ${wynik.away}` : '– : –'}</div>
-        </div>
-        <div class="tblock">
-          <div class="tflag">${F(match.af)}</div>
-          <div class="tname">${escapeHtml(match.apl)}</div>
-        </div>
-      </div>
+      <div class="tblock"><div class="tflag">${F(m.af)}</div><div class="tname">${m.apl}</div></div>
     </div>
-  </div>`;
+  </div></div>`;
 }
 
-function renderTipsTable(match) {
-  const wynik = S.wyniki[match.id];
-  const hasResult = wynik && wynik.home !== null && wynik.away !== null;
-  
-  const rows = S.players.map(player => {
-    const typ = (S.typy[match.id] || {})[safeId(player)];
-    const points = hasResult ? calculatePoints(typ, wynik) : null;
-    const icon = hasResult ? getPointsIcon(typ, wynik) : '';
-    const pointsClass = points !== null ? getPointsClass(typ, wynik) : '';
-    const pointsDisplay = points !== null ? `<span class="pb ${pointsClass}">${points > 0 ? '+' : ''}${points}</span>` : '';
-    
-    const hasTip = typ && typ.home !== null && typ.home !== undefined && typ.away !== null && typ.away !== undefined;
-    const tipDisplay = hasTip ? `${typ.home}:${typ.away}${typ.x2 ? '<span class="x2b">X2</span>' : ''}` : '—';
-    
+function renderTypy(m) {
+  const w = S.wyniki[m.id];
+  const hasR = w && w.home!==null && w.away!==null;
+  const rows = S.players.map(p => {
+    const typ = (S.typy[m.id]||{})[p];
+    const p2  = hasR ? pts(typ,w) : null;
+    const ic  = hasR ? icon(typ,w) : '';
+    const pc  = p2!==null ? ptsClass(typ,w) : '';
+    const ptsH = p2!==null
+      ? `<span class="pb ${pc}">${p2>0?'+':''}${p2}</span>`
+      : '';
+    const ts = typ
+      ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`
+      : '&mdash;';
     return `<tr>
-      <td><span class="pname">${escapeHtml(player)}</span></td>
-      <td><span class="tscore">${tipDisplay}</span></td>
-      <td style="text-align:center">${icon ? `<span style="font-size:16px">${icon}</span>` : ''}</td>
-      <td style="text-align:right">${pointsDisplay}</td>
+      <td><span class="pname">${p}</span></td>
+      <td><span class="tscore">${ts}</span></td>
+      <td style="text-align:center">${ic?`<span style="font-size:16px">${ic}</span>`:''}</td>
+      <td style="text-align:right">${ptsH}</td>
     </tr>`;
   }).join('');
-  
-  return `<div class="gap">
-    <div class="slabel">TYPY</div>
-    <div class="card">
-      <table class="tt">
-        <thead>
-          <tr><th>Gracz</th><th>Typ</th><th style="text-align:center">Status</th><th style="text-align:right">Pkt</th></tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>
-  </div>`;
+  return `<div class="gap"><div class="slabel">TYPY</div>
+  <div class="card">
+    <table class="tt">
+      <thead><tr><th>Gracz</th><th>Typ</th><th style="text-align:center">Status</th><th style="text-align:right">Pkt</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div></div>`;
 }
 
-function renderLeaderboard(roundFilter) {
-  const label = roundFilter ? `TABELA LIVE – RUNDA ${roundFilter}` : 'TABELA LIVE – ŁĄCZNIE';
-  
-  const scores = S.players.map(player => ({
-    name: player,
-    points: getTotalPoints(player, roundFilter)
-  })).sort((a, b) => b.points - a.points);
-  
-  const rows = scores.map((score, index) => {
-    const rankClass = index === 0 ? 'r1' : index === 1 ? 'r2' : index === 2 ? 'r3' : '';
-    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1).toString();
-    
+function renderLB(rf) {
+  const label = rf ? `TABELA LIVE &ndash; RUNDA ${rf}` : 'TABELA LIVE &ndash; LACZNIE';
+  const sc = S.players
+    .map(p => ({n:p, pts:totalPts(p,rf)}))
+    .sort((a,b)=>b.pts-a.pts);
+  const rows = sc.map((s,i)=>{
+    const rc = i===0?'r1':i===1?'r2':i===2?'r3':'';
+    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
     return `<li class="lb-row">
-      <span class="rnk ${rankClass}">${medal}</span>
-      <span class="lb-n">${escapeHtml(score.name)}</span>
-      <span class="lb-p">${score.points}<span class="lb-pl">pkt</span></span>
+      <span class="rnk ${rc}">${medal||i+1}</span>
+      <span class="lb-n">${s.n}</span>
+      <span class="lb-p">${s.pts}<span class="lb-pl">pkt</span></span>
     </li>`;
   }).join('');
-  
-  return `<div class="gap">
-    <div class="slabel">${label}</div>
-    <ul class="lb-list">${rows}</ul>
-  </div>`;
+  return `<div class="gap"><div class="slabel">${label}</div>
+  <ul class="lb-list">${rows}</ul></div>`;
 }
 
-function renderUpcomingMatches(currentMatch) {
+function renderUpcoming(cur) {
   const now = new Date();
-  const upcoming = MATCHES.filter(match => {
-    if (currentMatch && match.id === currentMatch.id) return false;
-    const wynik = S.wyniki[match.id];
-    if (wynik?.status === 'ft') return false;
-    return new Date(`${match.date}T${match.time}:00`) > now;
-  }).slice(0, 5);
-  
-  if (upcoming.length === 0) return '';
-  
-  const rows = upcoming.map(match => `
+  const list = MATCHES.filter(m=>{
+    if (cur && m.id===cur.id) return false;
+    const w = S.wyniki[m.id];
+    if (w?.status==='ft') return false;
+    return new Date(m.date+'T'+m.time+':00') > now;
+  }).slice(0,5);
+  if (!list.length) return '';
+  const rows = list.map(m=>`
     <div class="urow">
-      <span class="utime">${match.time}</span>
+      <span class="utime">${m.time}</span>
       <div style="flex:1">
-        <div style="font-weight:500">${F(match.hf)} ${escapeHtml(match.hpl)} vs ${escapeHtml(match.apl)} ${F(match.af)}</div>
-        <div style="font-size:11px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">R${match.r} · Gr.${match.g} · ${match.venue}</div>
+        <div style="font-weight:500">${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}</div>
+        <div style="font-size:11px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">R${m.r} &middot; Gr.${m.g} &middot; ${m.venue}</div>
       </div>
-    </div>
-  `).join('');
-  
-  return `<div class="gap">
-    <div class="slabel">NAJBLIŻSZE MECZE</div>
-    <div class="ulist">${rows}</div>
-  </div>`;
+    </div>`).join('');
+  return `<div class="gap"><div class="slabel">NAJBLIZSZE MECZE</div>
+  <div class="ulist">${rows}</div></div>`;
 }
 
-function renderNoMatchInfo(nextMatch) {
+function renderNoMatch(next) {
   let hero = '';
-  
-  if (nextMatch) {
-    const matchDate = new Date(`${nextMatch.date}T${nextMatch.time}:00`);
-    const dateStr = matchDate.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long' });
-    
+  if (next) {
+    const dt = new Date(next.date+'T'+next.time+':00');
+    const ds = dt.toLocaleDateString('pl-PL',{weekday:'long',day:'numeric',month:'long'});
     hero = `<div class="mhero" style="text-align:center">
-      <div class="mgrp" style="margin-bottom:12px">RUNDA ${nextMatch.r} · GRUPA ${nextMatch.g} · ${nextMatch.venue}</div>
+      <div class="mgrp" style="margin-bottom:12px">RUNDA ${next.r} &middot; GRUPA ${next.g} &middot; ${next.venue}</div>
       <div class="mline">
-        <div class="tblock">
-          <div class="tflag">${F(nextMatch.hf)}</div>
-          <div class="tname">${nextMatch.hpl}</div>
-        </div>
+        <div class="tblock"><div class="tflag">${F(next.hf)}</div><div class="tname">${next.hpl}</div></div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-          <div class="score up">${nextMatch.time} CET</div>
-          <div style="font-size:11px;color:var(--mut)">${dateStr}</div>
+          <div class="score up">${next.time} CET</div>
+          <div style="font-size:11px;color:var(--mut)">${ds}</div>
         </div>
-        <div class="tblock">
-          <div class="tflag">${F(nextMatch.af)}</div>
-          <div class="tname">${nextMatch.apl}</div>
-        </div>
+        <div class="tblock"><div class="tflag">${F(next.af)}</div><div class="tname">${next.apl}</div></div>
       </div>
     </div>`;
   } else {
-    hero = `<div class="mhero" style="text-align:center">
-      <div style="font-size:48px">🏆</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--mut);letter-spacing:2px;margin-top:10px">BRAK NADCHODZĄCYCH MECZY</div>
-    </div>`;
+    hero = `<div class="mhero" style="text-align:center"><div style="font-size:48px">🏆</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--mut);letter-spacing:2px;margin-top:10px">BRAK NADCHODZACYCH MECZY</div></div>`;
   }
-  
-  return `<div class="gap"><div class="slabel">NAJBLIŻSZY MECZ</div>${hero}</div>` + renderUpcomingMatches(nextMatch);
+  return `<div class="gap"><div class="slabel">NAJBLIZSZY MECZ</div>${hero}</div>`+renderUpcoming(next);
 }
 
 // =====================================================
-// NAVIGATION – HASH-BASED (survives page refresh)
+// ROUND SUBPAGE
 // =====================================================
-function showPage(pageId) {
-  ['pageMain','pageRound','pageTypowania'].forEach(id => {
-    document.getElementById(id).classList.remove('on');
+// =====================================================
+// NAWIGACJA OPARTA O HASH (przeżywa odświeżenie)
+// =====================================================
+function showPage(id) {
+  ['pageMain','pageRound','pageTypowania'].forEach(p => {
+    document.getElementById(p).classList.remove('on');
   });
-  document.getElementById(pageId).classList.add('on');
+  document.getElementById(id).classList.add('on');
 }
 
-window.goRound = function(round) {
-  currentRound = round;
-  location.hash = `round${round}`;
+window.goRound = function(r) {
+  currentRound = r;
+  location.hash = 'round'+r;
 };
-
 window.goMain = function() {
   location.hash = '';
 };
-
 window.goTypowania = function() {
   location.hash = 'typowania';
 };
 
 function handleHash() {
-  const hash = location.hash.replace('#','');
-  if (hash === 'typowania') {
+  const h = location.hash.replace('#','');
+  if (h === 'typowania') {
     showPage('pageTypowania');
     renderTypowaniaPage();
-  } else if (hash.startsWith('round')) {
-    const round = parseInt(hash.replace('round',''));
-    if (round >= 1 && round <= 8) {
-      currentRound = round;
+  } else if (h.startsWith('round')) {
+    const r = parseInt(h.replace('round',''));
+    if (r >= 1 && r <= 8) {
+      currentRound = r;
       showPage('pageRound');
-      renderRoundPage(round);
+      renderRoundPage(r);
     } else {
       showPage('pageMain');
+      render();
     }
   } else {
     showPage('pageMain');
+    render();
   }
 }
-
 window.addEventListener('hashchange', handleHash);
 
-// =====================================================
-// ROUND PAGE
-// =====================================================
-function renderRoundPage(round) {
-  if (!isDataLoaded) {
-    document.getElementById('roundContent').innerHTML = '<div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Ładowanie...</div>';
-    return;
-  }
-  
-  const roundMatches = MATCHES.filter(m => m.r === round);
-  
-  const scores = S.players.map(player => ({
-    name: player,
-    points: getTotalPoints(player, round)
-  })).sort((a, b) => b.points - a.points);
-  
-  const leaderboardRows = scores.map((score, index) => {
-    const rankClass = index === 0 ? 'r1' : index === 1 ? 'r2' : index === 2 ? 'r3' : '';
-    const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : (index + 1).toString();
-    
-    return `<li class="lb-row">
-      <span class="rnk ${rankClass}">${medal}</span>
-      <span class="lb-n">${escapeHtml(score.name)}</span>
-      <span class="lb-p">${score.points}<span class="lb-pl">pkt</span></span>
-    </li>`;
+function renderRoundPage(r) {
+  const rMatches = MATCHES.filter(m=>m.r===r);
+  const sc = S.players
+    .map(p=>({n:p,pts:totalPts(p,r)}))
+    .sort((a,b)=>b.pts-a.pts);
+
+  // Leaderboard
+  const lbRows = sc.map((s,i)=>{
+    const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+    return `<li class="lb-row"><span class="rnk ${rc}">${medal||i+1}</span><span class="lb-n">${s.n}</span><span class="lb-p">${s.pts}<span class="lb-pl">pkt</span></span></li>`;
   }).join('');
-  
-  const matchesRows = roundMatches.map(match => {
-    const wynik = S.wyniki[match.id];
-    const hasScore = wynik && wynik.home !== null && wynik.away !== null;
-    const scoreDisplay = hasScore ? `${wynik.home}:${wynik.away}` : '–';
-    
-    let statusBadge = '';
-    if (wynik?.status === 'ft') statusBadge = '<span style="font-size:11px;color:var(--grn)">FT</span>';
-    else if (wynik?.status === 'live') statusBadge = '<span style="font-size:11px;color:var(--red)">LIVE</span>';
-    else statusBadge = `<span style="font-size:11px;color:var(--mut)">${match.time}</span>`;
-    
-    const tipsRows = S.players.map(player => {
-      const typ = (S.typy[match.id] || {})[safeId(player)];
-      const hasTip = typ && typ.home !== null && typ.away !== null;
-      
-      if (!hasTip) {
-        return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd)">
-          <span style="color:var(--mut)">${escapeHtml(player)}</span>
-          <span style="color:var(--mut);font-size:12px">–</span>
-        </div>`;
-      }
-      
-      const points = hasScore ? calculatePoints(typ, wynik) : null;
-      const icon = hasScore ? getPointsIcon(typ, wynik) : '⏳';
-      const pointsClass = points !== null ? getPointsClass(typ, wynik) : '';
-      const pointsDisplay = points !== null ? `<span class="pb ${pointsClass}" style="font-size:12px">${points > 0 ? '+' : ''}${points}pkt</span>` : '';
-      const tipDisplay = `${typ.home}:${typ.away}${typ.x2 ? '<span class="x2b">X2</span>' : ''}`;
-      
+
+  // Matches – collapsible
+  const mRows = rMatches.map(m=>{
+    const w = S.wyniki[m.id];
+    const hasScore = w && w.home!==null && w.away!==null;
+    const scoreStr = hasScore ? `${w.home}:${w.away}` : '&ndash;';
+    const stBadge  = w?.status==='ft'  ? '<span style="font-size:11px;color:var(--grn)">FT</span>'
+                   : w?.status==='live'? '<span style="font-size:11px;color:var(--red)">LIVE</span>'
+                   : `<span style="font-size:11px;color:var(--mut)">${m.time}</span>`;
+
+    const typRows = S.players.map(p=>{
+      const typ = (S.typy[m.id]||{})[p];
+      if (!typ) return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd)"><span style="color:var(--mut)">${p}</span><span style="color:var(--mut);font-size:12px">brak typu</span></div>`;
+      const p2  = hasScore ? pts(typ,w) : null;
+      const ic  = hasScore ? icon(typ,w) : '&#8987;';
+      const ptsH = p2!==null
+        ? `<span class="pb ${ptsClass(typ,w)}" style="font-size:12px">${p2>0?'+':''}${p2}pkt</span>`
+        : '';
+      const ts = `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`;
       return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--brd)">
-        <span style="font-weight:600;font-size:13px;width:80px">${escapeHtml(player)}</span>
-        <span class="tscore" style="font-size:15px">${tipDisplay}</span>
-        <span style="font-size:15px">${icon}</span>
-        ${pointsDisplay}
+        <span style="font-weight:600;font-size:13px;width:80px">${p}</span>
+        <span class="tscore" style="font-size:15px">${ts}</span>
+        <span style="font-size:15px">${ic}</span>
+        ${ptsH}
       </div>`;
     }).join('');
-    
-    return `<div class="mrow" id="mr_${match.id}" onclick="toggleMrow('${match.id}')">
+
+    return `<div class="mrow" id="mr_${m.id}" onclick="toggleMrow('${m.id}')">
       <div class="mrow-header">
-        <span style="font-size:11px;color:var(--acc);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;width:44px">Gr.${match.g}</span>
-        <span style="flex:1;font-weight:600;font-size:13px">${F(match.hf)} ${escapeHtml(match.hpl)} – ${escapeHtml(match.apl)} ${F(match.af)}</span>
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;min-width:36px;text-align:center">${scoreDisplay}</span>
-        <span style="margin-left:8px">${statusBadge}</span>
-        <span style="color:var(--mut);font-size:12px;margin-left:6px">▼</span>
+        <span style="font-size:11px;color:var(--acc);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;width:44px">Gr.${m.g}</span>
+        <span style="flex:1;font-weight:600;font-size:13px">${F(m.hf)} ${m.hpl} &ndash; ${m.apl} ${F(m.af)}</span>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;min-width:36px;text-align:center">${scoreStr}</span>
+        <span style="margin-left:8px">${stBadge}</span>
+        <span style="color:var(--mut);font-size:12px;margin-left:6px">&#9660;</span>
       </div>
-      <div class="mrow-body">${tipsRows}</div>
+      <div class="mrow-body">${typRows}</div>
     </div>`;
   }).join('');
-  
-  const roundLabel = round === 4 ? '1/16 FINAŁU' : round === 5 ? '1/8 FINAŁU' : round === 6 ? 'ĆWIERĆFINAŁY' : round === 7 ? 'PÓŁFINAŁY' : round === 8 ? 'FINAŁ' : `RUNDA ${round}`;
-  const isKO = round >= 4;
-  
-  document.getElementById('roundContent').innerHTML = `
-    <div class="slabel">PUNKTACJA – ${roundLabel}</div>
-    <ul class="lb-list" style="margin-bottom:24px">${leaderboardRows}</ul>
-    <div class="slabel">MECZE – ${roundLabel} (kliknij aby rozwinąć)</div>
-    ${roundMatches.length === 0 ? `<div style="color:var(--mut);text-align:center;padding:24px;font-family:'Barlow Condensed',sans-serif;letter-spacing:2px">BRAK ZAPLANOWANYCH MECZY</div>` : matchesRows}
-  `;
+
+  const rLabel = r===4?'1/16 FINAŁU':r===5?'1/8 FINAŁU':r===6?'ĆWIERĆFINAŁY':r===7?'PÓŁFINAŁY':r===8?'FINAŁ':`RUNDA ${r}`;
+  document.getElementById('roundContent').innerHTML =
+    `<div class="slabel">PUNKTACJA &ndash; ${rLabel}</div>
+    <ul class="lb-list" style="margin-bottom:24px">${lbRows}</ul>
+    <div class="slabel">MECZE &ndash; ${rLabel} (kliknij aby rozwinac)</div>
+    ${rMatches.length===0?'<div style="color:var(--mut);text-align:center;padding:24px;font-family:Barlow Condensed,sans-serif;letter-spacing:2px">BRAK ZAPLANOWANYCH MECZY</div>':mRows}`;
 }
 
 window.toggleMrow = function(id) {
-  const el = document.getElementById(`mr_${id}`);
-  if (el) el.classList.toggle('open');
+  document.getElementById('mr_'+id)?.classList.toggle('open');
 };
+
+// =====================================================
+// ADMIN
+// =====================================================
+window.toggleAdmin = function() {
+  const p = document.getElementById('adminPanel');
+  p.classList.toggle('on');
+  if (p.classList.contains('on') && document.getElementById('koStageSel')) renderKoEditor();
+};
+
+window.diagApi = async function() {
+  const el = document.getElementById('diagResult');
+  el.style.display = 'block';
+  el.textContent = 'Testuje polaczenie...';
+  const key = document.getElementById('apiKeyInp').value.trim() || S.apiKey;
+  if (!key) { el.textContent = 'Brak klucza!'; return; }
+  try {
+    const PROXY = S.proxyUrl || '';
+    const apiUrl = PROXY
+      ? PROXY + '/v4/competitions/WC/matches'
+      : 'https://api.football-data.org/v4/competitions/WC/matches';
+    const r = await fetch(apiUrl, {
+      headers: { 'X-Auth-Token': key }
+    });
+    const text = await r.text();
+    let parsed;
+    try { parsed = JSON.parse(text); } catch(_) { parsed = null; }
+    const matchCount = parsed?.matches?.length || 0;
+    const msg = parsed?.message || parsed?.detail || parsed?.error || '';
+    if (r.status === 200) {
+      el.style.color = 'var(--acc)';
+      el.textContent = 'OK! Status 200. Meczy w odpowiedzi: ' + matchCount + '. Pierwsze 2: ' +
+        (parsed?.matches||[]).slice(0,2).map(m=>(m.homeTeam?.name||'?')+' vs '+(m.awayTeam?.name||'?')+' ['+m.status+']').join(', ');
+    } else {
+      el.style.color = 'var(--red)';
+      el.textContent = 'Blad HTTP ' + r.status + ': ' + (msg || text.slice(0,200));
+    }
+  } catch(e) {
+    el.style.color = 'var(--red)';
+    el.textContent = 'Blad sieci: ' + e.message + '. Sprawdz czy strona jest na HTTPS (GitHub Pages jest OK).';
+  }
+};
+
+window.saveApiKey = function() {
+  const k = document.getElementById('apiKeyInp').value.trim();
+  const p = (document.getElementById('proxyUrlInp').value||'').trim().replace(/\/+$/,'');
+  if (!k) return;
+  S.apiKey = k;
+  S.proxyUrl = p;
+  fbSave();
+  fetchScores();
+};
+
+window.onMatchChange = function() {
+  const id = document.getElementById('adminSel').value;
+  const m = MATCHES.find(x=>x.id===id);
+  if (m) renderAdminForm(m);
+};
+
+window.addPlayer = function() {
+  const n = document.getElementById('newPlayer').value.trim();
+  if (!n || S.players.includes(n)) return;
+  S.players.push(n);
+  document.getElementById('newPlayer').value='';
+  fbSave();
+};
+
+window.deletePlayer = function(i) {
+  if (!confirm(`Usunac gracza "${S.players[i]}"?`)) return;
+  S.players.splice(i,1);
+  fbSave();
+};
+
+window.saveWynik = function(id) {
+  const h = document.getElementById('wH').value.trim();
+  const a = document.getElementById('wA').value.trim();
+  const st = document.getElementById('wSt').value;
+  S.wyniki[id] = {
+    home:   h !== '' && !isNaN(parseInt(h)) ? parseInt(h) : null,
+    away:   a !== '' && !isNaN(parseInt(a)) ? parseInt(a) : null,
+    status: st,
+    minute: null,
+  };
+  fbSave();
+  render();
+};
+
+window.saveTypy = function(id) {
+  if (!S.typy[id]) S.typy[id] = {};
+  S.players.forEach(p => {
+    const hEl = document.getElementById('th_' + p);
+    const aEl = document.getElementById('ta_' + p);
+    const xEl = document.getElementById('tx_' + p);
+    const h = hEl ? hEl.value.trim() : '';
+    const a = aEl ? aEl.value.trim() : '';
+    const x = xEl ? xEl.checked : false;
+    if (h !== '' && a !== '' && !isNaN(parseInt(h)) && !isNaN(parseInt(a))) {
+      S.typy[id][p] = { home: parseInt(h), away: parseInt(a), x2: !!x };
+    }
+  });
+  fbSave();
+  render();
+  // Wizualny feedback
+  const btn = document.querySelector('[onclick="saveTypy(\''+id+'\')"]');
+  if (btn) { btn.textContent = '✅ Zapisano!'; setTimeout(()=>{ btn.textContent = '💾 Zapisz typy'; },1500); }
+};
+
+function rebuildAdmin() {
+  // Match selector
+  const sel = document.getElementById('adminSel');
+  if (sel && !sel.options.length) {
+    const {live,next}=curNext(), defId=(live||next||MATCHES[0]).id;
+    sel.innerHTML = MATCHES.map(m=>
+      `<option value="${m.id}"${m.id===defId?' selected':''}>R${m.r} ${m.hpl} vs ${m.apl}</option>`
+    ).join('');
+  }
+  // Players
+  const pl = document.getElementById('playersList');
+  if (pl) pl.innerHTML = S.players.map((p,i)=>
+    `<div class="prow"><span class="pn">${p}</span><button class="delbtn" onclick="deletePlayer(${i})">&#128465;</button></div>`
+  ).join('');
+  // API key
+  const ai = document.getElementById('apiKeyInp');
+  if (ai && !ai.value && S.apiKey) ai.value = S.apiKey;
+  const pi = document.getElementById('proxyUrlInp');
+  if (pi && !pi.value && S.proxyUrl) pi.value = S.proxyUrl;
+  // Form
+  const id = document.getElementById('adminSel')?.value;
+  const m = MATCHES.find(x=>x.id===id);
+  if (m) renderAdminForm(m);
+}
+
+function renderAdminForm(m) {
+  const f = document.getElementById('adminForm'); if(!f) return;
+  const w = S.wyniki[m.id]||{};
+  const ty= S.typy[m.id]||{};
+  let html=`<div style="font-size:12px;color:var(--acc);font-weight:600;margin-bottom:8px">${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}</div>`;
+  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Wynik oficjalny (nadpisuje API)</div>
+  <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px">
+    <input class="ainp" id="wH" value="${w.home!=null?w.home:''}" placeholder="?" style="width:40px;text-align:center">
+    <span style="color:var(--mut)">:</span>
+    <input class="ainp" id="wA" value="${w.away!=null?w.away:''}" placeholder="?" style="width:40px;text-align:center">
+    <select class="asel" id="wSt" style="flex:1">
+      <option value="upcoming"${(!w.status||w.status==='upcoming')?' selected':''}>Nadchodzacy</option>
+      <option value="live"${w.status==='live'?' selected':''}>&#128308; Live</option>
+      <option value="ft"${w.status==='ft'?' selected':''}>&#9989; FT</option>
+    </select>
+  </div>
+  <button class="abtn" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">Zapisz wynik</button>`;
+  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy</div>`;
+  S.players.forEach(p=>{
+    const t=ty[p]||{};
+    html+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
+      <span style="width:65px;font-size:12px;overflow:hidden;white-space:nowrap">${p}</span>
+      <input class="ainp" id="th_${p}" value="${t.home!=null?t.home:''}" placeholder="D" style="width:34px;text-align:center">
+      <span style="color:var(--mut)">:</span>
+      <input class="ainp" id="ta_${p}" value="${t.away!=null?t.away:''}" placeholder="G" style="width:34px;text-align:center">
+      <label style="font-size:11px;color:var(--mut);display:flex;align-items:center;gap:3px;cursor:pointer">
+        <input type="checkbox" id="tx_${p}"${t.x2?' checked':''}> X2
+      </label>
+    </div>`;
+  });
+  html+=`<button class="abtn" onclick="saveTypy('${m.id}')">&#128190; Zapisz typy</button>`;
+  f.innerHTML=html;
+}
 
 // =====================================================
 // TYPOWANIA PAGE
 // =====================================================
 function renderTypowaniaPage() {
-  if (!isDataLoaded) {
-    document.getElementById('typowaniaContent').innerHTML = '<div style="text-align:center;padding:40px;color:var(--mut)"><span class="sp"></span> Ładowanie...</div>';
-    return;
-  }
-  
-  const roundLabel = r => r === 4 ? '1/16' : r === 5 ? '1/8' : r === 6 ? '1/4' : r === 7 ? '1/2' : r === 8 ? 'Finał' : `R${r}`;
-  
-  const playerCards = S.players.map((player, pi) => {
-    const totalPts = getTotalPoints(player, null);
-    
-    const matchRows = MATCHES.map(match => {
-      const typ = (S.typy[match.id] || {})[safeId(player)];
-      const wynik = S.wyniki[match.id];
-      const hasTip = typ && typ.home !== null && typ.home !== undefined && typ.away !== null && typ.away !== undefined;
-      const hasResult = wynik && wynik.home !== null && wynik.away !== null;
-      
-      if (!hasTip && !hasResult) return '';
-      
-      const tipDisplay = hasTip ? `${typ.home}:${typ.away}${typ.x2 ? '<span class="x2b">X2</span>' : ''}` : '—';
-      const resultDisplay = hasResult ? `${wynik.home}:${wynik.away}` : '—';
-      const points = hasTip && hasResult ? calculatePoints(typ, wynik) : null;
-      const icon = points !== null ? getPointsIcon(typ, wynik) : '';
-      const pointsClass = points !== null ? getPointsClass(typ, wynik) : '';
-      const pointsDisplay = points !== null ? `<span class="pb ${pointsClass}" style="font-size:11px">${points > 0 ? '+' : ''}${points}</span>` : '';
-      const teamDisplay = match.hpl === 'TBD' ? `${match.g} – mecz ${match.id.split('_')[1]}` : `${F(match.hf)} ${escapeHtml(match.hpl)} vs ${escapeHtml(match.apl)} ${F(match.af)}`;
-      
+  const rLabel = r => r===4?'1/16':r===5?'1/8':r===6?'1/4':r===7?'1/2':r===8?'Finał':`R${r}`;
+  const cards = S.players.map((player, pi) => {
+    const total = MATCHES.reduce((sum,m) => {
+      const p2 = pts((S.typy[m.id]||{})[player], S.wyniki[m.id]);
+      return sum + (p2||0);
+    }, 0);
+    const rows = MATCHES.map(m => {
+      const typ = (S.typy[m.id]||{})[player];
+      const w   = S.wyniki[m.id];
+      const hasTip = typ && typ.home!=null && typ.away!=null;
+      const hasRes = w && w.home!=null && w.away!=null;
+      if (!hasTip && !hasRes) return '';
+      const ts   = hasTip ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}` : '&mdash;';
+      const rs   = hasRes ? `${w.home}:${w.away}` : '&mdash;';
+      const p2   = hasTip&&hasRes ? pts(typ,w) : null;
+      const ic   = p2!==null ? icon(typ,w) : '';
+      const ph   = p2!==null ? `<span class="pb ${ptsClass(typ,w)}" style="font-size:11px">${p2>0?'+':''}${p2}</span>` : '';
+      const team = m.hpl==='TBD' ? `${m.g} – mecz ${m.id.split('_')[1]||m.id}` : `${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}`;
       return `<tr>
-        <td style="font-size:11px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;white-space:nowrap">${roundLabel(match.r)}</td>
-        <td style="font-size:12px">${teamDisplay}</td>
-        <td style="text-align:center"><span class="tscore" style="font-size:14px">${tipDisplay}</span></td>
-        <td style="text-align:center;font-size:13px;font-weight:700">${resultDisplay}</td>
-        <td style="text-align:center;font-size:14px">${icon}</td>
-        <td style="text-align:right">${pointsDisplay}</td>
+        <td style="font-size:11px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;white-space:nowrap">${rLabel(m.r)}</td>
+        <td style="font-size:12px">${team}</td>
+        <td style="text-align:center"><span class="tscore" style="font-size:14px">${ts}</span></td>
+        <td style="text-align:center;font-weight:700">${rs}</td>
+        <td style="text-align:center">${ic}</td>
+        <td style="text-align:right">${ph}</td>
       </tr>`;
     }).filter(Boolean).join('');
-    
-    return `<div class="mrow" id="tp_${pi}" onclick="toggleTp(${pi})">
+    return `<div class="mrow" id="tp_${pi}" onclick="document.getElementById('tp_${pi}').classList.toggle('open')">
       <div class="mrow-header">
-        <span class="lb-n" style="font-size:15px">${escapeHtml(player)}</span>
-        <span class="lb-p" style="font-size:20px">${totalPts}<span class="lb-pl">pkt</span></span>
-        <span style="color:var(--mut);font-size:12px;margin-left:8px">▼</span>
+        <span class="lb-n" style="font-size:15px">${player}</span>
+        <span class="lb-p" style="font-size:20px">${total}<span class="lb-pl">pkt</span></span>
+        <span style="color:var(--mut);font-size:12px;margin-left:8px">&#9660;</span>
       </div>
       <div class="mrow-body" style="padding-left:0;padding-top:12px">
-        ${matchRows ? `<table class="tt" style="width:100%">
-          <thead><tr>
-            <th style="width:36px">Runda</th>
-            <th>Mecz</th>
-            <th style="text-align:center">Typ</th>
-            <th style="text-align:center">Wynik</th>
-            <th style="text-align:center">Status</th>
-            <th style="text-align:right">Pkt</th>
-          </tr></thead>
-          <tbody>${matchRows}</tbody>
-        </table>` : `<div style="color:var(--mut);font-size:12px;padding:8px">Brak typów</div>`}
+        ${rows ? `<table class="tt"><thead><tr><th>Runda</th><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">&#9654;</th><th style="text-align:right">Pkt</th></tr></thead><tbody>${rows}</tbody></table>` : '<div style="color:var(--mut);font-size:12px;padding:8px">Brak typów</div>'}
       </div>
     </div>`;
   }).join('');
-  
-  document.getElementById('typowaniaContent').innerHTML = `
-    <div class="slabel">TYPOWANIA GRACZY</div>
-    ${playerCards}
-  `;
+  document.getElementById('typowaniaContent').innerHTML =
+    `<div class="slabel">TYPOWANIA GRACZY</div>${cards}`;
 }
-
-window.toggleTp = function(pi) {
-  const el = document.getElementById(`tp_${pi}`);
-  if (el) el.classList.toggle('open');
-};
 
 // =====================================================
 // KO MATCH EDITOR
 // =====================================================
 window.renderKoEditor = function() {
   const stage = parseInt(document.getElementById('koStageSel').value);
-  const stageMatches = MATCHES.filter(m => m.r === stage);
-  const container = document.getElementById('koMatchList');
-  if (!container) return;
-  
-  const stageLabel = stage === 4 ? '1/16' : stage === 5 ? '1/8' : stage === 6 ? '1/4' : stage === 7 ? '1/2' : 'Finał';
-  
-  container.innerHTML = stageMatches.map((match, i) => {
-    const ko = S.koTeams || {};
-    const hpl = (ko[match.id] || {}).hpl || match.hpl;
-    const apl = (ko[match.id] || {}).apl || match.apl;
+  const stMatches = MATCHES.filter(m=>m.r===stage);
+  const sl = stage===4?'1/16':stage===5?'1/8':stage===6?'1/4':stage===7?'1/2':'Finał';
+  document.getElementById('koMatchList').innerHTML = stMatches.map((m,i) => {
+    const ko = S.koTeams||{};
+    const hpl = (ko[m.id]||{}).hpl || (m.hpl==='TBD'?'':m.hpl);
+    const apl = (ko[m.id]||{}).apl || (m.apl==='TBD'?'':m.apl);
     return `<div style="background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:10px;margin-bottom:8px">
-      <div style="font-size:11px;color:var(--acc);letter-spacing:1px;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif">${stageLabel} – mecz ${i+1} · ${match.date} ${match.time}</div>
-      <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
-        <input class="ainp" id="ko_h_${match.id}" value="${escapeHtml(hpl === 'TBD' ? '' : hpl)}" placeholder="Gospodarz" style="flex:1">
+      <div style="font-size:11px;color:var(--acc);letter-spacing:1px;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif">${sl} – mecz ${i+1} · ${m.date} ${m.time}</div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <input class="ainp" id="ko_h_${m.id}" value="${hpl}" placeholder="Gospodarz" style="flex:1">
         <span style="color:var(--mut)">vs</span>
-        <input class="ainp" id="ko_a_${match.id}" value="${escapeHtml(apl === 'TBD' ? '' : apl)}" placeholder="Gość" style="flex:1">
-        <button class="abtn" style="width:auto;padding:6px 12px;font-size:12px" onclick="saveKoTeams('${match.id}')">💾</button>
+        <input class="ainp" id="ko_a_${m.id}" value="${apl}" placeholder="Gość" style="flex:1">
+        <button class="abtn" style="width:auto;padding:6px 12px;font-size:12px" onclick="saveKoTeams('${m.id}')">&#128190;</button>
       </div>
     </div>`;
   }).join('');
 };
 
 window.saveKoTeams = function(matchId) {
-  const hInput = document.getElementById(`ko_h_${matchId}`);
-  const aInput = document.getElementById(`ko_a_${matchId}`);
-  if (!hInput || !aInput) return;
-  
-  const hVal = hInput.value.trim() || 'TBD';
-  const aVal = aInput.value.trim() || 'TBD';
-  
-  // Update in MATCHES array
-  const match = MATCHES.find(m => m.id === matchId);
-  if (match) {
-    match.hpl = hVal;
-    match.apl = aVal;
-  }
-  
-  if (!S.koTeams) S.koTeams = {};
-  S.koTeams[matchId] = { hpl: hVal, apl: aVal };
-  saveToFirebase();
-  
-  hInput.style.borderColor = 'var(--acc)';
-  setTimeout(() => { hInput.style.borderColor = ''; }, 1000);
+  const hVal = document.getElementById('ko_h_'+matchId)?.value.trim()||'TBD';
+  const aVal = document.getElementById('ko_a_'+matchId)?.value.trim()||'TBD';
+  const m = MATCHES.find(x=>x.id===matchId);
+  if (m) { m.hpl=hVal; m.apl=aVal; }
+  if (!S.koTeams) S.koTeams={};
+  S.koTeams[matchId] = {hpl:hVal, apl:aVal};
+  fbSave();
+  document.getElementById('ko_h_'+matchId).style.borderColor='var(--acc)';
+  setTimeout(()=>{ document.getElementById('ko_h_'+matchId).style.borderColor=''; },1000);
 };
 
 // =====================================================
-// ADMIN PANEL
+// INIT
 // =====================================================
-window.toggleAdmin = function() {
-  const panel = document.getElementById('adminPanel');
-  panel.classList.toggle('on');
-  if (panel.classList.contains('on')) {
-    rebuildAdmin();
-    renderKoEditor();
-  }
-};
-
-window.diagApi = async function() {
-  const diagEl = document.getElementById('diagResult');
-  diagEl.style.display = 'block';
-  diagEl.textContent = 'Testowanie połączenia...';
-  
-  const apiKey = document.getElementById('apiKeyInp').value.trim() || S.apiKey;
-  if (!apiKey) {
-    diagEl.textContent = 'Brak klucza API!';
-    return;
-  }
-  
-  try {
-    const proxy = S.proxyUrl || '';
-    const url = proxy ? `${proxy}/v4/competitions/WC/matches` : 'https://api.football-data.org/v4/competitions/WC/matches';
-    const response = await fetch(url, { headers: { 'X-Auth-Token': apiKey } });
-    const text = await response.text();
-    let data;
-    try { data = JSON.parse(text); } catch { data = null; }
-    
-    if (response.status === 200) {
-      const matchCount = data?.matches?.length || 0;
-      diagEl.style.color = 'var(--acc)';
-      diagEl.textContent = `OK! Status 200. Meczy: ${matchCount}.`;
-    } else {
-      diagEl.style.color = 'var(--red)';
-      const msg = data?.message || data?.detail || text.slice(0, 200);
-      diagEl.textContent = `Błąd HTTP ${response.status}: ${msg}`;
-    }
-  } catch (error) {
-    diagEl.style.color = 'var(--red)';
-    diagEl.textContent = `Błąd sieci: ${error.message}`;
-  }
-};
-
-window.saveApiKey = function() {
-  const newKey = document.getElementById('apiKeyInp').value.trim();
-  const newProxy = document.getElementById('proxyUrlInp').value.trim().replace(/\/+$/, '');
-  
-  if (!newKey) return;
-  
-  S.apiKey = newKey;
-  S.proxyUrl = newProxy;
-  saveToFirebase();
-  fetchScores();
-};
-
-window.onMatchChange = function() {
-  const matchId = document.getElementById('adminSel').value;
-  const match = MATCHES.find(m => m.id === matchId);
-  if (match) renderAdminForm(match);
-};
-
-window.addPlayer = function() {
-  const newPlayerName = document.getElementById('newPlayer').value.trim();
-  if (!newPlayerName || S.players.includes(newPlayerName)) return;
-  
-  S.players.push(newPlayerName);
-  document.getElementById('newPlayer').value = '';
-  saveToFirebase();
-};
-
-window.deletePlayer = function(index) {
-  if (!confirm(`Czy na pewno usunąć gracza "${S.players[index]}"?`)) return;
-  S.players.splice(index, 1);
-  saveToFirebase();
-};
-
-window.saveWynik = function(matchId) {
-  const homeScore = document.getElementById('wH').value.trim();
-  const awayScore = document.getElementById('wA').value.trim();
-  const status = document.getElementById('wSt').value;
-  
-  S.wyniki[matchId] = {
-    home: homeScore !== '' && !isNaN(parseInt(homeScore)) ? parseInt(homeScore) : null,
-    away: awayScore !== '' && !isNaN(parseInt(awayScore)) ? parseInt(awayScore) : null,
-    status: status,
-    minute: null
-  };
-  
-  saveToFirebase();
-  
-  const btn = document.getElementById(`btnWynik_${matchId}`);
-  if (btn) {
-    btn.textContent = '✅ Zapisano!';
-    setTimeout(() => { btn.textContent = '💾 Zapisz wynik'; }, 1500);
-  }
-};
-
-window.saveTypy = function(matchId) {
-  if (!S.typy[matchId]) S.typy[matchId] = {};
-  
-  let savedCount = 0;
-  
-  for (const player of S.players) {
-    const safePlayerId = safeId(player);
-    const homeInput = document.getElementById(`th_${safePlayerId}`);
-    const awayInput = document.getElementById(`ta_${safePlayerId}`);
-    const x2Checkbox = document.getElementById(`tx_${safePlayerId}`);
-    
-    if (!homeInput || !awayInput) continue;
-    
-    const homeValue = homeInput.value.trim();
-    const awayValue = awayInput.value.trim();
-    
-    if (homeValue !== '' && awayValue !== '' && !isNaN(parseInt(homeValue)) && !isNaN(parseInt(awayValue))) {
-      // Użyj safeId jako klucza - Firebase nie akceptuje . # $ [ ] w kluczach
-      S.typy[matchId][safePlayerId] = {
-        home: parseInt(homeValue),
-        away: parseInt(awayValue),
-        x2: x2Checkbox ? x2Checkbox.checked : false,
-        name: player
-      };
-      savedCount++;
-    }
-  }
-  
-  saveToFirebase();
-  
-  const btn = document.getElementById(`btnTypy_${matchId}`);
-  if (btn) {
-    btn.textContent = `✅ Zapisano ${savedCount} typów!`;
-    setTimeout(() => { btn.textContent = '💾 Zapisz typy'; }, 2000);
-  }
-};
-
-function rebuildAdmin() {
-  // Admin select
-  const select = document.getElementById('adminSel');
-  if (select && select.options.length !== MATCHES.length) {
-    const { liveMatch, nextMatch } = getCurrentAndNextMatch();
-    const defaultMatch = liveMatch || nextMatch || MATCHES[0];
-    select.innerHTML = MATCHES.map(m => 
-      `<option value="${m.id}"${m.id === defaultMatch?.id ? ' selected' : ''}>R${m.r} ${m.hpl} vs ${m.apl}</option>`
-    ).join('');
-  }
-  
-  // Players list
-  const playersList = document.getElementById('playersList');
-  if (playersList) {
-    playersList.innerHTML = S.players.map((player, index) => `
-      <div class="prow">
-        <span class="pn">${escapeHtml(player)}</span>
-        <button class="delbtn" onclick="deletePlayer(${index})">🗑</button>
-      </div>
-    `).join('');
-  }
-  
-  // API inputs
-  const apiKeyInput = document.getElementById('apiKeyInp');
-  if (apiKeyInput && !apiKeyInput.value && S.apiKey) apiKeyInput.value = S.apiKey;
-  
-  const proxyInput = document.getElementById('proxyUrlInp');
-  if (proxyInput && !proxyInput.value && S.proxyUrl) proxyInput.value = S.proxyUrl;
-  
-  // Admin form
-  const selectedId = select?.value;
-  if (selectedId) {
-    const match = MATCHES.find(m => m.id === selectedId);
-    if (match) renderAdminForm(match);
-  }
-}
-
-function renderAdminForm(match) {
-  const formContainer = document.getElementById('adminForm');
-  if (!formContainer) return;
-  
-  const wynik = S.wyniki[match.id] || {};
-  const typy = S.typy[match.id] || {};
-  
-  let html = `<div style="font-size:12px;color:var(--acc);font-weight:600;margin-bottom:8px">
-    ${F(match.hf)} ${escapeHtml(match.hpl)} vs ${escapeHtml(match.apl)} ${F(match.af)}
-  </div>`;
-  
-  html += `<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Wynik oficjalny (nadpisuje API)</div>
-  <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px">
-    <input class="ainp" id="wH" value="${wynik.home != null ? wynik.home : ''}" placeholder="?" style="width:40px;text-align:center">
-    <span style="color:var(--mut)">:</span>
-    <input class="ainp" id="wA" value="${wynik.away != null ? wynik.away : ''}" placeholder="?" style="width:40px;text-align:center">
-    <select class="asel" id="wSt" style="flex:1">
-      <option value="upcoming"${(!wynik.status || wynik.status === 'upcoming') ? ' selected' : ''}>Nadchodzący</option>
-      <option value="live"${wynik.status === 'live' ? ' selected' : ''}>🔴 Live</option>
-      <option value="ft"${wynik.status === 'ft' ? ' selected' : ''}>✅ FT</option>
-    </select>
-  </div>
-  <button class="abtn" id="btnWynik_${match.id}" style="margin-bottom:10px" onclick="saveWynik('${match.id}')">💾 Zapisz wynik</button>`;
-  
-  html += `<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy</div>`;
-  
-  for (const player of S.players) {
-    const safePlayerId = safeId(player);
-    const typ = typy[safeId(player)] || {};
-    html += `<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
-      <span style="width:65px;font-size:12px;overflow:hidden;white-space:nowrap" title="${escapeHtml(player)}">${escapeHtml(player)}</span>
-      <input class="ainp" id="th_${safePlayerId}" value="${typ.home != null ? typ.home : ''}" placeholder="D" style="width:34px;text-align:center">
-      <span style="color:var(--mut)">:</span>
-      <input class="ainp" id="ta_${safePlayerId}" value="${typ.away != null ? typ.away : ''}" placeholder="G" style="width:34px;text-align:center">
-      <label style="font-size:11px;color:var(--mut);display:flex;align-items:center;gap:3px;cursor:pointer">
-        <input type="checkbox" id="tx_${safePlayerId}"${typ.x2 ? ' checked' : ''}> X2
-      </label>
-    </div>`;
-  }
-  
-  html += `<button class="abtn" id="btnTypy_${match.id}" onclick="saveTypy('${match.id}')">💾 Zapisz typy</button>`;
-  
-  formContainer.innerHTML = html;
-}
-
-// =====================================================
-// INITIALIZATION
-// =====================================================
-// Nasłuchuj zmian z Firebase
-const stateRef = ref(db, 'state');
-onValue(stateRef, (snapshot) => {
-  const data = snapshot.val();
-  
-  if (data && typeof data === 'object') {
-    S.players = Array.isArray(data.players) ? data.players : [];
-    S.typy = data.typy || {};
-    S.wyniki = data.wyniki || {};
-    S.apiKey = data.apiKey || '';
-    S.proxyUrl = data.proxyUrl || '';
-    S.koTeams = data.koTeams || {};
-    
-    // Apply saved KO team names to MATCHES
-    for (const [matchId, teams] of Object.entries(S.koTeams)) {
-      const match = MATCHES.find(m => m.id === matchId);
-      if (match && teams.hpl) match.hpl = teams.hpl;
-      if (match && teams.apl) match.apl = teams.apl;
-    }
-    
-    // Inicjalizuj domyślnych graczy tylko jeśli baza jest pusta
-    if (S.players.length === 0) {
-      S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
-    }
-  } else {
-    // Pusta baza – pierwsze uruchomienie
-    S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
-    S.typy = {};
-    S.wyniki = {};
-    S.koTeams = {};
-  }
-
-  setFbBadge('ok', 'Firebase OK');
-  
-  const wasLoaded = isDataLoaded;
-  isDataLoaded = true;
-  
-  // Zapisz domyślnych graczy jeśli baza była pusta
-  if (!data || !data.players || data.players.length === 0) {
-    saveToFirebase();
-    return; // saveToFirebase wywoła onValue ponownie
-  }
-  
-  handleHash();
-  rebuildAdmin();
-  
-  // Pobierz wyniki live tylko przy pierwszym załadowaniu
-  if (!wasLoaded && S.apiKey) {
-    fetchScores();
-  } else if (!S.apiKey) {
-    setApiBadge('err', 'Brak klucza API');
-  }
-}, (error) => {
-  console.error('Firebase error:', error);
-  setFbBadge('err', 'Błąd Firebase');
-  // Nawet przy błędzie pokaż pustą stronę z domyślnymi danymi
-  S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
-  isDataLoaded = true;
-  handleHash();
-});
-
-// Auto-refresh co 60 sekund
-setInterval(() => {
-  if (S.apiKey && isDataLoaded) {
-    fetchScores();
-  }
-}, 60000);
+initFirebase();
+// Auto-fetch scores co 60s
+setInterval(()=>{ if(S.apiKey) fetchScores(); }, 60000);
 </script>
 </body>
 </html>
