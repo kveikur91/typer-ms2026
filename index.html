@@ -763,22 +763,37 @@ window.deletePlayer = function(i) {
 };
 
 window.saveWynik = function(id) {
-  const h = document.getElementById('wH').value;
-  const a = document.getElementById('wA').value;
-  const st= document.getElementById('wSt').value;
-  S.wyniki[id] = { home:h!==''?parseInt(h):null, away:a!==''?parseInt(a):null, status:st, minute:null };
+  const h = document.getElementById('wH').value.trim();
+  const a = document.getElementById('wA').value.trim();
+  const st = document.getElementById('wSt').value;
+  S.wyniki[id] = {
+    home:   h !== '' && !isNaN(parseInt(h)) ? parseInt(h) : null,
+    away:   a !== '' && !isNaN(parseInt(a)) ? parseInt(a) : null,
+    status: st,
+    minute: null,
+  };
   fbSave();
+  render();
 };
 
 window.saveTypy = function(id) {
-  if (!S.typy[id]) S.typy[id]={};
-  S.players.forEach(p=>{
-    const h = document.getElementById(`th_${p}`)?.value;
-    const a = document.getElementById(`ta_${p}`)?.value;
-    const x = document.getElementById(`tx_${p}`)?.checked;
-    if (h!==''&&a!=='') S.typy[id][p]={ home:parseInt(h), away:parseInt(a), x2:!!x };
+  if (!S.typy[id]) S.typy[id] = {};
+  S.players.forEach(p => {
+    const hEl = document.getElementById('th_' + p);
+    const aEl = document.getElementById('ta_' + p);
+    const xEl = document.getElementById('tx_' + p);
+    const h = hEl ? hEl.value.trim() : '';
+    const a = aEl ? aEl.value.trim() : '';
+    const x = xEl ? xEl.checked : false;
+    if (h !== '' && a !== '' && !isNaN(parseInt(h)) && !isNaN(parseInt(a))) {
+      S.typy[id][p] = { home: parseInt(h), away: parseInt(a), x2: !!x };
+    }
   });
   fbSave();
+  render();
+  // Wizualny feedback
+  const btn = document.querySelector('[onclick="saveTypy(\''+id+'\')"]');
+  if (btn) { btn.textContent = '✅ Zapisano!'; setTimeout(()=>{ btn.textContent = '💾 Zapisz typy'; },1500); }
 };
 
 function rebuildAdmin() {
