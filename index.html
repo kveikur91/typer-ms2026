@@ -158,10 +158,12 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
     <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:1px;margin-bottom:4px">&#128273; KLUCZ API – WYNIKI LIVE</div>
     <input class="ainp" id="apiKeyInp" placeholder="Klucz z football-data.org..." />
     <button class="abtn" style="margin-top:6px" onclick="saveApiKey()">Zapisz i polacz</button>
+    <button class="abtn" style="margin-top:4px;background:var(--sur2);color:var(--txt);border:1px solid var(--brd)" onclick="diagApi()">&#128270; Diagnostyka API</button>
+    <div id="diagResult" style="font-size:11px;color:var(--mut);margin-top:6px;word-break:break-all;display:none;background:var(--bg);padding:8px;border-radius:6px;border:1px solid var(--brd)"></div>
     <div class="apiinfo">
       Darmowy klucz: <a href="https://www.football-data.org/client/register" target="_blank">football-data.org/client/register</a><br>
-      Rejestracja ~1 min, klucz przychodzi mailem natychmiast.<br>
-      <strong style="color:var(--acc)">To INNY klucz niz Firebase!</strong>
+      <strong style="color:var(--acc)">To INNY klucz niz Firebase!</strong><br>
+      Blad 403 = WC nie jest w Twoim planie (zaloguj sie na football-data.org i sprawdz subskrypcje).
     </div>
   </div>
 
@@ -326,14 +328,29 @@ async function fetchScores() {
   if (!S.apiKey) return;
   setApiBadge('wait','Ladowanie...');
   try {
-    const r = await fetch(
-      'https://api.football-data.org/v4/competitions/WC/matches?season=2026',
-      { headers:{'X-Auth-Token': S.apiKey} }
-    );
-    if (r.status===401) { setApiBadge('err','Bledny klucz'); return; }
-    if (r.status===429) { setApiBadge('err','Limit zapytan'); return; }
-    if (!r.ok) throw new Error(r.status);
-    const data = await r.json();
+    // Nie wysyłamy season=2026 w free tier - API może to blokować
+    // Zamiast tego pobieramy mecze z ostatnich dni (today i +7 dni)
+    const url = 'https://api.football-data.org/v4/competitions/WC/matches';
+    const r = await fetch(url, {
+      headers: { 'X-Auth-Token': S.apiKey }
+    });
+
+    // Pobierz treść błędu żeby wiedzieć co nie gra
+    const text = await r.text();
+    let data;
+    try { data = JSON.parse(text); } catch(_) { data = {}; }
+
+    if (r.status === 401) { setApiBadge('err','401 Bledny klucz'); return; }
+    if (r.status === 403) {
+      // 403 = plan nie obejmuje tej ligi LUB brak dostępu
+      const msg = data.message || data.detail || '';
+      setApiBadge('err', msg.includes('permission') ? '403 Plan nie obejmuje WC' : '403 Brak dostepu');
+      console.error('API 403:', text);
+      return;
+    }
+    if (r.status === 429) { setApiBadge('err','429 Limit zapytan'); return; }
+    if (!r.ok) { setApiBadge('err','Blad '+r.status); console.error('API error:', text); return; }
+
     let changed = false;
     (data.matches||[]).forEach(m => {
       const match = findByEnglishNames(
@@ -343,7 +360,8 @@ async function fetchScores() {
       if (!match) return;
       const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
-      const cur = (ft?.home!=null)  ? ft : (ht?.home!=null) ? ht : null;
+      // API zwraca null dla przyszłych meczy, 0:0 dla trwających
+      const cur = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
       const newW = {
         home:   cur ? cur.home : null,
         away:   cur ? cur.away : null,
@@ -356,10 +374,14 @@ async function fetchScores() {
         changed = true;
       }
     });
-    setApiBadge('ok','Scores live');
+    const count = (data.matches||[]).length;
+    setApiBadge('ok', `Live (${count} meczy)`);
     if (changed) { fbSave(); render(); }
+    else render(); // zawsze odswiezamy widok
   } catch(e) {
-    setApiBadge('err','Blad API');
+    // Network error (CORS, brak sieci itp)
+    setApiBadge('err', 'Blad sieci/CORS');
+    console.error('fetchScores error:', e);
   }
 }
 
@@ -666,6 +688,35 @@ window.toggleMrow = function(id) {
 // =====================================================
 window.toggleAdmin = function() {
   document.getElementById('adminPanel').classList.toggle('on');
+};
+
+window.diagApi = async function() {
+  const el = document.getElementById('diagResult');
+  el.style.display = 'block';
+  el.textContent = 'Testuje polaczenie...';
+  const key = document.getElementById('apiKeyInp').value.trim() || S.apiKey;
+  if (!key) { el.textContent = 'Brak klucza!'; return; }
+  try {
+    const r = await fetch('https://api.football-data.org/v4/competitions/WC/matches', {
+      headers: { 'X-Auth-Token': key }
+    });
+    const text = await r.text();
+    let parsed;
+    try { parsed = JSON.parse(text); } catch(_) { parsed = null; }
+    const matchCount = parsed?.matches?.length || 0;
+    const msg = parsed?.message || parsed?.detail || parsed?.error || '';
+    if (r.status === 200) {
+      el.style.color = 'var(--acc)';
+      el.textContent = 'OK! Status 200. Meczy w odpowiedzi: ' + matchCount + '. Pierwsze 2: ' +
+        (parsed?.matches||[]).slice(0,2).map(m=>(m.homeTeam?.name||'?')+' vs '+(m.awayTeam?.name||'?')+' ['+m.status+']').join(', ');
+    } else {
+      el.style.color = 'var(--red)';
+      el.textContent = 'Blad HTTP ' + r.status + ': ' + (msg || text.slice(0,200));
+    }
+  } catch(e) {
+    el.style.color = 'var(--red)';
+    el.textContent = 'Blad sieci: ' + e.message + '. Sprawdz czy strona jest na HTTPS (GitHub Pages jest OK).';
+  }
 };
 
 window.saveApiKey = function() {
