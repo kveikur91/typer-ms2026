@@ -521,7 +521,8 @@ function renderTypy(m) {
     const ptsH = p2!==null
       ? `<span class="pb ${pc}">${p2>0?'+':''}${p2}</span>`
       : '';
-    const ts = typ
+    const hasTyp = typ && typ.home !== null && typ.home !== undefined && typ.away !== null && typ.away !== undefined;
+    const ts = hasTyp
       ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`
       : '&mdash;';
     return `<tr>
@@ -638,7 +639,9 @@ function renderRoundPage(r) {
 
     const typRows = S.players.map(p=>{
       const typ = (S.typy[m.id]||{})[p];
-      if (!typ) return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd)"><span style="color:var(--mut)">${p}</span><span style="color:var(--mut);font-size:12px">brak typu</span></div>`;
+      const hasTyp = typ && typ.home !== null && typ.home !== undefined
+                        && typ.away !== null && typ.away !== undefined;
+      if (!hasTyp) return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd)"><span style="color:var(--mut)">${p}</span><span style="color:var(--mut);font-size:12px">&ndash;</span></div>`;
       const p2  = hasScore ? pts(typ,w) : null;
       const ic  = hasScore ? icon(typ,w) : '&#8987;';
       const ptsH = p2!==null
@@ -773,9 +776,11 @@ window.saveTypy = function(id) {
     const a = aEl.value.trim();
     const x = xEl ? xEl.checked : false;
     if (h !== '' && a !== '' && !isNaN(parseInt(h)) && !isNaN(parseInt(a))) {
+      // Wpisano wartości – zapisz/nadpisz
       S.typy[id][p] = { home: parseInt(h), away: parseInt(a), x2: !!x };
       saved++;
     }
+    // Puste inputy = nie ruszamy istniejącego typu (nie kasujemy!)
   });
   fbSave();
   render();
@@ -799,9 +804,14 @@ function rebuildAdmin() {
   if (ai && !ai.value && S.apiKey) ai.value = S.apiKey;
   const pi = document.getElementById('proxyUrlInp');
   if (pi && !pi.value && S.proxyUrl) pi.value = S.proxyUrl;
-  const id = document.getElementById('adminSel')?.value;
-  const m = MATCHES.find(x=>x.id===id);
-  if (m) renderAdminForm(m);
+  // Formularz meczowy przebudowujemy TYLKO gdy panel jest otwarty.
+  // Dzięki temu odświeżenie Firebase nie niszczy wartości wpisanych w inputy.
+  const panelOpen = document.getElementById('adminPanel').classList.contains('on');
+  if (panelOpen) {
+    const id = document.getElementById('adminSel')?.value;
+    const m = MATCHES.find(x=>x.id===id);
+    if (m) renderAdminForm(m);
+  }
 }
 
 // BUGFIX #1: wszystkie id inputów generowane przez safeId(p)
