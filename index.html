@@ -174,6 +174,8 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
     <input class="ainp" id="proxyUrlInp" placeholder="https://twoj-worker.workers.dev" />
     <button class="abtn" style="margin-top:6px" onclick="saveApiKey()">Zapisz i polacz</button>
     <button class="abtn" style="margin-top:4px;background:var(--sur2);color:var(--txt);border:1px solid var(--brd)" onclick="diagApi()">&#128270; Diagnostyka</button>
+    <button class="abtn" style="margin-top:4px;background:var(--sur2);color:var(--txt);border:1px solid var(--brd)" onclick="manualRefresh()">&#128260; Odswiez wyniki teraz</button>
+    <div id="lastFetchInfo" style="font-size:11px;color:var(--mut);margin-top:4px"></div>
     <div id="diagResult" style="font-size:11px;color:var(--mut);margin-top:6px;word-break:break-all;display:none;background:var(--bg);padding:8px;border-radius:6px;border:1px solid var(--brd)"></div>
     <div class="apiinfo">
       Klucz: <a href="https://www.football-data.org/client/register" target="_blank">football-data.org/client/register</a><br>
@@ -493,6 +495,13 @@ async function fetchScores() {
         minute: m.minute || null,
       };
       const old = S.wyniki[match.id];
+      // Ochrona: jesli mamy juz zapisany wynik (recznie lub z API), a nowy wpis
+      // z API ma puste wyniki (home/away===null) - nie nadpisuj, bo to by
+      // usunelo poprawny wynik (API czasem zwraca FINISHED bez score).
+      if (old && old.home !== null && old.away !== null
+          && (newW.home === null || newW.away === null)) {
+        return;
+      }
       if (!old || old.home!==newW.home || old.away!==newW.away || old.status!==newW.status) {
         S.wyniki[match.id] = newW;
         changed = true;
@@ -500,6 +509,8 @@ async function fetchScores() {
     });
     const count = (data.matches||[]).length;
     setApiBadge('ok', `Live (${count} meczy)`);
+    const lf = document.getElementById('lastFetchInfo');
+    if (lf) lf.textContent = 'Ostatnie odswiezenie: ' + new Date().toLocaleTimeString('pl-PL');
     if (changed) { fbSave(); }
     handleHash(); // zawsze odswiezamy aktualnie widoczna strone (main/round/typowania)
     rebuildAdmin();
@@ -850,6 +861,11 @@ window.toggleAdmin = function() {
   if (p.classList.contains('on') && document.getElementById('koStageSel')) renderKoEditor();
 };
 
+window.manualRefresh = function() {
+  _lastFetch = Date.now();
+  fetchScores();
+};
+
 window.diagApi = async function() {
   const el = document.getElementById('diagResult');
   el.style.display = 'block';
@@ -871,8 +887,13 @@ window.diagApi = async function() {
     const msg = parsed?.message || parsed?.detail || parsed?.error || '';
     if (r.status === 200) {
       el.style.color = 'var(--acc)';
-      el.textContent = 'OK! Status 200. Meczy w odpowiedzi: ' + matchCount + '. Pierwsze 2: ' +
-        (parsed?.matches||[]).slice(0,2).map(m=>(m.homeTeam?.name||'?')+' vs '+(m.awayTeam?.name||'?')+' ['+m.status+']').join(', ');
+      const sample = (parsed?.matches||[]).slice(0,2).map(m=>{
+        const ft = m.score?.fullTime;
+        const scoreStr = ft ? (ft.home ?? '?')+':'+(ft.away ?? '?') : 'brak score';
+        const found = findByEnglishNames(m.homeTeam?.shortName||m.homeTeam?.name||'', m.awayTeam?.shortName||m.awayTeam?.name||'');
+        return (m.homeTeam?.name||'?')+' vs '+(m.awayTeam?.name||'?')+' ['+m.status+', '+scoreStr+'] -> dopasowano: '+(found?found.id:'NIE ZNALEZIONO');
+      }).join(' | ');
+      el.textContent = 'OK! Status 200. Meczy w odpowiedzi: ' + matchCount + '. Pierwsze 2: ' + sample;
     } else {
       el.style.color = 'var(--red)';
       el.textContent = 'Blad HTTP ' + r.status + ': ' + (msg || text.slice(0,200));
