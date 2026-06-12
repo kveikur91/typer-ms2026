@@ -268,9 +268,11 @@ let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'' };
 let currentRound = 1;
 let fbLoaded = false;
 
-// BUGFIX #2: Flaga blokująca fetchScores podczas zapisu z admina
-// Zapobiega pętli: fbSave → onValue → fetchScores → fbSave → ...
-let _suppressFetch = false;
+// Licznik własnych zapisów oczekujących na echo z Firebase.
+// onValue odpala się też na nasze własne set() – ignorujemy te echa.
+let _pendingSaves = 0;
+// Znacznik czasu ostatniego fetchScores – nie odpytujemy częściej niż co 55s
+let _lastFetch = 0;
 
 // =====================================================
 // FIREBASE
@@ -278,6 +280,17 @@ let _suppressFetch = false;
 function initFirebase() {
   onValue(ref(db,'state'), snap => {
     const d = snap.val();
+
+    if (_pendingSaves > 0) {
+      // To echo naszego własnego zapisu – pomijamy nadpisanie S,
+      // bo S już ma najnowszy stan (właśnie go zapisaliśmy)
+      _pendingSaves--;
+      setFbBadge('ok','Firebase OK');
+      render();
+      rebuildAdmin();
+      return;
+    }
+
     if (d) {
       S.players  = d.players  || [];
       S.typy     = d.typy     || {};
@@ -287,27 +300,27 @@ function initFirebase() {
     } else {
       S.players = ['Gracz 1','Gracz 2','Gracz 3','Gracz 4','Gracz 5','Gracz 6','Gracz 7','Gracz 8'];
       fbSave();
+      return;
     }
+
+    const isFirstLoad = !fbLoaded;
     fbLoaded = true;
     setFbBadge('ok','Firebase OK');
     render();
     rebuildAdmin();
 
-    // BUGFIX #2: fetchScores tylko przy pierwszym załadowaniu lub jeśli
-    // zmiana nie pochodzi z naszego własnego zapisu
-    if (!_suppressFetch) {
-      if (S.apiKey) fetchScores();
+    // fetchScores tylko przy pierwszym załadowaniu danych z Firebase
+    if (isFirstLoad) {
+      if (S.apiKey) { _lastFetch = Date.now(); fetchScores(); }
       else setApiBadge('err','Brak klucza API');
     }
-    _suppressFetch = false;
   }, err => {
     setFbBadge('err','Blad Firebase');
   });
 }
 
-function fbSave(suppressFetch = true) {
-  // BUGFIX #2: domyślnie blokujemy fetchScores po własnym zapisie
-  _suppressFetch = suppressFetch;
+function fbSave() {
+  _pendingSaves++;   // zapamiętaj ile ech czekamy z Firebase
   set(ref(db,'state'), {
     players:  S.players,
     typy:     S.typy,
@@ -361,13 +374,24 @@ async function fetchScores() {
       const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
       const cur = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
+      const apiStatus = mapSt(m.status);
       const newW = {
         home:   cur ? cur.home : null,
         away:   cur ? cur.away : null,
-        status: mapSt(m.status),
+        status: apiStatus,
         minute: m.minute || null,
       };
+
       const old = S.wyniki[match.id];
+
+      // Nie nadpisuj ręcznie wpisanego wyniku (ft/live) danymi z API
+      // jeśli API zwraca null:null (mecz jeszcze nie rozegrany wg API)
+      if (old && (old.status === 'ft' || old.status === 'live')) {
+        if (newW.home === null && newW.away === null && apiStatus === 'upcoming') {
+          return; // zachowaj ręczny wynik
+        }
+      }
+
       if (!old || old.home!==newW.home || old.away!==newW.away || old.status!==newW.status) {
         S.wyniki[match.id] = newW;
         changed = true;
@@ -375,7 +399,7 @@ async function fetchScores() {
     });
     const count = (data.matches||[]).length;
     setApiBadge('ok', `Live (${count} meczy)`);
-    if (changed) fbSave(false); // false = nie blokuj fetchScores po zapisie wyników API
+    if (changed) fbSave();
     else render();
   } catch(e) {
     setApiBadge('err', 'Blad sieci/CORS');
@@ -723,7 +747,8 @@ window.saveApiKey = function() {
   if (!k) return;
   S.apiKey = k;
   S.proxyUrl = p;
-  fbSave(false); // po zapisaniu klucza API chcemy żeby fetchScores się odpaliło
+  fbSave();
+  fetchScores(); // wywołaj wprost, nie przez pętlę onValue
 };
 
 window.onMatchChange = function() {
@@ -854,7 +879,12 @@ function renderAdminForm(m) {
 // INIT
 // =====================================================
 initFirebase();
-setInterval(()=>{ if(S.apiKey) fetchScores(); }, 60000);
+setInterval(()=>{
+  if (S.apiKey && _pendingSaves === 0) {
+    const now = Date.now();
+    if (now - _lastFetch >= 55000) { _lastFetch = now; fetchScores(); }
+  }
+}, 60000);
 </script>
 </body>
 </html>
