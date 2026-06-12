@@ -350,19 +350,6 @@ let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'', koTeams:{} };
 let currentRound = 1;
 let fbLoaded = false;
 
-
-function cleanScoreValue(v) {
-  if (v === null || v === undefined) return null;
-  if (typeof v === 'string') {
-    const t = v.trim().toLowerCase();
-    if (t === '' || t === 'undefined' || t === 'null' || t === 'nan') return null;
-  }
-  const n = parseInt(v, 10);
-  return isNaN(n) ? null : n;
-}
-
-
-
 // =====================================================
 // FIREBASE LISTENERS – real-time sync
 // =====================================================
@@ -374,15 +361,6 @@ function initFirebase() {
       S.players  = d.players  || [];
       S.typy     = d.typy     || {};
       S.wyniki   = d.wyniki   || {};
-      Object.keys(S.wyniki).forEach(k => {
-        const w = S.wyniki[k] || {};
-        S.wyniki[k] = {
-          home: cleanScoreValue(w.home),
-          away: cleanScoreValue(w.away),
-          status: w.status || 'upcoming',
-          minute: w.minute || null
-        };
-      });
       S.apiKey   = d.apiKey   || '';
       S.proxyUrl = d.proxyUrl || '';
       S.koTeams  = d.koTeams  || {};
@@ -408,7 +386,12 @@ function initFirebase() {
 }
 
 function fbSave() {
-  set(ref(db,'state'), { players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey, proxyUrl:S.proxyUrl||'', koTeams:S.koTeams||{} });
+  // Firebase odrzuca wartosci "undefined" - usuwamy je rekurencyjnie przed zapisem
+  const clean = JSON.parse(JSON.stringify({ players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey, proxyUrl:S.proxyUrl||'', koTeams:S.koTeams||{} }));
+  set(ref(db,'state'), clean).catch(err => {
+    console.error('fbSave error:', err);
+    alert('Blad zapisu do Firebase: ' + (err && err.message ? err.message : err));
+  });
 }
 
 function setFbBadge(t,l) {
@@ -469,8 +452,8 @@ async function fetchScores() {
       // API zwraca null dla przyszłych meczy, 0:0 dla trwających
       const cur = (ft && ft.home !== null) ? ft : (ht && ht.home !== null) ? ht : null;
       const newW = {
-        home:   cleanScoreValue(cur ? cur.home : null),
-        away:   cleanScoreValue(cur ? cur.away : null),
+        home:   cur ? cur.home : null,
+        away:   cur ? cur.away : null,
         status: mapSt(m.status),
         minute: m.minute || null,
       };
@@ -482,8 +465,9 @@ async function fetchScores() {
     });
     const count = (data.matches||[]).length;
     setApiBadge('ok', `Live (${count} meczy)`);
-    if (changed) { fbSave(); render(); }
-    else render(); // zawsze odswiezamy widok
+    if (changed) { fbSave(); }
+    handleHash(); // zawsze odswiezamy aktualnie widoczna strone (main/round/typowania)
+    rebuildAdmin();
   } catch(e) {
     // Network error (CORS, brak sieci itp)
     setApiBadge('err', 'Blad sieci/CORS');
@@ -493,17 +477,15 @@ async function fetchScores() {
 
 // Match API name to our match object
 function findByEnglishNames(hn, an) {
-  const norm = s => (s||'').toLowerCase()
+  const norm = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
     .replace(/[^\w\s]/g,'').replace(/\s+/g,' ').trim();
   // Build alias map for short names the API might return
   const ALIAS = {
     'usa':'united states','us':'united states','türkiye':'turkey','turkiye':'turkey',
     'ir iran':'iran','côte divoire':'ivory coast',"cote divoire":'ivory coast',
-    'ivory coast':"côte d'ivoire",'south korea':'south korea','korea republic':'south korea',
+    'ivory coast':'cote divoire','south korea':'south korea','korea republic':'south korea',
     'czechia':'czech republic','bosnia':'bosnia and herzegovina',
-    'dr congo':'dr congo','congo dr':'dr congo',
-    'south africa republic':'south africa','republic of south africa':'south africa',
-    'bosnia herzegovina':'bosnia and herzegovina','mexico':'mexico'
+    'dr congo':'dr congo','congo dr':'dr congo'
   };
   const na = s => { const n=norm(s); return ALIAS[n]||n; };
   const h = na(hn), a = na(an);
@@ -605,9 +587,7 @@ function render() {
 
 function renderHero(m, isLive) {
   const w = S.wyniki[m.id]||{};
-  w.home = cleanScoreValue(w.home);
-  w.away = cleanScoreValue(w.away);
-  const hasScore = cleanScoreValue(w.home)!==null && cleanScoreValue(w.away)!==null;
+  const hasScore = w.home!==null && w.home!==undefined;
   let badge = '';
   if      (w.status==='live') badge=`<span class="tbadge live">&#128308; LIVE ${w.minute?w.minute+"'":''}  </span>`;
   else if (w.status==='ft')   badge=`<span class="tbadge">FT</span>`;
@@ -902,13 +882,9 @@ window.saveWynik = function(id) {
   const h = document.getElementById('wH').value.trim();
   const a = document.getElementById('wA').value.trim();
   const st = document.getElementById('wSt').value;
-
-  const homeVal = cleanScoreValue(h);
-  const awayVal = cleanScoreValue(a);
-
   S.wyniki[id] = {
-    home: homeVal,
-    away: awayVal,
+    home:   h !== '' && !isNaN(parseInt(h)) ? parseInt(h) : null,
+    away:   a !== '' && !isNaN(parseInt(a)) ? parseInt(a) : null,
     status: st,
     minute: null,
   };
