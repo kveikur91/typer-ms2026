@@ -1289,13 +1289,7 @@ const stateRef = ref(db, 'state');
 onValue(stateRef, (snapshot) => {
   const data = snapshot.val();
   
-  // Pomijamy echo własnych zapisów
-  if (isInternalUpdate) {
-    return;
-  }
-  
   if (data && typeof data === 'object') {
-    // Załaduj dane z Firebase
     S.players = Array.isArray(data.players) ? data.players : [];
     S.typy = data.typy || {};
     S.wyniki = data.wyniki || {};
@@ -1313,20 +1307,29 @@ onValue(stateRef, (snapshot) => {
     // Inicjalizuj domyślnych graczy tylko jeśli baza jest pusta
     if (S.players.length === 0) {
       S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
-      saveToFirebase();
     }
   } else {
     // Pusta baza – pierwsze uruchomienie
     S.players = ['Gracz 1', 'Gracz 2', 'Gracz 3', 'Gracz 4', 'Gracz 5', 'Gracz 6', 'Gracz 7', 'Gracz 8'];
     S.typy = {};
     S.wyniki = {};
-    saveToFirebase();
+    S.koTeams = {};
+  }
+
+  // Pomijamy echo własnych zapisów – ale tylko jeśli dane już załadowane
+  if (isInternalUpdate && isDataLoaded) {
+    return;
   }
   
   setFbBadge('ok', 'Firebase OK');
   isDataLoaded = true;
   handleHash();
   rebuildAdmin();
+  
+  // Zapisz domyślnych graczy jeśli baza była pusta
+  if (!data || !data.players || data.players.length === 0) {
+    saveToFirebase();
+  }
   
   // Pobierz wyniki live jeśli mamy klucz API
   if (S.apiKey) {
