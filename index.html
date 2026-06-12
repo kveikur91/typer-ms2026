@@ -556,6 +556,7 @@ function mapSt(s) {
 // =====================================================
 function pts(typ, w) {
   if (!w||w.home===null||w.away===null||!typ) return null;
+  if (w.status!=='live' && w.status!=='ft') return null;
   const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
   let p;
   if (tH===wH&&tA===wA) p=4;
