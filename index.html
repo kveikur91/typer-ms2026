@@ -13,7 +13,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh}
-/* HEADER */
 .hdr{background:linear-gradient(135deg,#0a0f1e,#0d1b35);border-bottom:1px solid var(--brd);padding:14px 20px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
 .hdr-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;letter-spacing:1px}
 .hdr-title span{color:var(--acc)}
@@ -23,16 +22,12 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .b-ok{background:rgba(34,211,168,.15);color:var(--acc)}
 .b-err{background:rgba(239,68,68,.15);color:var(--red)}
 .b-wait{background:rgba(100,116,139,.15);color:var(--mut)}
-/* LAYOUT */
 .page{display:none}.page.on{display:block}
 .wrap{max-width:800px;margin:0 auto;padding:16px}
 .gap{margin-bottom:24px}
-/* SECTION */
 .slabel{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--mut);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .slabel::after{content:'';flex:1;height:1px;background:var(--brd)}
-/* CARDS */
 .card{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:16px}
-/* MATCH HERO */
 .mhero{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
 .mhero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 .mmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
@@ -46,7 +41,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .tname{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;text-align:center}
 .score{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:52px;line-height:1;letter-spacing:2px}
 .score.up{font-size:32px;color:var(--mut)}
-/* TYPY TABLE */
 .tt{width:100%;border-collapse:collapse}
 .tt th{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--mut);text-transform:uppercase;padding:6px 8px;text-align:left;border-bottom:1px solid var(--brd)}
 .tt td{padding:9px 8px;border-bottom:1px solid var(--brd);font-size:13px}
@@ -61,7 +55,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .p2{background:rgba(251,191,36,.12);color:var(--gld)}
 .pn{background:rgba(239,68,68,.12);color:var(--red)}
 .p0{color:var(--mut)}
-/* LEADERBOARD */
 .lb-list{list-style:none}
 .lb-row{display:flex;align-items:center;padding:10px 12px;border-radius:8px;margin-bottom:6px;background:var(--sur2);border:1px solid var(--brd);transition:transform .15s}
 .lb-row:hover{transform:translateX(2px)}
@@ -70,31 +63,24 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .lb-n{flex:1;font-weight:600;font-size:14px}
 .lb-p{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--acc)}
 .lb-pl{font-size:10px;color:var(--mut);margin-left:3px;font-weight:500}
-/* UPCOMING */
 .ulist{display:flex;flex-direction:column;gap:8px}
 .urow{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;font-size:13px;cursor:pointer;transition:border-color .15s}
 .urow:hover{border-color:var(--acc)}
 .utime{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--acc2);width:55px;flex-shrink:0}
-/* FOOTER */
 .footer{text-align:center;padding:20px 0 40px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .flink{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:var(--acc2);cursor:pointer;border-bottom:1px solid rgba(245,158,11,.3);padding-bottom:2px}
 .flink:hover{border-color:var(--acc2)}
-/* BACK BTN */
 .back{display:inline-flex;align-items:center;gap:6px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--mut);cursor:pointer;margin-bottom:16px;background:none;border:none;padding:6px 0}
 .back:hover{color:var(--txt)}
-/* ROUND PAGE */
 .mrow{padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
 .mrow:hover{border-color:var(--acc)}
 .mrow-header{display:flex;align-items:center;gap:8px}
 .mrow-body{display:none;padding-top:10px;padding-left:50px}
 .mrow.open .mrow-body{display:block}
-/* MATCH DETAIL PAGE */
 .match-detail-hero{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
 .match-detail-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
-/* SPINNER */
 .sp{display:inline-block;width:16px;height:16px;border:2px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* ADMIN PANEL */
 .afab{position:fixed;bottom:16px;right:16px;background:var(--acc);color:#000;border:none;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;z-index:200;box-shadow:0 4px 16px rgba(34,211,168,.3)}
 .apanel{position:fixed;bottom:72px;right:16px;width:340px;background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:16px;z-index:200;display:none;box-shadow:0 8px 32px rgba(0,0,0,.6);max-height:80vh;overflow-y:auto}
 .apanel.on{display:block}
@@ -114,7 +100,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .delbtn:hover{color:var(--red)}
 .fbbox{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:12px;margin-bottom:12px}
 .fbinfo{font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5}
-/* TYPOWANIA sub-rounds */
 .round-section{background:var(--bg);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
 .round-section:hover{border-color:var(--acc)}
 .round-section-header{display:flex;align-items:center;gap:8px;padding:9px 12px}
@@ -122,11 +107,29 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .round-section.open .round-section-body{display:block}
 .round-section-arrow{color:var(--mut);font-size:11px;margin-left:auto;transition:transform .2s}
 .round-section.open .round-section-arrow{transform:rotate(180deg)}
+
+/* ===== ODZNAKI CSS ===== */
+.odz-player-card{background:var(--sur2);border:1px solid var(--brd);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.odz-player-card:hover{border-color:var(--acc)}
+.odz-player-header{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.odz-player-body{display:none;padding:4px 14px 14px 14px}
+.odz-player-card.open .odz-player-body{display:block}
+.odz-count{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--acc);background:rgba(34,211,168,.12);padding:2px 8px;border-radius:12px;margin-left:auto}
+.odz-arrow{color:var(--mut);font-size:11px;transition:transform .2s;margin-left:6px}
+.odz-player-card.open .odz-arrow{transform:rotate(180deg)}
+.odz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:10px}
+.odz-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border-radius:10px;border:1px solid var(--brd);background:var(--bg);text-align:center;transition:border-color .2s}
+.odz-item.earned{border-color:rgba(34,211,168,.3);background:rgba(34,211,168,.04)}
+.odz-item.locked{opacity:.35;filter:grayscale(0.6)}
+.odz-icon{font-size:32px;line-height:1}
+.odz-name{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--txt);line-height:1.3}
+.odz-item.locked .odz-name{color:var(--mut)}
+.odz-desc{font-size:10px;color:var(--mut);line-height:1.4;margin-top:2px}
+.odz-item.earned .odz-desc{color:rgba(226,232,240,.6)}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="hdr">
   <span style="font-size:22px">&#9917;</span>
   <span class="hdr-title">MS <span>2026</span> TYPER</span>
@@ -150,6 +153,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
       <span class="flink" onclick="goRound(7)">⚔️ 1/2</span>
       <span class="flink" onclick="goRound(8)">🏆 FINAŁ</span>
       <span class="flink" onclick="goTypowania()">👤 TYPOWANIA</span>
+      <span class="flink" onclick="goOdznaki()">🏅 ODZNAKI</span>
     </div>
   </div>
 </div>
@@ -178,16 +182,22 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   </div>
 </div>
 
+<!-- ODZNAKI PAGE -->
+<div id="pageOdznaki" class="page">
+  <div class="wrap">
+    <button class="back" onclick="goMain()">&#8592; WRÓC</button>
+    <div id="odznakiContent"></div>
+  </div>
+</div>
+
 <!-- ADMIN FAB -->
 <button class="afab" onclick="toggleAdmin()">&#9881;</button>
 <div class="apanel" id="adminPanel">
   <div class="atitle">&#9881; PANEL ADMINA</div>
-
   <div class="fbbox">
     <div style="font-size:11px;color:var(--gld);font-weight:700;letter-spacing:1px;margin-bottom:4px">&#128293; FIREBASE POLACZONY</div>
     <div class="fbinfo">Dane sa wspoldzielone miedzy wszystkimi uzytkownikami w czasie rzeczywistym.</div>
   </div>
-
   <div class="apibox">
     <div style="font-size:11px;color:var(--acc);font-weight:700;letter-spacing:1px;margin-bottom:4px">&#128273; KLUCZ API – WYNIKI LIVE</div>
     <input class="ainp" id="apiKeyInp" placeholder="Klucz z football-data.org..." />
@@ -204,20 +214,16 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
       <strong style="color:var(--gld)">Bez workera = blad CORS. Instrukcja nizej.</strong>
     </div>
   </div>
-
   <div class="asect">WYBIERZ MECZ</div>
   <select class="asel" id="adminSel" onchange="onMatchChange()" style="margin-bottom:8px"></select>
-
   <div class="asect">TYPY I WYNIK</div>
   <div id="adminForm"></div>
-
   <div class="asect">GRACZE</div>
   <div id="playersList"></div>
   <div style="display:flex;gap:6px;margin-top:6px">
     <input class="ainp" id="newPlayer" placeholder="Imie gracza" style="flex:1" onkeydown="if(event.key==='Enter')addPlayer()"/>
     <button class="abtn" style="width:auto;padding:9px 16px" onclick="addPlayer()">+</button>
   </div>
-
   <div class="asect">FAZA PUCHAROWA – DRUŻYNY</div>
   <select class="asel" id="koStageSel" onchange="renderKoEditor()" style="margin-bottom:8px">
     <option value="4">1/16 finału</option>
@@ -230,9 +236,6 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 </div>
 
 <script type="module">
-// =====================================================
-// FIREBASE CONFIG
-// =====================================================
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, onValue, set, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
@@ -242,11 +245,7 @@ const FB_CONFIG = {
 const fbApp = initializeApp(FB_CONFIG);
 const db = getDatabase(fbApp);
 
-// =====================================================
-// MATCHES DATA
-// =====================================================
 const MATCHES = [
-  // ROUND 1
   {id:'r1m01',r:1,g:'A',hn:'Mexico',      an:'South Africa',   hpl:'Meksyk',      apl:'RPA',           hf:'MX', af:'ZA',  date:'2026-06-11',time:'21:00',venue:'Mexico City'},
   {id:'r1m02',r:1,g:'A',hn:'South Korea', an:'Czech Republic', hpl:'Korea Pd.',   apl:'Czechy',         hf:'KR', af:'CZ',  date:'2026-06-12',time:'04:00',venue:'Guadalajara'},
   {id:'r1m03',r:1,g:'B',hn:'Canada',      an:'Bosnia and Herzegovina',hpl:'Kanada',apl:'Bosnia i Herc.',hf:'CA', af:'BA',  date:'2026-06-12',time:'21:00',venue:'Toronto'},
@@ -271,7 +270,6 @@ const MATCHES = [
   {id:'r1m22',r:1,g:'L',hn:'England',     an:'Croatia',        hpl:'Anglia',      apl:'Chorwacja',      hf:'ENG',af:'HR',  date:'2026-06-17',time:'22:00',venue:'Dallas'},
   {id:'r1m23',r:1,g:'L',hn:'Ghana',       an:'Panama',         hpl:'Ghana',       apl:'Panama',         hf:'GH', af:'PA',  date:'2026-06-18',time:'01:00',venue:'Toronto'},
   {id:'r1m24',r:1,g:'K',hn:'Uzbekistan',  an:'Colombia',       hpl:'Uzbekistan',  apl:'Kolumbia',       hf:'UZ', af:'CO',  date:'2026-06-18',time:'04:00',venue:'Mexico City'},
-  // ROUND 2
   {id:'r2m01',r:2,g:'A',hn:'Czech Republic',an:'South Africa', hpl:'Czechy',      apl:'RPA',            hf:'CZ', af:'ZA',  date:'2026-06-18',time:'18:00',venue:'Atlanta'},
   {id:'r2m02',r:2,g:'B',hn:'Switzerland', an:'Bosnia and Herzegovina',hpl:'Szwajcaria',apl:'Bosnia i Herc.',hf:'CH',af:'BA',date:'2026-06-18',time:'21:00',venue:'Los Angeles'},
   {id:'r2m03',r:2,g:'B',hn:'Canada',      an:'Qatar',          hpl:'Kanada',      apl:'Katar',          hf:'CA', af:'QA',  date:'2026-06-19',time:'00:00',venue:'Vancouver'},
@@ -296,7 +294,6 @@ const MATCHES = [
   {id:'r2m22',r:2,g:'L',hn:'England',     an:'Ghana',          hpl:'Anglia',      apl:'Ghana',          hf:'ENG',af:'GH',  date:'2026-06-23',time:'22:00',venue:'Boston'},
   {id:'r2m23',r:2,g:'L',hn:'Panama',      an:'Croatia',        hpl:'Panama',      apl:'Chorwacja',      hf:'PA', af:'HR',  date:'2026-06-24',time:'01:00',venue:'Toronto'},
   {id:'r2m24',r:2,g:'K',hn:'Colombia',    an:'DR Congo',       hpl:'Kolumbia',    apl:'DR Kongo',       hf:'CO', af:'CD',  date:'2026-06-24',time:'04:00',venue:'Guadalajara'},
-  // ROUND 3
   {id:'r3m01',r:3,g:'B',hn:'Switzerland', an:'Canada',         hpl:'Szwajcaria',  apl:'Kanada',         hf:'CH', af:'CA',  date:'2026-06-24',time:'21:00',venue:'Vancouver'},
   {id:'r3m02',r:3,g:'B',hn:'Bosnia and Herzegovina',an:'Qatar',hpl:'Bosnia i Herc.',apl:'Katar',        hf:'BA', af:'QA',  date:'2026-06-24',time:'21:00',venue:'Seattle'},
   {id:'r3m03',r:3,g:'C',hn:'Scotland',    an:'Brazil',         hpl:'Szkocja',     apl:'Brazylia',       hf:'SCT',af:'BR',  date:'2026-06-25',time:'00:00',venue:'Miami'},
@@ -365,9 +362,6 @@ const FLAGS = {
 };
 const F = c => FLAGS[c]||'🏳️';
 
-// =====================================================
-// HELPERS
-// =====================================================
 function safeId(name) {
   return String(name).replace(/[^a-zA-Z0-9_-]/g, '_');
 }
@@ -375,18 +369,12 @@ function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-// =====================================================
-// LOCAL STATE
-// =====================================================
 let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'', koTeams:{} };
 let currentRound = 1;
 let fbLoaded = false;
 let _pendingSaves = 0;
 let _lastFetch = 0;
 
-// =====================================================
-// FIREBASE LISTENERS
-// =====================================================
 function initFirebase() {
   onValue(ref(db,'state'), snap => {
     const d = snap.val();
@@ -449,9 +437,6 @@ function setApiBadge(t,l) {
   el.className='badge b-'+t; el.textContent=l;
 }
 
-// =====================================================
-// FOOTBALL-DATA.ORG – live scores
-// =====================================================
 async function fetchScores() {
   if (!S.apiKey) return;
   setApiBadge('wait','Ladowanie...');
@@ -469,17 +454,14 @@ async function fetchScores() {
     const text = await r.text();
     let data;
     try { data = JSON.parse(text); } catch(_) { data = {}; }
-
     if (r.status === 401) { setApiBadge('err','401 Bledny klucz'); return; }
     if (r.status === 403) {
       const msg = data.message || data.detail || '';
       setApiBadge('err', msg.includes('permission') ? '403 Plan nie obejmuje WC' : '403 Brak dostepu');
-      console.error('API 403:', text);
       return;
     }
     if (r.status === 429) { setApiBadge('err','429 Limit zapytan'); return; }
-    if (!r.ok) { setApiBadge('err','Blad '+r.status); console.error('API error:', text); return; }
-
+    if (!r.ok) { setApiBadge('err','Blad '+r.status); return; }
     let changed = false;
     (data.matches||[]).forEach(m => {
       const match = findByEnglishNames(
@@ -549,9 +531,6 @@ function mapSt(s) {
   return 'upcoming';
 }
 
-// =====================================================
-// SCORING
-// =====================================================
 function pts(typ, w) {
   if (!w||w.home==null||w.away==null||!typ) return null;
   if (w.status!=='live' && w.status!=='ft') return null;
@@ -562,6 +541,17 @@ function pts(typ, w) {
   else if ((tH>tA&&wH>wA)||(tH<tA&&wH<wA)||(tH===tA&&wH===wA)) p=2;
   else p=-1;
   return typ.x2 ? p*2 : p;
+}
+
+function ptsBase(typ, w) {
+  // punkty bez mnoznika x2
+  if (!w||w.home==null||w.away==null||!typ) return null;
+  if (w.status!=='live' && w.status!=='ft') return null;
+  const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
+  if (tH===wH&&tA===wA) return 4;
+  if (tH-tA===wH-wA) return 3;
+  if ((tH>tA&&wH>wA)||(tH<tA&&wH<wA)||(tH===tA&&wH===wA)) return 2;
+  return -1;
 }
 
 function icon(typ, w) {
@@ -592,9 +582,6 @@ function totalPts(player, roundFilter) {
   },0);
 }
 
-// =====================================================
-// CURRENT / NEXT MATCH
-// =====================================================
 function curNext() {
   const now = new Date();
   let live=null, next=null, minD=Infinity;
@@ -609,6 +596,429 @@ function curNext() {
     if (d>0 && d<minD) { minD=d; next=m; }
   });
   return {live,next};
+}
+
+// =====================================================
+// ODZNAKI – LOGIKA
+// =====================================================
+
+// Mecze posortowane chronologicznie
+const MATCHES_SORTED = [...MATCHES].sort((a,b) => {
+  const da = new Date(a.date+'T'+a.time+':00');
+  const db2 = new Date(b.date+'T'+b.time+':00');
+  return da - db2;
+});
+
+// Wszystkie definicje odznak
+const BADGE_DEFS = [
+  { id:'sokolie_oko',    icon:'🦅', name:'Sokole oko',      desc:'Jedyny z punktami dodatnimi gdy wszyscy inni mają -1/-2' },
+  { id:'owieczka',       icon:'🐑', name:'Owieczka',         desc:'Zdobył punkty dodatnie gdy wszyscy inni też zdobyli punkty dodatnie' },
+  { id:'robaczek',       icon:'🐛', name:'Robaczek',         desc:'Zdobył punkty ujemne gdy wszyscy inni też zdobyli punkty ujemne' },
+  { id:'krol_imprezy',   icon:'🎉', name:'Król imprezy',     desc:'Użył x2 i trafił dokładny wynik' },
+  { id:'klaun',          icon:'🤡', name:'Klaun',            desc:'Użył x2 i nie trafił nawet zwycięzcy' },
+  { id:'rzeznik',        icon:'🔪', name:'Rzeźnik',          desc:'Najwięcej nietrafionych wyników w rundzie' },
+  { id:'kolekcjoner',    icon:'🎯', name:'Kolekcjoner',      desc:'Najwięcej trafionych zwycięzców/remisów w rundzie' },
+  { id:'snajper',        icon:'🎳', name:'Snajper',          desc:'Najwięcej dokładnych wyników w rundzie' },
+  { id:'perfekcjonista', icon:'✨', name:'Perfekcjonista',   desc:'Trzy razy z rzędu punkty dodatnie (chronologicznie)' },
+  { id:'pechowiec',      icon:'🌧️', name:'Pechowiec',       desc:'Trzy razy z rzędu punkty ujemne (chronologicznie)' },
+  { id:'zimnokrwisty',   icon:'🧊', name:'Zimnokrwisty',    desc:'Najwięcej trafionych remisów w rundzie' },
+  { id:'krol_r1',        icon:'👑', name:'Król Rundy 1',     desc:'Najwięcej punktów w Rundzie 1' },
+  { id:'krol_r2',        icon:'👑', name:'Król Rundy 2',     desc:'Najwięcej punktów w Rundzie 2' },
+  { id:'krol_r3',        icon:'👑', name:'Król Rundy 3',     desc:'Najwięcej punktów w Rundzie 3' },
+  { id:'krol_16',        icon:'⚔️', name:'Król 1/16',       desc:'Najwięcej punktów w fazie 1/16' },
+  { id:'krol_8',         icon:'⚔️', name:'Król 1/8',        desc:'Najwięcej punktów w fazie 1/8' },
+  { id:'krol_4',         icon:'⚔️', name:'Król 1/4',        desc:'Najwięcej punktów w fazie 1/4' },
+  { id:'feniks',         icon:'🦅', name:'Feniks',           desc:'Najmniej punktów w pewnej rundzie i podium (top 3) w innej (do 1/4)' },
+  { id:'biedak',         icon:'📉', name:'Biedak',           desc:'Najwięcej punktów w pewnej rundzie i najmniej w innej (do 1/4)' },
+  { id:'hazardzista',    icon:'🎲', name:'Hazardzista',      desc:'Najwięcej punktów z x2 na koniec (min. 1 użycie)' },
+  { id:'slepiec',        icon:'🙈', name:'Ślepiec',          desc:'Ani razu nie trafił dokładnego wyniku przez całą grę' },
+  { id:'skoczek',        icon:'🚀', name:'Skoczek',          desc:'Największy awans w tabeli między dwiema sąsiednimi rundami (do 1/4)' },
+  { id:'obywatel',       icon:'🌍', name:'Obywatel Świata',  desc:'Trafił kierunek wyniku dla największej liczby unikalnych drużyn' },
+  { id:'saper',          icon:'💣', name:'Saper',            desc:'Najmniej punktów z x2 na koniec (min. 1 użycie)' },
+  { id:'dominator',      icon:'🏆', name:'Dominator',        desc:'Najwięcej punktów łącznie po wszystkich fazach' },
+];
+
+function computeAllBadges() {
+  // Zbieramy dane per gracz
+  const players = S.players;
+  const earned = {}; // earned[player][badgeId] = true/false
+
+  players.forEach(p => { earned[p] = {}; });
+
+  // === DANE POMOCNICZE ===
+
+  // Mecze z rozliczonym wynikiem (ft lub live z wynikiem)
+  const resolvedMatches = MATCHES_SORTED.filter(m => {
+    const w = S.wyniki[m.id];
+    return w && w.home != null && w.away != null && (w.status === 'ft' || w.status === 'live');
+  });
+
+  // Per mecz: punkty każdego gracza (z mnożnikiem)
+  function matchPtsAll(m) {
+    const w = S.wyniki[m.id];
+    const res = {};
+    players.forEach(p => {
+      const typ = (S.typy[m.id]||{})[p];
+      res[p] = pts(typ, w); // null jeśli brak typu/wyniku
+    });
+    return res;
+  }
+
+  // Per mecz: bazowe punkty (bez x2)
+  function matchPtsBaseAll(m) {
+    const w = S.wyniki[m.id];
+    const res = {};
+    players.forEach(p => {
+      const typ = (S.typy[m.id]||{})[p];
+      res[p] = ptsBase(typ, w);
+    });
+    return res;
+  }
+
+  // === 1. SOKOLE OKO ===
+  // Gracz zdobył ≥1 pkt dodatnich (baza), a WSZYSCY inni mają -1 (bazowo)
+  resolvedMatches.forEach(m => {
+    const bAll = matchPtsBaseAll(m);
+    players.forEach(p => {
+      if (bAll[p] == null) return;
+      if (bAll[p] < 2) return; // musi mieć jakieś punkty dodatnie
+      const others = players.filter(o => o !== p);
+      const allOthersNeg = others.every(o => bAll[o] != null && bAll[o] < 0);
+      if (others.length > 0 && allOthersNeg) {
+        earned[p]['sokolie_oko'] = true;
+      }
+    });
+  });
+
+  // === 2. OWIECZKA ===
+  // Gracz zdobył punkty dodatnie (baza ≥2), i WSZYSCY inni też mają ≥2
+  resolvedMatches.forEach(m => {
+    const bAll = matchPtsBaseAll(m);
+    players.forEach(p => {
+      if (bAll[p] == null || bAll[p] < 2) return;
+      const others = players.filter(o => o !== p);
+      if (others.length === 0) return;
+      const allOthersPos = others.every(o => bAll[o] != null && bAll[o] >= 2);
+      if (allOthersPos) earned[p]['owieczka'] = true;
+    });
+  });
+
+  // === 3. ROBACZEK ===
+  // Gracz zdobył punkty ujemne (baza <0), i WSZYSCY inni też mają <0
+  resolvedMatches.forEach(m => {
+    const bAll = matchPtsBaseAll(m);
+    players.forEach(p => {
+      if (bAll[p] == null || bAll[p] >= 0) return;
+      const others = players.filter(o => o !== p);
+      if (others.length === 0) return;
+      const allOthersNeg = others.every(o => bAll[o] != null && bAll[o] < 0);
+      if (allOthersNeg) earned[p]['robaczek'] = true;
+    });
+  });
+
+  // === 4. KRÓL IMPREZY ===
+  // Użył x2 i trafił dokładny wynik (base = 4)
+  resolvedMatches.forEach(m => {
+    const w = S.wyniki[m.id];
+    players.forEach(p => {
+      const typ = (S.typy[m.id]||{})[p];
+      if (!typ || !typ.x2) return;
+      if (ptsBase(typ, w) === 4) earned[p]['krol_imprezy'] = true;
+    });
+  });
+
+  // === 5. KLAUN ===
+  // Użył x2 i nie trafił nawet zwycięzcy (base = -1)
+  resolvedMatches.forEach(m => {
+    const w = S.wyniki[m.id];
+    players.forEach(p => {
+      const typ = (S.typy[m.id]||{})[p];
+      if (!typ || !typ.x2) return;
+      if (ptsBase(typ, w) === -1) earned[p]['klaun'] = true;
+    });
+  });
+
+  // === ODZNAKI RUNDOWE (Rzeźnik, Kolekcjoner, Snajper, Zimnokrwisty, Króle) ===
+  // Rundy: 1,2,3,4,5,6,7,8
+  const ROUND_IDS = [1,2,3,4,5,6,7,8];
+
+  ROUND_IDS.forEach(r => {
+    const rMatches = resolvedMatches.filter(m => m.r === r);
+    if (rMatches.length === 0) return;
+
+    // Per gracz: liczba "nietrafionych" (base=-1), trafionych kierunków (≥2), dokładnych (=4), remisów (base typ = remis AND base wynik = remis)
+    const stats = {};
+    players.forEach(p => {
+      stats[p] = { missed: 0, hit: 0, exact: 0, draw: 0, rndPts: 0 };
+    });
+
+    rMatches.forEach(m => {
+      const w = S.wyniki[m.id];
+      players.forEach(p => {
+        const typ = (S.typy[m.id]||{})[p];
+        const b = ptsBase(typ, w);
+        if (b === null) return;
+        if (b < 0) stats[p].missed++;
+        if (b >= 2) stats[p].hit++;
+        if (b === 4) stats[p].exact++;
+        // Zimnokrwisty: gracz typował remis (tH===tA) i faktycznie był remis (wH===wA)
+        if (typ && w && typ.home === typ.away && w.home === w.away && b >= 2) {
+          stats[p].draw++;
+        }
+      });
+    });
+
+    players.forEach(p => {
+      stats[p].rndPts = totalPts(p, r);
+    });
+
+    // Rzeźnik: najwięcej missed (>0)
+    const maxMissed = Math.max(...players.map(p => stats[p].missed));
+    if (maxMissed > 0) {
+      players.forEach(p => { if (stats[p].missed === maxMissed) earned[p]['rzeznik'] = true; });
+    }
+
+    // Kolekcjoner: najwięcej hit (>0)
+    const maxHit = Math.max(...players.map(p => stats[p].hit));
+    if (maxHit > 0) {
+      players.forEach(p => { if (stats[p].hit === maxHit) earned[p]['kolekcjoner'] = true; });
+    }
+
+    // Snajper: najwięcej exact (>0)
+    const maxExact = Math.max(...players.map(p => stats[p].exact));
+    if (maxExact > 0) {
+      players.forEach(p => { if (stats[p].exact === maxExact) earned[p]['snajper'] = true; });
+    }
+
+    // Zimnokrwisty: najwięcej draw (>0)
+    const maxDraw = Math.max(...players.map(p => stats[p].draw));
+    if (maxDraw > 0) {
+      players.forEach(p => { if (stats[p].draw === maxDraw) earned[p]['zimnokrwisty'] = true; });
+    }
+
+    // Król rundy
+    const maxPts = Math.max(...players.map(p => stats[p].rndPts));
+    const badgeId = r===1?'krol_r1':r===2?'krol_r2':r===3?'krol_r3':r===4?'krol_16':r===5?'krol_8':r===6?'krol_4':null;
+    if (badgeId) {
+      players.forEach(p => { if (stats[p].rndPts === maxPts) earned[p][badgeId] = true; });
+    }
+  });
+
+  // === 9/10. PERFEKCJONISTA / PECHOWIEC ===
+  // Trzy mecze z rzędu (chronologicznie) z typem i wynikiem: ≥2 bazy = dodatni, <0 = ujemny
+  players.forEach(p => {
+    const seq = resolvedMatches
+      .map(m => {
+        const typ = (S.typy[m.id]||{})[p];
+        const w = S.wyniki[m.id];
+        const b = ptsBase(typ, w);
+        return b; // null = brak typu
+      })
+      .filter(b => b !== null);
+
+    // Szukamy 3 z rzędu
+    for (let i = 0; i <= seq.length - 3; i++) {
+      const trio = seq.slice(i, i+3);
+      if (trio.every(b => b >= 2)) { earned[p]['perfekcjonista'] = true; }
+      if (trio.every(b => b < 0))  { earned[p]['pechowiec'] = true; }
+    }
+  });
+
+  // === FENIKS / BIEDAK / SKOCZEK – tylko rundy 1-6 ===
+  const SCORE_ROUNDS = [1,2,3,4,5,6];
+
+  // Ranking gracza w danej rundzie (pozycja = 1 = najlepszy)
+  function rankInRound(r) {
+    const sc = players
+      .map(p => ({ p, pts: totalPts(p, r) }))
+      .sort((a,b) => b.pts - a.pts);
+    const result = {};
+    sc.forEach((s, i) => { result[s.p] = i + 1; });
+    return result;
+  }
+
+  const roundRanks = {}; // roundRanks[r][player] = pozycja
+  SCORE_ROUNDS.forEach(r => { roundRanks[r] = rankInRound(r); });
+
+  const roundPoints = {}; // roundPoints[r][player] = pkt
+  SCORE_ROUNDS.forEach(r => {
+    roundPoints[r] = {};
+    players.forEach(p => { roundPoints[r][p] = totalPts(p, r); });
+  });
+
+  // Sprawdź czy runda ma jakiekolwiek rozliczone mecze
+  function hasResolvedInRound(r) {
+    return resolvedMatches.some(m => m.r === r);
+  }
+
+  const activeRounds = SCORE_ROUNDS.filter(hasResolvedInRound);
+
+  // FENIKS: min punktów w pewnej rundzie i top 3 w innej
+  if (activeRounds.length >= 2) {
+    players.forEach(p => {
+      const minPts = Math.min(...activeRounds.map(r => roundPoints[r][p]));
+      const hasTop3 = activeRounds.some(r => roundRanks[r][p] <= 3);
+      const hasMin = activeRounds.some(r => {
+        const allPts = players.map(pp => roundPoints[r][pp]);
+        return roundPoints[r][p] === Math.min(...allPts);
+      });
+      if (hasMin && hasTop3) earned[p]['feniks'] = true;
+    });
+  }
+
+  // BIEDAK: max punktów w pewnej rundzie i min punktów w innej
+  if (activeRounds.length >= 2) {
+    players.forEach(p => {
+      let hasMax = false, hasMinInOtherRound = false;
+      activeRounds.forEach(r => {
+        const allPts = players.map(pp => roundPoints[r][pp]);
+        if (roundPoints[r][p] === Math.max(...allPts)) hasMax = true;
+        if (roundPoints[r][p] === Math.min(...allPts)) hasMinInOtherRound = true;
+      });
+      if (hasMax && hasMinInOtherRound) earned[p]['biedak'] = true;
+    });
+  }
+
+  // SKOCZEK: największy awans (zmiana miejsca) między dwiema sąsiednimi rundami (do 1/4)
+  if (activeRounds.length >= 2) {
+    const jumpMap = {};
+    players.forEach(p => { jumpMap[p] = 0; });
+
+    for (let i = 0; i < activeRounds.length - 1; i++) {
+      const r1 = activeRounds[i];
+      const r2 = activeRounds[i+1];
+      players.forEach(p => {
+        const jump = roundRanks[r1][p] - roundRanks[r2][p]; // pozycja maleje = awans
+        if (jump > jumpMap[p]) jumpMap[p] = jump;
+      });
+    }
+    const maxJump = Math.max(...players.map(p => jumpMap[p]));
+    if (maxJump > 0) {
+      players.forEach(p => { if (jumpMap[p] === maxJump) earned[p]['skoczek'] = true; });
+    }
+  }
+
+  // === HAZARDZISTA / SAPER – punkty z x2 (łącznie po wszystkich fazach) ===
+  const x2Points = {};
+  players.forEach(p => { x2Points[p] = 0; });
+
+  let anyX2Used = false;
+  MATCHES.forEach(m => {
+    const w = S.wyniki[m.id];
+    players.forEach(p => {
+      const typ = (S.typy[m.id]||{})[p];
+      if (!typ || !typ.x2) return;
+      const b = ptsBase(typ, w);
+      if (b === null) return;
+      anyX2Used = true;
+      x2Points[p] += (b * 2) - b; // dodatkowe punkty z mnożnika = b*2 - b = b
+    });
+  });
+
+  // Tylko gracze którzy użyli x2 co najmniej raz
+  const x2Users = players.filter(p => {
+    return MATCHES.some(m => {
+      const typ = (S.typy[m.id]||{})[p];
+      return typ && typ.x2;
+    });
+  });
+
+  if (x2Users.length > 0) {
+    const maxX2 = Math.max(...x2Users.map(p => x2Points[p]));
+    const minX2 = Math.min(...x2Users.map(p => x2Points[p]));
+    x2Users.forEach(p => {
+      if (x2Points[p] === maxX2) earned[p]['hazardzista'] = true;
+      if (x2Points[p] === minX2) earned[p]['saper'] = true;
+    });
+  }
+
+  // === ŚLEPIEC ===
+  // Ani razu nie trafił dokładnego wyniku (base=4) przez całą grę
+  players.forEach(p => {
+    const hasExact = resolvedMatches.some(m => {
+      const typ = (S.typy[m.id]||{})[p];
+      const w = S.wyniki[m.id];
+      return ptsBase(typ, w) === 4;
+    });
+    // Ślepiec dostaje odznakę tylko jeśli miał co najmniej jeden typ
+    const hasTips = resolvedMatches.some(m => {
+      const typ = (S.typy[m.id]||{})[p];
+      const w = S.wyniki[m.id];
+      return ptsBase(typ, w) !== null;
+    });
+    if (hasTips && !hasExact) earned[p]['slepiec'] = true;
+  });
+
+  // === OBYWATEL ŚWIATA ===
+  // Trafił kierunek wyniku (base ≥ 2) dla jak największej liczby unikalnych drużyn
+  const worldTeams = {};
+  players.forEach(p => { worldTeams[p] = new Set(); });
+
+  resolvedMatches.forEach(m => {
+    const typ = (S.typy[m.id]||{})[players[0]];
+    players.forEach(p => {
+      const typ2 = (S.typy[m.id]||{})[p];
+      const w = S.wyniki[m.id];
+      const b = ptsBase(typ2, w);
+      if (b !== null && b >= 2) {
+        // Dodaj obie drużyny z meczu
+        worldTeams[p].add(m.hn);
+        worldTeams[p].add(m.an);
+      }
+    });
+  });
+
+  const maxTeams = Math.max(...players.map(p => worldTeams[p].size));
+  if (maxTeams > 0) {
+    players.forEach(p => { if (worldTeams[p].size === maxTeams) earned[p]['obywatel'] = true; });
+  }
+
+  // === DOMINATOR ===
+  // Najwięcej punktów łącznie po wszystkich fazach
+  const totalAll = players.map(p => ({ p, pts: totalPts(p, null) }));
+  const maxTotal = Math.max(...totalAll.map(x => x.pts));
+  totalAll.forEach(x => { if (x.pts === maxTotal) earned[x.p]['dominator'] = true; });
+
+  return earned;
+}
+
+// =====================================================
+// RENDER ODZNAKI PAGE
+// =====================================================
+function renderOdznakiPage() {
+  const earnedMap = computeAllBadges();
+
+  const cards = S.players.map((player, pi) => {
+    const playerEarned = earnedMap[player] || {};
+    const count = Object.keys(playerEarned).length;
+    const total = BADGE_DEFS.length;
+
+    const badgesHtml = BADGE_DEFS.map(bd => {
+      const has = !!playerEarned[bd.id];
+      return `<div class="odz-item ${has ? 'earned' : 'locked'}" title="${escapeHtml(bd.name)}: ${escapeHtml(bd.desc)}">
+        <div class="odz-icon">${bd.icon}</div>
+        <div class="odz-name">${escapeHtml(bd.name)}</div>
+        <div class="odz-desc">${escapeHtml(bd.desc)}</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="odz-player-card" id="odz_${pi}"
+      onclick="document.getElementById('odz_${pi}').classList.toggle('open')">
+      <div class="odz-player-header">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700">${escapeHtml(player)}</span>
+        <span class="odz-count">${count} / ${total} odznak</span>
+        <span class="odz-arrow">&#9660;</span>
+      </div>
+      <div class="odz-player-body">
+        <div class="odz-grid">${badgesHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('odznakiContent').innerHTML =
+    `<div class="slabel">ODZNAKI GRACZY</div>
+     <div style="font-size:12px;color:var(--mut);margin-bottom:14px;font-style:italic">Jasne odznaki = zdobyte &nbsp;|&nbsp; Szare i przezroczyste = jeszcze nie zdobyte. Kliknij gracza aby rozwinąć.</div>
+     ${cards}`;
 }
 
 // =====================================================
@@ -743,9 +1153,6 @@ function renderNoMatch(next) {
   return `<div class="gap"><div class="slabel">NAJBLIZSZY MECZ</div>${hero}</div>`+renderUpcoming(next);
 }
 
-// =====================================================
-// MATCH DETAIL PAGE (kliknięty mecz z "Najbliższe")
-// =====================================================
 window.goMatchDetail = function(matchId) {
   location.hash = 'match_' + matchId;
 };
@@ -753,15 +1160,12 @@ window.goMatchDetail = function(matchId) {
 function renderMatchDetailPage(matchId) {
   const m = MATCHES.find(x => x.id === matchId);
   if (!m) { goMain(); return; }
-
   const w = S.wyniki[m.id]||{};
   const hasScore = w.home!=null && w.away!=null;
-
   let badge = '';
   if      (w.status==='live') badge=`<span class="tbadge live">&#128308; LIVE ${w.minute?w.minute+"'":''}  </span>`;
   else if (w.status==='ft')   badge=`<span class="tbadge">FT</span>`;
   else                        badge=`<span class="tbadge">${m.time} CET</span>`;
-
   const heroHtml = `
     <div class="match-detail-hero">
       <div class="mmeta">
@@ -777,18 +1181,13 @@ function renderMatchDetailPage(matchId) {
         <div class="tblock"><div class="tflag">${F(m.af)}</div><div class="tname">${m.apl}</div></div>
       </div>
     </div>`;
-
   const rows = S.players.map(p => {
     const typ = (S.typy[m.id]||{})[p];
     const p2  = hasScore ? pts(typ,w) : null;
     const ic  = hasScore ? icon(typ,w) : '';
     const pc  = p2!==null ? ptsClass(typ,w) : '';
-    const ptsH = p2!==null
-      ? `<span class="pb ${pc}">${p2>0?'+':''}${p2}</span>`
-      : '';
-    const ts = typ
-      ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`
-      : '&mdash;';
+    const ptsH = p2!==null ? `<span class="pb ${pc}">${p2>0?'+':''}${p2}</span>` : '';
+    const ts = typ ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}` : '&mdash;';
     return `<tr>
       <td><span class="pname">${p}</span></td>
       <td><span class="tscore">${ts}</span></td>
@@ -796,7 +1195,6 @@ function renderMatchDetailPage(matchId) {
       <td style="text-align:right">${ptsH}</td>
     </tr>`;
   }).join('');
-
   const typyHtml = `
     <div class="gap"><div class="slabel">TYPY GRACZY</div>
     <div class="card">
@@ -805,26 +1203,16 @@ function renderMatchDetailPage(matchId) {
         <tbody>${rows}</tbody>
       </table>
     </div></div>`;
-
   document.getElementById('matchDetailContent').innerHTML = heroHtml + typyHtml;
 }
 
-// =====================================================
-// ROUND SUBPAGE
-// =====================================================
-window.goRound = function(r) {
-  currentRound = r;
-  location.hash = 'round'+r;
-};
-window.goMain = function() {
-  location.hash = '';
-};
-window.goTypowania = function() {
-  location.hash = 'typowania';
-};
+window.goRound = function(r) { currentRound = r; location.hash = 'round'+r; };
+window.goMain = function() { location.hash = ''; };
+window.goTypowania = function() { location.hash = 'typowania'; };
+window.goOdznaki = function() { location.hash = 'odznaki'; };
 
 function showPage(id) {
-  ['pageMain','pageRound','pageTypowania','pageMatchDetail'].forEach(p => {
+  ['pageMain','pageRound','pageTypowania','pageMatchDetail','pageOdznaki'].forEach(p => {
     document.getElementById(p).classList.remove('on');
   });
   document.getElementById(id).classList.add('on');
@@ -835,6 +1223,9 @@ function handleHash() {
   if (h === 'typowania') {
     showPage('pageTypowania');
     renderTypowaniaPage();
+  } else if (h === 'odznaki') {
+    showPage('pageOdznaki');
+    renderOdznakiPage();
   } else if (h.startsWith('match_')) {
     const matchId = h.replace('match_','');
     showPage('pageMatchDetail');
@@ -861,13 +1252,11 @@ function renderRoundPage(r) {
   const sc = S.players
     .map(p=>({n:p,pts:totalPts(p,r)}))
     .sort((a,b)=>b.pts-a.pts);
-
   const lbRows = sc.map((s,i)=>{
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
     return `<li class="lb-row"><span class="rnk ${rc}">${medal||i+1}</span><span class="lb-n">${s.n}</span><span class="lb-p">${s.pts}<span class="lb-pl">pkt</span></span></li>`;
   }).join('');
-
   const mRows = rMatches.map(m=>{
     const w = S.wyniki[m.id];
     const hasScore = w && w.home!=null && w.away!=null;
@@ -875,15 +1264,12 @@ function renderRoundPage(r) {
     const stBadge  = w?.status==='ft'  ? '<span style="font-size:11px;color:var(--grn)">FT</span>'
                    : w?.status==='live'? '<span style="font-size:11px;color:var(--red)">LIVE</span>'
                    : `<span style="font-size:11px;color:var(--mut)">${m.time}</span>`;
-
     const typRows = S.players.map(p=>{
       const typ = (S.typy[m.id]||{})[p];
       if (!typ) return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--brd)"><span style="color:var(--mut)">${p}</span><span style="color:var(--mut);font-size:12px">brak typu</span></div>`;
       const p2  = hasScore ? pts(typ,w) : null;
       const ic  = hasScore ? icon(typ,w) : '&#8987;';
-      const ptsH = p2!==null
-        ? `<span class="pb ${ptsClass(typ,w)}" style="font-size:12px">${p2>0?'+':''}${p2}pkt</span>`
-        : '';
+      const ptsH = p2!==null ? `<span class="pb ${ptsClass(typ,w)}" style="font-size:12px">${p2>0?'+':''}${p2}pkt</span>` : '';
       const ts = `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`;
       return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--brd)">
         <span style="font-weight:600;font-size:13px;width:80px">${p}</span>
@@ -892,7 +1278,6 @@ function renderRoundPage(r) {
         ${ptsH}
       </div>`;
     }).join('');
-
     return `<div class="mrow" id="mr_${m.id}" onclick="toggleMrow('${m.id}')">
       <div class="mrow-header">
         <span style="font-size:11px;color:var(--acc);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;width:44px">Gr.${m.g}</span>
@@ -904,7 +1289,6 @@ function renderRoundPage(r) {
       <div class="mrow-body">${typRows}</div>
     </div>`;
   }).join('');
-
   const rLabel = r===4?'1/16 FINAŁU':r===5?'1/8 FINAŁU':r===6?'ĆWIERĆFINAŁY':r===7?'PÓŁFINAŁY':r===8?'FINAŁ':`RUNDA ${r}`;
   document.getElementById('roundContent').innerHTML =
     `<div class="slabel">PUNKTACJA &ndash; ${rLabel}</div>
@@ -917,17 +1301,12 @@ window.toggleMrow = function(id) {
   document.getElementById('mr_'+id)?.classList.toggle('open');
 };
 
-// =====================================================
-// TYPOWANIA PAGE – grouped by round
-// =====================================================
 function renderTypowaniaPage() {
-  // Definicja sekcji rund – tu w przyszłości dodasz 1/16, 1/8 itd.
   const ROUND_GROUPS = [
     { label:'Runda 1', emoji:'📊', filter: m => m.r === 1 },
     { label:'Runda 2', emoji:'📊', filter: m => m.r === 2 },
     { label:'Runda 3', emoji:'📊', filter: m => m.r === 3 },
   ];
-
   function buildMatchRow(m, player) {
     const typ = (S.typy[m.id]||{})[player];
     const w   = S.wyniki[m.id];
@@ -950,14 +1329,11 @@ function renderTypowaniaPage() {
       <td style="text-align:right">${ph}</td>
     </tr>`;
   }
-
   const cards = S.players.map((player, pi) => {
     const total = MATCHES.reduce((sum,m) => {
       const p2 = pts((S.typy[m.id]||{})[player], S.wyniki[m.id]);
       return sum + (p2||0);
     }, 0);
-
-    // Zbuduj sekcje per runda
     const roundSections = ROUND_GROUPS.map((grp, gi) => {
       const rMatches = MATCHES.filter(grp.filter);
       const rPts = rMatches.reduce((sum,m) => {
@@ -966,11 +1342,9 @@ function renderTypowaniaPage() {
       }, 0);
       const rows = rMatches.map(m => buildMatchRow(m, player)).filter(Boolean).join('');
       const subId = `tprs_${pi}_${gi}`;
-
       const ptsTag = rPts !== 0
         ? `<span class="pb ${rPts>0?'p3':'pn'}" style="font-size:12px;padding:2px 7px">${rPts>0?'+':''}${rPts} pkt</span>`
         : `<span style="color:var(--mut);font-size:12px">0 pkt</span>`;
-
       return `<div class="round-section" id="${subId}"
           onclick="event.stopPropagation();document.getElementById('${subId}').classList.toggle('open')">
         <div class="round-section-header">
@@ -996,7 +1370,6 @@ function renderTypowaniaPage() {
         </div>
       </div>`;
     }).join('');
-
     return `<div class="mrow" id="tp_${pi}" onclick="document.getElementById('tp_${pi}').classList.toggle('open')" style="margin-bottom:10px">
       <div class="mrow-header">
         <span class="lb-n" style="font-size:15px">${player}</span>
@@ -1008,24 +1381,17 @@ function renderTypowaniaPage() {
       </div>
     </div>`;
   }).join('');
-
   document.getElementById('typowaniaContent').innerHTML =
     `<div class="slabel">TYPOWANIA GRACZY</div>${cards}`;
 }
 
-// =====================================================
-// ADMIN
-// =====================================================
 window.toggleAdmin = function() {
   const p = document.getElementById('adminPanel');
   p.classList.toggle('on');
   if (p.classList.contains('on') && document.getElementById('koStageSel')) renderKoEditor();
 };
 
-window.manualRefresh = function() {
-  _lastFetch = Date.now();
-  fetchScores();
-};
+window.manualRefresh = function() { _lastFetch = Date.now(); fetchScores(); };
 
 window.diagApi = async function() {
   const el = document.getElementById('diagResult');
@@ -1052,7 +1418,7 @@ window.diagApi = async function() {
         const found = findByEnglishNames(m.homeTeam?.shortName||m.homeTeam?.name||'', m.awayTeam?.shortName||m.awayTeam?.name||'');
         return (m.homeTeam?.name||'?')+' vs '+(m.awayTeam?.name||'?')+' ['+m.status+', '+scoreStr+'] -> dopasowano: '+(found?found.id:'NIE ZNALEZIONO');
       }).join(' | ');
-      el.textContent = 'OK! Status 200. Meczy w odpowiedzi: ' + matchCount + '. Pierwsze 2: ' + sample;
+      el.textContent = 'OK! Status 200. Meczy: ' + matchCount + '. Pierwsze 2: ' + sample;
     } else {
       el.style.color = 'var(--red)';
       el.textContent = 'Blad HTTP ' + r.status + ': ' + (msg || text.slice(0,200));
@@ -1185,9 +1551,6 @@ function renderAdminForm(m) {
   f.innerHTML=html;
 }
 
-// =====================================================
-// KO MATCH EDITOR
-// =====================================================
 window.renderKoEditor = function() {
   const stage = parseInt(document.getElementById('koStageSel').value);
   const stMatches = MATCHES.filter(m=>m.r===stage);
@@ -1220,9 +1583,6 @@ window.saveKoTeams = function(matchId) {
   setTimeout(()=>{ document.getElementById('ko_h_'+matchId).style.borderColor=''; },1000);
 };
 
-// =====================================================
-// INIT
-// =====================================================
 initFirebase();
 setInterval(()=>{
   if (S.apiKey && _pendingSaves === 0 && fbLoaded) {
