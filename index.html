@@ -72,7 +72,8 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .lb-pl{font-size:10px;color:var(--mut);margin-left:3px;font-weight:500}
 /* UPCOMING */
 .ulist{display:flex;flex-direction:column;gap:8px}
-.urow{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;font-size:13px}
+.urow{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--sur2);border:1px solid var(--brd);border-radius:8px;font-size:13px;cursor:pointer;transition:border-color .15s}
+.urow:hover{border-color:var(--acc)}
 .utime{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--acc2);width:55px;flex-shrink:0}
 /* FOOTER */
 .footer{text-align:center;padding:20px 0 40px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
@@ -87,6 +88,9 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .mrow-header{display:flex;align-items:center;gap:8px}
 .mrow-body{display:none;padding-top:10px;padding-left:50px}
 .mrow.open .mrow-body{display:block}
+/* MATCH DETAIL PAGE */
+.match-detail-hero{background:var(--sur);border:1px solid var(--brd);border-radius:12px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.match-detail-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--acc),var(--acc2))}
 /* SPINNER */
 .sp{display:inline-block;width:16px;height:16px;border:2px solid var(--brd);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -110,6 +114,14 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .delbtn:hover{color:var(--red)}
 .fbbox{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:12px;margin-bottom:12px}
 .fbinfo{font-size:11px;color:var(--mut);margin-top:6px;line-height:1.5}
+/* TYPOWANIA sub-rounds */
+.round-section{background:var(--bg);border:1px solid var(--brd);border-radius:8px;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
+.round-section:hover{border-color:var(--acc)}
+.round-section-header{display:flex;align-items:center;gap:8px;padding:9px 12px}
+.round-section-body{display:none;padding:0 8px 10px 8px}
+.round-section.open .round-section-body{display:block}
+.round-section-arrow{color:var(--mut);font-size:11px;margin-left:auto;transition:transform .2s}
+.round-section.open .round-section-arrow{transform:rotate(180deg)}
 </style>
 </head>
 <body>
@@ -150,10 +162,19 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
   </div>
 </div>
 
+<!-- TYPOWANIA PAGE -->
 <div id="pageTypowania" class="page">
   <div class="wrap">
     <button class="back" onclick="goMain()">&#8592; WRÓC</button>
     <div id="typowaniaContent"></div>
+  </div>
+</div>
+
+<!-- MATCH DETAIL PAGE -->
+<div id="pageMatchDetail" class="page">
+  <div class="wrap">
+    <button class="back" onclick="history.back()">&#8592; WRÓC</button>
+    <div id="matchDetailContent"></div>
   </div>
 </div>
 
@@ -223,7 +244,6 @@ const db = getDatabase(fbApp);
 
 // =====================================================
 // MATCHES DATA
-// English names match football-data.org API exactly
 // =====================================================
 const MATCHES = [
   // ROUND 1
@@ -346,10 +366,7 @@ const FLAGS = {
 const F = c => FLAGS[c]||'🏳️';
 
 // =====================================================
-// LOCAL STATE (mirrors Firebase, updated by listeners)
-// =====================================================
-// =====================================================
-// Bezpieczne ID (dla pol formularzy graczy z dziwnymi znakami)
+// HELPERS
 // =====================================================
 function safeId(name) {
   return String(name).replace(/[^a-zA-Z0-9_-]/g, '_');
@@ -359,7 +376,7 @@ function escapeHtml(str) {
 }
 
 // =====================================================
-// LOCAL STATE (mirrors Firebase, updated by listeners)
+// LOCAL STATE
 // =====================================================
 let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'', koTeams:{} };
 let currentRound = 1;
@@ -368,15 +385,11 @@ let _pendingSaves = 0;
 let _lastFetch = 0;
 
 // =====================================================
-// FIREBASE LISTENERS – real-time sync
+// FIREBASE LISTENERS
 // =====================================================
 function initFirebase() {
-  // Watch entire state
   onValue(ref(db,'state'), snap => {
     const d = snap.val();
-
-    // Jezeli to echo naszego wlasnego zapisu - nie nadpisuj lokalnego stanu
-    // (zapobiega "wyscigom" gdzie lokalna zmiana jest natychmiast zastapiona starszymi danymi)
     if (_pendingSaves > 0) {
       _pendingSaves--;
       fbLoaded = true;
@@ -385,7 +398,6 @@ function initFirebase() {
       rebuildAdmin();
       return;
     }
-
     if (d) {
       S.players  = d.players  || [];
       S.typy     = d.typy     || {};
@@ -393,13 +405,11 @@ function initFirebase() {
       S.apiKey   = d.apiKey   || '';
       S.proxyUrl = d.proxyUrl || '';
       S.koTeams  = d.koTeams  || {};
-      // Zastosuj zapisane nazwy druzyn KO do tablicy MATCHES
       Object.entries(S.koTeams||{}).forEach(([mid,t]) => {
         const m = MATCHES.find(x=>x.id===mid);
         if (m) { if(t.hpl) m.hpl=t.hpl; if(t.apl) m.apl=t.apl; }
       });
     } else {
-      // First run – seed default players
       S.players = ['Gracz 1','Gracz 2','Gracz 3','Gracz 4','Gracz 5','Gracz 6','Gracz 7','Gracz 8'];
       fbSave();
     }
@@ -422,7 +432,6 @@ function initFirebase() {
 
 function fbSave() {
   _pendingSaves++;
-  // Firebase odrzuca wartosci "undefined" - usuwamy je rekurencyjnie przed zapisem
   const clean = JSON.parse(JSON.stringify({ players:S.players, typy:S.typy, wyniki:S.wyniki, apiKey:S.apiKey, proxyUrl:S.proxyUrl||'', koTeams:S.koTeams||{} }));
   set(ref(db,'state'), clean).catch(err => {
     console.error('fbSave error:', err);
@@ -442,14 +451,11 @@ function setApiBadge(t,l) {
 
 // =====================================================
 // FOOTBALL-DATA.ORG – live scores
-// Names must match API exactly (English)
 // =====================================================
 async function fetchScores() {
   if (!S.apiKey) return;
   setApiBadge('wait','Ladowanie...');
   try {
-    // Używamy Cloudflare Worker jako proxy (omija CORS)
-    // Jeśli nie ma skonfigurowanego workera - próbuje bezpośrednio (działa np. z localhost)
     const PROXY = S.proxyUrl || '';
     let url, headers;
     if (PROXY) {
@@ -460,15 +466,12 @@ async function fetchScores() {
       headers = { 'X-Auth-Token': S.apiKey };
     }
     const r = await fetch(url, { headers });
-
-    // Pobierz treść błędu żeby wiedzieć co nie gra
     const text = await r.text();
     let data;
     try { data = JSON.parse(text); } catch(_) { data = {}; }
 
     if (r.status === 401) { setApiBadge('err','401 Bledny klucz'); return; }
     if (r.status === 403) {
-      // 403 = plan nie obejmuje tej ligi LUB brak dostępu
       const msg = data.message || data.detail || '';
       setApiBadge('err', msg.includes('permission') ? '403 Plan nie obejmuje WC' : '403 Brak dostepu');
       console.error('API 403:', text);
@@ -486,7 +489,6 @@ async function fetchScores() {
       if (!match) return;
       const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
-      // API zwraca null dla przyszłych meczy, 0:0 dla trwających
       const cur = (ft && ft.home !== null && ft.home !== undefined) ? ft
                  : (ht && ht.home !== null && ht.home !== undefined) ? ht
                  : null;
@@ -497,9 +499,6 @@ async function fetchScores() {
         minute: m.minute || null,
       };
       const old = S.wyniki[match.id];
-      // Ochrona: jesli mamy juz zapisany wynik (recznie lub z API), a nowy wpis
-      // z API ma puste wyniki (home/away===null) - nie nadpisuj, bo to by
-      // usunelo poprawny wynik (API czasem zwraca FINISHED bez score).
       if (old && old.home !== null && old.away !== null
           && (newW.home === null || newW.away === null)) {
         return;
@@ -514,20 +513,17 @@ async function fetchScores() {
     const lf = document.getElementById('lastFetchInfo');
     if (lf) lf.textContent = 'Ostatnie odswiezenie: ' + new Date().toLocaleTimeString('pl-PL');
     if (changed) { fbSave(); }
-    handleHash(); // zawsze odswiezamy aktualnie widoczna strone (main/round/typowania)
+    handleHash();
     rebuildAdmin();
   } catch(e) {
-    // Network error (CORS, brak sieci itp)
     setApiBadge('err', 'Blad sieci/CORS');
     console.error('fetchScores error:', e);
   }
 }
 
-// Match API name to our match object
 function findByEnglishNames(hn, an) {
   const norm = s => (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
     .replace(/[^\w\s]/g,'').replace(/\s+/g,' ').trim();
-  // Build alias map for short names the API might return
   const ALIAS = {
     'usa':'united states','us':'united states','türkiye':'turkey','turkiye':'turkey',
     'ir iran':'iran','côte divoire':'ivory coast',"cote divoire":'ivory coast',
@@ -712,14 +708,15 @@ function renderUpcoming(cur) {
   }).slice(0,5);
   if (!list.length) return '';
   const rows = list.map(m=>`
-    <div class="urow">
+    <div class="urow" onclick="goMatchDetail('${m.id}')">
       <span class="utime">${m.time}</span>
       <div style="flex:1">
         <div style="font-weight:500">${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}</div>
         <div style="font-size:11px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px">R${m.r} &middot; Gr.${m.g} &middot; ${m.venue}</div>
       </div>
+      <span style="color:var(--mut);font-size:11px">&#9654;</span>
     </div>`).join('');
-  return `<div class="gap"><div class="slabel">NAJBLIZSZE MECZE</div>
+  return `<div class="gap"><div class="slabel">NAJBLIZSZE MECZE <span style="font-size:10px;font-weight:400;letter-spacing:1px">(kliknij aby zobaczyc typy)</span></div>
   <div class="ulist">${rows}</div></div>`;
 }
 
@@ -747,18 +744,74 @@ function renderNoMatch(next) {
 }
 
 // =====================================================
-// ROUND SUBPAGE
+// MATCH DETAIL PAGE (kliknięty mecz z "Najbliższe")
 // =====================================================
-// =====================================================
-// NAWIGACJA OPARTA O HASH (przeżywa odświeżenie)
-// =====================================================
-function showPage(id) {
-  ['pageMain','pageRound','pageTypowania'].forEach(p => {
-    document.getElementById(p).classList.remove('on');
-  });
-  document.getElementById(id).classList.add('on');
+window.goMatchDetail = function(matchId) {
+  location.hash = 'match_' + matchId;
+};
+
+function renderMatchDetailPage(matchId) {
+  const m = MATCHES.find(x => x.id === matchId);
+  if (!m) { goMain(); return; }
+
+  const w = S.wyniki[m.id]||{};
+  const hasScore = w.home!=null && w.away!=null;
+
+  let badge = '';
+  if      (w.status==='live') badge=`<span class="tbadge live">&#128308; LIVE ${w.minute?w.minute+"'":''}  </span>`;
+  else if (w.status==='ft')   badge=`<span class="tbadge">FT</span>`;
+  else                        badge=`<span class="tbadge">${m.time} CET</span>`;
+
+  const heroHtml = `
+    <div class="match-detail-hero">
+      <div class="mmeta">
+        <span class="mgrp">R${m.r} &middot; GRUPA ${m.g} &middot; ${m.venue}</span>
+        ${badge}
+      </div>
+      <div class="mline">
+        <div class="tblock"><div class="tflag">${F(m.hf)}</div><div class="tname">${m.hpl}</div></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <div class="score">${hasScore ? w.home+' : '+w.away : '&ndash; : &ndash;'}</div>
+          <div style="font-size:11px;color:var(--mut)">${m.date}</div>
+        </div>
+        <div class="tblock"><div class="tflag">${F(m.af)}</div><div class="tname">${m.apl}</div></div>
+      </div>
+    </div>`;
+
+  const rows = S.players.map(p => {
+    const typ = (S.typy[m.id]||{})[p];
+    const p2  = hasScore ? pts(typ,w) : null;
+    const ic  = hasScore ? icon(typ,w) : '';
+    const pc  = p2!==null ? ptsClass(typ,w) : '';
+    const ptsH = p2!==null
+      ? `<span class="pb ${pc}">${p2>0?'+':''}${p2}</span>`
+      : '';
+    const ts = typ
+      ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`
+      : '&mdash;';
+    return `<tr>
+      <td><span class="pname">${p}</span></td>
+      <td><span class="tscore">${ts}</span></td>
+      <td style="text-align:center">${ic?`<span style="font-size:16px">${ic}</span>`:''}</td>
+      <td style="text-align:right">${ptsH}</td>
+    </tr>`;
+  }).join('');
+
+  const typyHtml = `
+    <div class="gap"><div class="slabel">TYPY GRACZY</div>
+    <div class="card">
+      <table class="tt">
+        <thead><tr><th>Gracz</th><th>Typ</th><th style="text-align:center">Status</th><th style="text-align:right">Pkt</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div></div>`;
+
+  document.getElementById('matchDetailContent').innerHTML = heroHtml + typyHtml;
 }
 
+// =====================================================
+// ROUND SUBPAGE
+// =====================================================
 window.goRound = function(r) {
   currentRound = r;
   location.hash = 'round'+r;
@@ -770,11 +823,22 @@ window.goTypowania = function() {
   location.hash = 'typowania';
 };
 
+function showPage(id) {
+  ['pageMain','pageRound','pageTypowania','pageMatchDetail'].forEach(p => {
+    document.getElementById(p).classList.remove('on');
+  });
+  document.getElementById(id).classList.add('on');
+}
+
 function handleHash() {
   const h = location.hash.replace('#','');
   if (h === 'typowania') {
     showPage('pageTypowania');
     renderTypowaniaPage();
+  } else if (h.startsWith('match_')) {
+    const matchId = h.replace('match_','');
+    showPage('pageMatchDetail');
+    renderMatchDetailPage(matchId);
   } else if (h.startsWith('round')) {
     const r = parseInt(h.replace('round',''));
     if (r >= 1 && r <= 8) {
@@ -798,14 +862,12 @@ function renderRoundPage(r) {
     .map(p=>({n:p,pts:totalPts(p,r)}))
     .sort((a,b)=>b.pts-a.pts);
 
-  // Leaderboard
   const lbRows = sc.map((s,i)=>{
     const rc=i===0?'r1':i===1?'r2':i===2?'r3':'';
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
     return `<li class="lb-row"><span class="rnk ${rc}">${medal||i+1}</span><span class="lb-n">${s.n}</span><span class="lb-p">${s.pts}<span class="lb-pl">pkt</span></span></li>`;
   }).join('');
 
-  // Matches – collapsible
   const mRows = rMatches.map(m=>{
     const w = S.wyniki[m.id];
     const hasScore = w && w.home!=null && w.away!=null;
@@ -856,6 +918,102 @@ window.toggleMrow = function(id) {
 };
 
 // =====================================================
+// TYPOWANIA PAGE – grouped by round
+// =====================================================
+function renderTypowaniaPage() {
+  // Definicja sekcji rund – tu w przyszłości dodasz 1/16, 1/8 itd.
+  const ROUND_GROUPS = [
+    { label:'Runda 1', emoji:'📊', filter: m => m.r === 1 },
+    { label:'Runda 2', emoji:'📊', filter: m => m.r === 2 },
+    { label:'Runda 3', emoji:'📊', filter: m => m.r === 3 },
+  ];
+
+  function buildMatchRow(m, player) {
+    const typ = (S.typy[m.id]||{})[player];
+    const w   = S.wyniki[m.id];
+    const hasTip = typ && typ.home!=null && typ.away!=null;
+    const hasRes = w && w.home!=null && w.away!=null;
+    if (!hasTip && !hasRes) return '';
+    const ts = hasTip ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}` : '&mdash;';
+    const rs = hasRes ? `${w.home}:${w.away}` : '&mdash;';
+    const p2 = hasTip&&hasRes ? pts(typ,w) : null;
+    const ic = p2!==null ? icon(typ,w) : '';
+    const ph = p2!==null ? `<span class="pb ${ptsClass(typ,w)}" style="font-size:11px">${p2>0?'+':''}${p2}</span>` : '';
+    const team = m.hpl==='TBD'
+      ? `${m.g} – mecz ${m.id.split('_')[1]||m.id}`
+      : `${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}`;
+    return `<tr>
+      <td style="font-size:12px">${team}</td>
+      <td style="text-align:center"><span class="tscore" style="font-size:14px">${ts}</span></td>
+      <td style="text-align:center;font-weight:700">${rs}</td>
+      <td style="text-align:center">${ic}</td>
+      <td style="text-align:right">${ph}</td>
+    </tr>`;
+  }
+
+  const cards = S.players.map((player, pi) => {
+    const total = MATCHES.reduce((sum,m) => {
+      const p2 = pts((S.typy[m.id]||{})[player], S.wyniki[m.id]);
+      return sum + (p2||0);
+    }, 0);
+
+    // Zbuduj sekcje per runda
+    const roundSections = ROUND_GROUPS.map((grp, gi) => {
+      const rMatches = MATCHES.filter(grp.filter);
+      const rPts = rMatches.reduce((sum,m) => {
+        const p2 = pts((S.typy[m.id]||{})[player], S.wyniki[m.id]);
+        return sum + (p2||0);
+      }, 0);
+      const rows = rMatches.map(m => buildMatchRow(m, player)).filter(Boolean).join('');
+      const subId = `tprs_${pi}_${gi}`;
+
+      const ptsTag = rPts !== 0
+        ? `<span class="pb ${rPts>0?'p3':'pn'}" style="font-size:12px;padding:2px 7px">${rPts>0?'+':''}${rPts} pkt</span>`
+        : `<span style="color:var(--mut);font-size:12px">0 pkt</span>`;
+
+      return `<div class="round-section" id="${subId}"
+          onclick="event.stopPropagation();document.getElementById('${subId}').classList.toggle('open')">
+        <div class="round-section-header">
+          <span style="font-size:14px">${grp.emoji}</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--txt);flex:1">${grp.label}</span>
+          ${ptsTag}
+          <span class="round-section-arrow">&#9660;</span>
+        </div>
+        <div class="round-section-body">
+          ${rows
+            ? `<table class="tt" style="margin-top:4px">
+                <thead><tr>
+                  <th>Mecz</th>
+                  <th style="text-align:center">Typ</th>
+                  <th style="text-align:center">Wynik</th>
+                  <th style="text-align:center">&#9654;</th>
+                  <th style="text-align:right">Pkt</th>
+                </tr></thead>
+                <tbody>${rows}</tbody>
+               </table>`
+            : '<div style="color:var(--mut);font-size:12px;padding:6px 4px">Brak typów w tej rundzie</div>'
+          }
+        </div>
+      </div>`;
+    }).join('');
+
+    return `<div class="mrow" id="tp_${pi}" onclick="document.getElementById('tp_${pi}').classList.toggle('open')" style="margin-bottom:10px">
+      <div class="mrow-header">
+        <span class="lb-n" style="font-size:15px">${player}</span>
+        <span class="lb-p" style="font-size:20px">${total}<span class="lb-pl">pkt</span></span>
+        <span style="color:var(--mut);font-size:12px;margin-left:8px">&#9660;</span>
+      </div>
+      <div class="mrow-body" style="padding-left:0;padding-top:10px">
+        ${roundSections}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('typowaniaContent').innerHTML =
+    `<div class="slabel">TYPOWANIA GRACZY</div>${cards}`;
+}
+
+// =====================================================
 // ADMIN
 // =====================================================
 window.toggleAdmin = function() {
@@ -880,9 +1038,7 @@ window.diagApi = async function() {
     const apiUrl = PROXY
       ? PROXY + '/v4/competitions/WC/matches'
       : 'https://api.football-data.org/v4/competitions/WC/matches';
-    const r = await fetch(apiUrl, {
-      headers: { 'X-Auth-Token': key }
-    });
+    const r = await fetch(apiUrl, { headers: { 'X-Auth-Token': key } });
     const text = await r.text();
     let parsed;
     try { parsed = JSON.parse(text); } catch(_) { parsed = null; }
@@ -903,7 +1059,7 @@ window.diagApi = async function() {
     }
   } catch(e) {
     el.style.color = 'var(--red)';
-    el.textContent = 'Blad sieci: ' + e.message + '. Sprawdz czy strona jest na HTTPS (GitHub Pages jest OK).';
+    el.textContent = 'Blad sieci: ' + e.message;
   }
 };
 
@@ -969,13 +1125,11 @@ window.saveTypy = function(id) {
   });
   fbSave();
   handleHash();
-  // Wizualny feedback
   const btn = document.getElementById('btnTypy_'+id);
   if (btn) { btn.textContent = '✅ Zapisano!'; setTimeout(()=>{ btn.textContent = '💾 Zapisz typy'; },1500); }
 };
 
 function rebuildAdmin() {
-  // Match selector
   const sel = document.getElementById('adminSel');
   if (sel && !sel.options.length) {
     const {live,next}=curNext(), defId=(live||next||MATCHES[0]).id;
@@ -983,17 +1137,14 @@ function rebuildAdmin() {
       `<option value="${m.id}"${m.id===defId?' selected':''}>R${m.r} ${m.hpl} vs ${m.apl}</option>`
     ).join('');
   }
-  // Players
   const pl = document.getElementById('playersList');
   if (pl) pl.innerHTML = S.players.map((p,i)=>
     `<div class="prow"><span class="pn">${p}</span><button class="delbtn" onclick="deletePlayer(${i})">&#128465;</button></div>`
   ).join('');
-  // API key
   const ai = document.getElementById('apiKeyInp');
   if (ai && !ai.value && S.apiKey) ai.value = S.apiKey;
   const pi = document.getElementById('proxyUrlInp');
   if (pi && !pi.value && S.proxyUrl) pi.value = S.proxyUrl;
-  // Form
   const id = document.getElementById('adminSel')?.value;
   const m = MATCHES.find(x=>x.id===id);
   if (m) renderAdminForm(m);
@@ -1035,52 +1186,6 @@ function renderAdminForm(m) {
 }
 
 // =====================================================
-// TYPOWANIA PAGE
-// =====================================================
-function renderTypowaniaPage() {
-  const rLabel = r => r===4?'1/16':r===5?'1/8':r===6?'1/4':r===7?'1/2':r===8?'Finał':`R${r}`;
-  const cards = S.players.map((player, pi) => {
-    const total = MATCHES.reduce((sum,m) => {
-      const p2 = pts((S.typy[m.id]||{})[player], S.wyniki[m.id]);
-      return sum + (p2||0);
-    }, 0);
-    const rows = MATCHES.map(m => {
-      const typ = (S.typy[m.id]||{})[player];
-      const w   = S.wyniki[m.id];
-      const hasTip = typ && typ.home!=null && typ.away!=null;
-      const hasRes = w && w.home!=null && w.away!=null;
-      if (!hasTip && !hasRes) return '';
-      const ts   = hasTip ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}` : '&mdash;';
-      const rs   = hasRes ? `${w.home}:${w.away}` : '&mdash;';
-      const p2   = hasTip&&hasRes ? pts(typ,w) : null;
-      const ic   = p2!==null ? icon(typ,w) : '';
-      const ph   = p2!==null ? `<span class="pb ${ptsClass(typ,w)}" style="font-size:11px">${p2>0?'+':''}${p2}</span>` : '';
-      const team = m.hpl==='TBD' ? `${m.g} – mecz ${m.id.split('_')[1]||m.id}` : `${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}`;
-      return `<tr>
-        <td style="font-size:11px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;white-space:nowrap">${rLabel(m.r)}</td>
-        <td style="font-size:12px">${team}</td>
-        <td style="text-align:center"><span class="tscore" style="font-size:14px">${ts}</span></td>
-        <td style="text-align:center;font-weight:700">${rs}</td>
-        <td style="text-align:center">${ic}</td>
-        <td style="text-align:right">${ph}</td>
-      </tr>`;
-    }).filter(Boolean).join('');
-    return `<div class="mrow" id="tp_${pi}" onclick="document.getElementById('tp_${pi}').classList.toggle('open')">
-      <div class="mrow-header">
-        <span class="lb-n" style="font-size:15px">${player}</span>
-        <span class="lb-p" style="font-size:20px">${total}<span class="lb-pl">pkt</span></span>
-        <span style="color:var(--mut);font-size:12px;margin-left:8px">&#9660;</span>
-      </div>
-      <div class="mrow-body" style="padding-left:0;padding-top:12px">
-        ${rows ? `<table class="tt"><thead><tr><th>Runda</th><th>Mecz</th><th style="text-align:center">Typ</th><th style="text-align:center">Wynik</th><th style="text-align:center">&#9654;</th><th style="text-align:right">Pkt</th></tr></thead><tbody>${rows}</tbody></table>` : '<div style="color:var(--mut);font-size:12px;padding:8px">Brak typów</div>'}
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('typowaniaContent').innerHTML =
-    `<div class="slabel">TYPOWANIA GRACZY</div>${cards}`;
-}
-
-// =====================================================
 // KO MATCH EDITOR
 // =====================================================
 window.renderKoEditor = function() {
@@ -1119,7 +1224,6 @@ window.saveKoTeams = function(matchId) {
 // INIT
 // =====================================================
 initFirebase();
-// Auto-fetch scores co ~60s, ale tylko jesli nie czekamy na echo zapisu
 setInterval(()=>{
   if (S.apiKey && _pendingSaves === 0 && fbLoaded) {
     const now = Date.now();
