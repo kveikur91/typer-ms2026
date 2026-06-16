@@ -611,60 +611,81 @@ const MATCHES_SORTED = [...MATCHES].sort((a,b) => {
 
 // Wszystkie definicje odznak
 const BADGE_DEFS = [
-  { id:'sokolie_oko',    icon:'🦅', name:'Sokole oko',      desc:'Jedyny z punktami dodatnimi gdy wszyscy inni mają -1/-2' },
-  { id:'owieczka',       icon:'🐑', name:'Owieczka',         desc:'Zdobył punkty dodatnie gdy wszyscy inni też zdobyli punkty dodatnie' },
-  { id:'robaczek',       icon:'🐛', name:'Robaczek',         desc:'Zdobył punkty ujemne gdy wszyscy inni też zdobyli punkty ujemne' },
-  { id:'krol_imprezy',   icon:'🎉', name:'Król imprezy',     desc:'Użył x2 i trafił dokładny wynik' },
-  { id:'klaun',          icon:'🤡', name:'Klaun',            desc:'Użył x2 i nie trafił nawet zwycięzcy' },
-  { id:'rzeznik',        icon:'🔪', name:'Rzeźnik',          desc:'Najwięcej nietrafionych wyników w rundzie' },
-  { id:'kolekcjoner',    icon:'🎯', name:'Kolekcjoner',      desc:'Najwięcej trafionych zwycięzców/remisów w rundzie' },
-  { id:'snajper',        icon:'🎳', name:'Snajper',          desc:'Najwięcej dokładnych wyników w rundzie' },
-  { id:'perfekcjonista', icon:'✨', name:'Perfekcjonista',   desc:'Trzy razy z rzędu punkty dodatnie (chronologicznie)' },
-  { id:'pechowiec',      icon:'🌧️', name:'Pechowiec',       desc:'Trzy razy z rzędu punkty ujemne (chronologicznie)' },
-  { id:'zimnokrwisty',   icon:'🧊', name:'Zimnokrwisty',    desc:'Najwięcej trafionych remisów w rundzie' },
-  { id:'krol_r1',        icon:'👑', name:'Król Rundy 1',     desc:'Najwięcej punktów w Rundzie 1' },
-  { id:'krol_r2',        icon:'👑', name:'Król Rundy 2',     desc:'Najwięcej punktów w Rundzie 2' },
-  { id:'krol_r3',        icon:'👑', name:'Król Rundy 3',     desc:'Najwięcej punktów w Rundzie 3' },
-  { id:'krol_16',        icon:'⚔️', name:'Król 1/16',       desc:'Najwięcej punktów w fazie 1/16' },
-  { id:'krol_8',         icon:'⚔️', name:'Król 1/8',        desc:'Najwięcej punktów w fazie 1/8' },
-  { id:'krol_4',         icon:'⚔️', name:'Król 1/4',        desc:'Najwięcej punktów w fazie 1/4' },
-  { id:'feniks',         icon:'🦅', name:'Feniks',           desc:'Najmniej punktów w pewnej rundzie i podium (top 3) w innej (do 1/4)' },
-  { id:'biedak',         icon:'📉', name:'Biedak',           desc:'Najwięcej punktów w pewnej rundzie i najmniej w innej (do 1/4)' },
-  { id:'hazardzista',    icon:'🎲', name:'Hazardzista',      desc:'Najwięcej punktów z x2 na koniec (min. 1 użycie)' },
-  { id:'slepiec',        icon:'🙈', name:'Ślepiec',          desc:'Ani razu nie trafił dokładnego wyniku przez całą grę' },
-  { id:'skoczek',        icon:'🚀', name:'Skoczek',          desc:'Największy awans w tabeli między dwiema sąsiednimi rundami (do 1/4)' },
-  { id:'obywatel',       icon:'🌍', name:'Obywatel Świata',  desc:'Trafił kierunek wyniku dla największej liczby unikalnych drużyn' },
-  { id:'saper',          icon:'💣', name:'Saper',            desc:'Najmniej punktów z x2 na koniec (min. 1 użycie)' },
-  { id:'dominator',      icon:'🏆', name:'Dominator',        desc:'Najwięcej punktów łącznie po wszystkich fazach' },
+  // --- natychmiastowe (per mecz) ---
+  { id:'sokolie_oko',    icon:'🦅', name:'Sokole oko',           desc:'Jedyny z punktami dodatnimi gdy wszyscy typujący inni mają -1' },
+  { id:'owieczka',       icon:'🐑', name:'Owieczka',              desc:'Zdobył punkty dodatnie gdy wszyscy inni typujący też zdobyli punkty dodatnie' },
+  { id:'robaczek',       icon:'🐛', name:'Robaczek',              desc:'Zdobył punkty ujemne gdy wszyscy inni typujący też zdobyli punkty ujemne' },
+  { id:'krol_imprezy',   icon:'🎉', name:'Król imprezy',          desc:'Użył x2 i trafił dokładny wynik' },
+  { id:'klaun',          icon:'🤡', name:'Klaun',                 desc:'Użył x2 i nie trafił nawet zwycięzcy' },
+  { id:'perfekcjonista', icon:'✨', name:'Perfekcjonista',        desc:'Trzy razy z rzędu punkty dodatnie (chronologicznie, tylko mecze z typem)' },
+  { id:'pechowiec',      icon:'🌧️', name:'Pechowiec',            desc:'Trzy razy z rzędu punkty ujemne (chronologicznie, tylko mecze z typem)' },
+  { id:'poszukiwacz',    icon:'🎰', name:'Poszukiwacz szczęścia', desc:'W ciągu czterech kolejnych meczy z typem na zmianę plus/minus (np. +−+− lub −+−+)' },
+  // --- po zakończeniu rundy ---
+  { id:'rzeznik',        icon:'🔪', name:'Rzeźnik',               desc:'Najwięcej nietrafionych wyników w rundzie (po zakończeniu rundy)' },
+  { id:'kolekcjoner',    icon:'🎯', name:'Kolekcjoner',           desc:'Najwięcej trafionych zwycięzców/remisów w rundzie (po zakończeniu rundy)' },
+  { id:'snajper',        icon:'🎳', name:'Snajper',               desc:'Najwięcej dokładnych wyników w rundzie (po zakończeniu rundy)' },
+  { id:'zimnokrwisty',   icon:'🧊', name:'Zimnokrwisty',         desc:'Najwięcej trafionych remisów w rundzie (po zakończeniu rundy)' },
+  { id:'kredyciarz',     icon:'💸', name:'Kredyciarz',            desc:'Zakończył rundę na minusie (po zakończeniu rundy)' },
+  { id:'kulawy',         icon:'🦿', name:'Kulawy',                desc:'Najwięcej meczy, w których do poprawnego wyniku brakowało mu jednej bramki (po zakończeniu rundy)' },
+  { id:'krol_r1',        icon:'👑', name:'Król Rundy 1',          desc:'Najwięcej punktów w Rundzie 1 (po zakończeniu rundy)' },
+  { id:'krol_r2',        icon:'👑', name:'Król Rundy 2',          desc:'Najwięcej punktów w Rundzie 2 (po zakończeniu rundy)' },
+  { id:'krol_r3',        icon:'👑', name:'Król Rundy 3',          desc:'Najwięcej punktów w Rundzie 3 (po zakończeniu rundy)' },
+  { id:'krol_16',        icon:'⚔️', name:'Król 1/16',            desc:'Najwięcej punktów w fazie 1/16 (po zakończeniu fazy)' },
+  { id:'krol_8',         icon:'⚔️', name:'Król 1/8',             desc:'Najwięcej punktów w fazie 1/8 (po zakończeniu fazy)' },
+  { id:'krol_4',         icon:'⚔️', name:'Król 1/4',             desc:'Najwięcej punktów w fazie 1/4 (po zakończeniu fazy)' },
+  // --- po zakończeniu całej gry ---
+  { id:'feniks',         icon:'🐦', name:'Feniks',                desc:'Najmniej punktów w pewnej rundzie i podium (top 3) w innej (do 1/4 włącznie)' },
+  { id:'biedak',         icon:'📉', name:'Biedak',                desc:'Najwięcej punktów w pewnej rundzie i najmniej w innej (do 1/4 włącznie)' },
+  { id:'skoczek',        icon:'🚀', name:'Skoczek',               desc:'Największy awans w tabeli między dwiema sąsiednimi rundami (do 1/4 włącznie)' },
+  { id:'hazardzista',    icon:'🎲', name:'Hazardzista',           desc:'Najwięcej dodatkowych punktów z x2 na koniec gry (min. 1 użycie)' },
+  { id:'saper',          icon:'💣', name:'Saper',                 desc:'Najmniej dodatkowych punktów z x2 na koniec gry (min. 1 użycie)' },
+  { id:'slepiec',        icon:'🙈', name:'Ślepiec',               desc:'Ani razu nie trafił dokładnego wyniku przez całą grę' },
+  { id:'obywatel',       icon:'🌍', name:'Obywatel Świata',       desc:'Trafił kierunek wyniku dla największej liczby unikalnych drużyn' },
+  { id:'dominator',      icon:'🏆', name:'Dominator',             desc:'Najwięcej punktów łącznie po wszystkich fazach' },
+  // --- geograficzne / tematyczne (przez całą grę) ---
+  { id:'iberysta',       icon:'🇪🇸', name:'Iberysta',            desc:'Trafił kierunek w 4 meczach Hiszpanii lub Portugalii (łącznie)' },
+  { id:'zakatarzony',    icon:'🤧', name:'Zakatarzony',           desc:'Trafił kierunek w 3 meczach Kataru' },
+  { id:'gospodarz',      icon:'🏠', name:'Gospodarz',             desc:'Trafił kierunek w 5 meczach Kanady, USA lub Meksyku (łącznie)' },
+  { id:'daleki_wschod',  icon:'🌸', name:'Miłośnik Dalekiego Wschodu', desc:'Trafił kierunek w 5 meczach Korei Południowej lub Japonii (łącznie)' },
+  { id:'slowanin',       icon:'🦅', name:'Słowianin',             desc:'Trafił kierunek w 5 meczach Czech, Bośni i Hercegowiny lub Chorwacji (łącznie)' },
+  { id:'skandynaw',      icon:'❄️', name:'Skandynaw',             desc:'Trafił kierunek w 4 meczach Szwecji lub Norwegii (łącznie)' },
+  { id:'wyspiarz',       icon:'🏝️', name:'Wyspiarz',             desc:'Trafił kierunek w 5 meczach Curaçao, Haiti lub Cabo Verde (łącznie)' },
+  { id:'krol_brytyjski', icon:'🎩', name:'Król brytyjski',        desc:'Trafił kierunek w 6 meczach Australii, Anglii, Nowej Zelandii lub Szkocji (łącznie)' },
+  { id:'bialo_czerwony', icon:'🇵🇱', name:'Biało-czerwony',      desc:'Trafił kierunek w 8 meczach Austrii, Szwajcarii, Kanady, Turcji, Tunezji lub Anglii (łącznie)' },
+  { id:'ekstraklasowicz',icon:'⚽', name:'Ekstraklasowicz',       desc:'Trafił kierunek w 6 meczach Iraku, Nowej Zelandii, Szwecji lub DR Konga (łącznie)' },
+  { id:'messi',          icon:'🐐', name:'Messi',                 desc:'Trafił kierunek w 5 meczach Argentyny, Hiszpanii lub USA (łącznie)' },
+  { id:'ronaldo',        icon:'🦁', name:'Ronaldo',               desc:'Trafił kierunek w 6 meczach Portugalii, Arabii Saudyjskiej, Anglii lub Hiszpanii (łącznie)' },
 ];
 
-function computeAllBadges() {
-  // Zbieramy dane per gracz
-  const players = S.players;
-  const earned = {}; // earned[player][badgeId] = true/false
+// Pomocnicza: mapowanie skrótów angielskich nazw drużyn na grupy geograficzne
+// używamy m.hn (angielska nazwa) do identyfikacji
+const GEO_GROUPS = {
+  iberysta:        { teams: ['Spain','Portugal'], threshold: 4 },
+  zakatarzony:     { teams: ['Qatar'], threshold: 3 },
+  gospodarz:       { teams: ['Canada','United States','Mexico'], threshold: 5 },
+  daleki_wschod:   { teams: ['South Korea','Japan'], threshold: 5 },
+  slowanin:        { teams: ['Czech Republic','Bosnia and Herzegovina','Croatia'], threshold: 5 },
+  skandynaw:       { teams: ['Sweden','Norway'], threshold: 4 },
+  wyspiarz:        { teams: ['Curaçao','Haiti','Cabo Verde'], threshold: 5 },
+  krol_brytyjski:  { teams: ['Australia','England','New Zealand','Scotland'], threshold: 6 },
+  bialo_czerwony:  { teams: ['Austria','Switzerland','Canada','Türkiye','Tunisia','England'], threshold: 8 },
+  ekstraklasowicz: { teams: ['Iraq','New Zealand','Sweden','DR Congo'], threshold: 6 },
+  messi:           { teams: ['Argentina','Spain','United States'], threshold: 5 },
+  ronaldo:         { teams: ['Portugal','Saudi Arabia','England','Spain'], threshold: 6 },
+};
 
+function computeAllBadges() {
+  const players = S.players;
+  const earned = {};
   players.forEach(p => { earned[p] = {}; });
 
-  // === DANE POMOCNICZE ===
-
-  // Mecze z rozliczonym wynikiem (ft lub live z wynikiem)
+  // Mecze z rozliczonym wynikiem, posortowane chronologicznie
   const resolvedMatches = MATCHES_SORTED.filter(m => {
     const w = S.wyniki[m.id];
     return w && w.home != null && w.away != null && (w.status === 'ft' || w.status === 'live');
   });
 
-  // Per mecz: punkty każdego gracza (z mnożnikiem)
-  function matchPtsAll(m) {
-    const w = S.wyniki[m.id];
-    const res = {};
-    players.forEach(p => {
-      const typ = (S.typy[m.id]||{})[p];
-      res[p] = pts(typ, w); // null jeśli brak typu/wyniku
-    });
-    return res;
-  }
-
-  // Per mecz: bazowe punkty (bez x2)
+  // Per mecz: bazowe punkty (bez x2) – null jeśli brak typu LUB brak wyniku
   function matchPtsBaseAll(m) {
     const w = S.wyniki[m.id];
     const res = {};
@@ -675,49 +696,55 @@ function computeAllBadges() {
     return res;
   }
 
-  // === 1. SOKOLE OKO ===
-  // Gracz zdobył ≥1 pkt dodatnich (baza), a WSZYSCY inni mają -1 (bazowo)
-  resolvedMatches.forEach(m => {
-    const bAll = matchPtsBaseAll(m);
-    players.forEach(p => {
-      if (bAll[p] == null) return;
-      if (bAll[p] < 2) return; // musi mieć jakieś punkty dodatnie
-      const others = players.filter(o => o !== p);
-      const allOthersNeg = others.every(o => bAll[o] != null && bAll[o] < 0);
-      if (others.length > 0 && allOthersNeg) {
-        earned[p]['sokolie_oko'] = true;
-      }
-    });
-  });
+  // Pomocnicza: "typujący gracze" w danym meczu = ci którzy mają rozliczony wynik (non-null base)
+  function typujacy(bAll) {
+    return players.filter(p => bAll[p] !== null);
+  }
 
-  // === 2. OWIECZKA ===
-  // Gracz zdobył punkty dodatnie (baza ≥2), i WSZYSCY inni też mają ≥2
+  // ===================================================
+  // ODZNAKI NATYCHMIASTOWE (per mecz / seria)
+  // ===================================================
+
+  // 1. SOKOLE OKO
+  // Gracz ma ≥2 bazowo, a WSZYSCY INNI TYPUJĄCY mają <0
   resolvedMatches.forEach(m => {
     const bAll = matchPtsBaseAll(m);
+    const typ = typujacy(bAll);
     players.forEach(p => {
       if (bAll[p] == null || bAll[p] < 2) return;
-      const others = players.filter(o => o !== p);
-      if (others.length === 0) return;
-      const allOthersPos = others.every(o => bAll[o] != null && bAll[o] >= 2);
-      if (allOthersPos) earned[p]['owieczka'] = true;
+      const others = typ.filter(o => o !== p);
+      if (others.length === 0) return; // nikt inny nie typował
+      if (others.every(o => bAll[o] < 0)) earned[p]['sokolie_oko'] = true;
     });
   });
 
-  // === 3. ROBACZEK ===
-  // Gracz zdobył punkty ujemne (baza <0), i WSZYSCY inni też mają <0
+  // 2. OWIECZKA
+  // Gracz ma ≥2 bazowo, i WSZYSCY INNI TYPUJĄCY też mają ≥2
   resolvedMatches.forEach(m => {
     const bAll = matchPtsBaseAll(m);
+    const typ = typujacy(bAll);
     players.forEach(p => {
-      if (bAll[p] == null || bAll[p] >= 0) return;
-      const others = players.filter(o => o !== p);
+      if (bAll[p] == null || bAll[p] < 2) return;
+      const others = typ.filter(o => o !== p);
       if (others.length === 0) return;
-      const allOthersNeg = others.every(o => bAll[o] != null && bAll[o] < 0);
-      if (allOthersNeg) earned[p]['robaczek'] = true;
+      if (others.every(o => bAll[o] >= 2)) earned[p]['owieczka'] = true;
     });
   });
 
-  // === 4. KRÓL IMPREZY ===
-  // Użył x2 i trafił dokładny wynik (base = 4)
+  // 3. ROBACZEK
+  // Gracz ma <0 bazowo, i WSZYSCY INNI TYPUJĄCY też mają <0
+  resolvedMatches.forEach(m => {
+    const bAll = matchPtsBaseAll(m);
+    const typ = typujacy(bAll);
+    players.forEach(p => {
+      if (bAll[p] == null || bAll[p] >= 0) return;
+      const others = typ.filter(o => o !== p);
+      if (others.length === 0) return;
+      if (others.every(o => bAll[o] < 0)) earned[p]['robaczek'] = true;
+    });
+  });
+
+  // 4. KRÓL IMPREZY – x2 + dokładny wynik
   resolvedMatches.forEach(m => {
     const w = S.wyniki[m.id];
     players.forEach(p => {
@@ -727,8 +754,7 @@ function computeAllBadges() {
     });
   });
 
-  // === 5. KLAUN ===
-  // Użył x2 i nie trafił nawet zwycięzcy (base = -1)
+  // 5. KLAUN – x2 + chybienie zwycięzcy
   resolvedMatches.forEach(m => {
     const w = S.wyniki[m.id];
     players.forEach(p => {
@@ -738,18 +764,58 @@ function computeAllBadges() {
     });
   });
 
-  // === ODZNAKI RUNDOWE (Rzeźnik, Kolekcjoner, Snajper, Zimnokrwisty, Króle) ===
-  // Rundy: 1,2,3,4,5,6,7,8
+  // 6. PERFEKCJONISTA / 7. PECHOWIEC
+  // Seria 3 kolejnych meczów (tylko te z typem i wynikiem)
+  players.forEach(p => {
+    const seq = resolvedMatches
+      .map(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]))
+      .filter(b => b !== null);
+    for (let i = 0; i <= seq.length - 3; i++) {
+      const trio = seq.slice(i, i+3);
+      if (trio.every(b => b >= 2)) earned[p]['perfekcjonista'] = true;
+      if (trio.every(b => b < 0))  earned[p]['pechowiec'] = true;
+    }
+  });
+
+  // 8. POSZUKIWACZ SZCZĘŚCIA
+  // W ciągu 4 kolejnych meczów (z typem+wynikiem) naprzemiennie plus/minus
+  // wzorzec: (+−+−) lub (−+−+) gdzie + = ≥2, − = <0
+  players.forEach(p => {
+    const seq = resolvedMatches
+      .map(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]))
+      .filter(b => b !== null);
+    for (let i = 0; i <= seq.length - 4; i++) {
+      const q = seq.slice(i, i+4);
+      const alt1 = q[0]>=2 && q[1]<0 && q[2]>=2 && q[3]<0;
+      const alt2 = q[0]<0  && q[1]>=2 && q[2]<0  && q[3]>=2;
+      if (alt1 || alt2) { earned[p]['poszukiwacz'] = true; break; }
+    }
+  });
+
+  // ===================================================
+  // ODZNAKI PO ZAKOŃCZENIU RUNDY
+  // Warunek: wszystkie mecze danej rundy mają status ft/live (runda "zamknięta")
+  // ===================================================
+
+  function isRoundComplete(r) {
+    const rMatches = MATCHES.filter(m => m.r === r);
+    if (rMatches.length === 0) return false;
+    return rMatches.every(m => {
+      const w = S.wyniki[m.id];
+      return w && w.home != null && w.away != null && (w.status === 'ft' || w.status === 'live');
+    });
+  }
+
   const ROUND_IDS = [1,2,3,4,5,6,7,8];
 
   ROUND_IDS.forEach(r => {
+    if (!isRoundComplete(r)) return; // runda jeszcze trwa – nie przyznajemy
     const rMatches = resolvedMatches.filter(m => m.r === r);
     if (rMatches.length === 0) return;
 
-    // Per gracz: liczba "nietrafionych" (base=-1), trafionych kierunków (≥2), dokładnych (=4), remisów (base typ = remis AND base wynik = remis)
     const stats = {};
     players.forEach(p => {
-      stats[p] = { missed: 0, hit: 0, exact: 0, draw: 0, rndPts: 0 };
+      stats[p] = { missed: 0, hit: 0, exact: 0, draw: 0, kulawy: 0, rndPts: 0 };
     });
 
     rMatches.forEach(m => {
@@ -761,223 +827,182 @@ function computeAllBadges() {
         if (b < 0) stats[p].missed++;
         if (b >= 2) stats[p].hit++;
         if (b === 4) stats[p].exact++;
-        // Zimnokrwisty: gracz typował remis (tH===tA) i faktycznie był remis (wH===wA)
-        if (typ && w && typ.home === typ.away && w.home === w.away && b >= 2) {
-          stats[p].draw++;
+        // Zimnokrwisty: typ = remis i wynik = remis
+        if (typ && w && typ.home === typ.away && w.home === w.away && b >= 2) stats[p].draw++;
+        // Kulawy: do poprawnego wyniku brakowało 1 bramki
+        // Trafił kierunek (b>=2) ale nie dokładnie (b<4) i różnica to 1 gol
+        if (typ && w && b < 4) {
+          const dH = Math.abs(typ.home - w.home);
+          const dA = Math.abs(typ.away - w.away);
+          if ((dH === 1 && dA === 0) || (dH === 0 && dA === 1) || (dH === 1 && dA === 1)) {
+            stats[p].kulawy++;
+          }
         }
       });
+      stats[p] = stats[p]; // noop
     });
 
-    players.forEach(p => {
-      stats[p].rndPts = totalPts(p, r);
-    });
+    players.forEach(p => { stats[p].rndPts = totalPts(p, r); });
 
-    // Rzeźnik: najwięcej missed (>0)
+    // Rzeźnik
     const maxMissed = Math.max(...players.map(p => stats[p].missed));
-    if (maxMissed > 0) {
-      players.forEach(p => { if (stats[p].missed === maxMissed) earned[p]['rzeznik'] = true; });
-    }
+    if (maxMissed > 0) players.forEach(p => { if (stats[p].missed === maxMissed) earned[p]['rzeznik'] = true; });
 
-    // Kolekcjoner: najwięcej hit (>0)
+    // Kolekcjoner
     const maxHit = Math.max(...players.map(p => stats[p].hit));
-    if (maxHit > 0) {
-      players.forEach(p => { if (stats[p].hit === maxHit) earned[p]['kolekcjoner'] = true; });
-    }
+    if (maxHit > 0) players.forEach(p => { if (stats[p].hit === maxHit) earned[p]['kolekcjoner'] = true; });
 
-    // Snajper: najwięcej exact (>0)
+    // Snajper
     const maxExact = Math.max(...players.map(p => stats[p].exact));
-    if (maxExact > 0) {
-      players.forEach(p => { if (stats[p].exact === maxExact) earned[p]['snajper'] = true; });
-    }
+    if (maxExact > 0) players.forEach(p => { if (stats[p].exact === maxExact) earned[p]['snajper'] = true; });
 
-    // Zimnokrwisty: najwięcej draw (>0)
+    // Zimnokrwisty
     const maxDraw = Math.max(...players.map(p => stats[p].draw));
-    if (maxDraw > 0) {
-      players.forEach(p => { if (stats[p].draw === maxDraw) earned[p]['zimnokrwisty'] = true; });
-    }
+    if (maxDraw > 0) players.forEach(p => { if (stats[p].draw === maxDraw) earned[p]['zimnokrwisty'] = true; });
+
+    // Kredyciarz
+    players.forEach(p => { if (stats[p].rndPts < 0) earned[p]['kredyciarz'] = true; });
+
+    // Kulawy (po zakończeniu rundy – bierzemy max)
+    const maxKulawy = Math.max(...players.map(p => stats[p].kulawy));
+    if (maxKulawy > 0) players.forEach(p => { if (stats[p].kulawy === maxKulawy) earned[p]['kulawy'] = true; });
 
     // Król rundy
     const maxPts = Math.max(...players.map(p => stats[p].rndPts));
     const badgeId = r===1?'krol_r1':r===2?'krol_r2':r===3?'krol_r3':r===4?'krol_16':r===5?'krol_8':r===6?'krol_4':null;
-    if (badgeId) {
-      players.forEach(p => { if (stats[p].rndPts === maxPts) earned[p][badgeId] = true; });
-    }
+    if (badgeId) players.forEach(p => { if (stats[p].rndPts === maxPts) earned[p][badgeId] = true; });
   });
 
-  // === 9/10. PERFEKCJONISTA / PECHOWIEC ===
-  // Trzy mecze z rzędu (chronologicznie) z typem i wynikiem: ≥2 bazy = dodatni, <0 = ujemny
-  players.forEach(p => {
-    const seq = resolvedMatches
-      .map(m => {
-        const typ = (S.typy[m.id]||{})[p];
-        const w = S.wyniki[m.id];
-        const b = ptsBase(typ, w);
-        return b; // null = brak typu
-      })
-      .filter(b => b !== null);
+  // ===================================================
+  // ODZNAKI PO ZAKOŃCZENIU CAŁEJ GRY
+  // Warunek: finał (runda 8) zakończona
+  // ===================================================
 
-    // Szukamy 3 z rzędu
-    for (let i = 0; i <= seq.length - 3; i++) {
-      const trio = seq.slice(i, i+3);
-      if (trio.every(b => b >= 2)) { earned[p]['perfekcjonista'] = true; }
-      if (trio.every(b => b < 0))  { earned[p]['pechowiec'] = true; }
-    }
-  });
+  const allOver = isRoundComplete(8);
+  const SCORE_ROUNDS = [1,2,3,4,5,6]; // do 1/4 włącznie
 
-  // === FENIKS / BIEDAK / SKOCZEK – tylko rundy 1-6 ===
-  const SCORE_ROUNDS = [1,2,3,4,5,6];
+  // Pomocnicze: ranking i punkty per runda (tylko zaknieczone)
+  const completedScoreRounds = SCORE_ROUNDS.filter(isRoundComplete);
 
-  // Ranking gracza w danej rundzie (pozycja = 1 = najlepszy)
   function rankInRound(r) {
-    const sc = players
-      .map(p => ({ p, pts: totalPts(p, r) }))
-      .sort((a,b) => b.pts - a.pts);
+    const sc = players.map(p => ({ p, pts: totalPts(p, r) })).sort((a,b) => b.pts - a.pts);
     const result = {};
     sc.forEach((s, i) => { result[s.p] = i + 1; });
     return result;
   }
 
-  const roundRanks = {}; // roundRanks[r][player] = pozycja
-  SCORE_ROUNDS.forEach(r => { roundRanks[r] = rankInRound(r); });
-
-  const roundPoints = {}; // roundPoints[r][player] = pkt
+  const roundRanks = {};
+  const roundPoints = {};
   SCORE_ROUNDS.forEach(r => {
+    roundRanks[r] = rankInRound(r);
     roundPoints[r] = {};
     players.forEach(p => { roundPoints[r][p] = totalPts(p, r); });
   });
 
-  // Sprawdź czy runda ma jakiekolwiek rozliczone mecze
-  function hasResolvedInRound(r) {
-    return resolvedMatches.some(m => m.r === r);
-  }
-
-  const activeRounds = SCORE_ROUNDS.filter(hasResolvedInRound);
-
-  // FENIKS: min punktów w pewnej rundzie i top 3 w innej
-  if (activeRounds.length >= 2) {
-    players.forEach(p => {
-      const minPts = Math.min(...activeRounds.map(r => roundPoints[r][p]));
-      const hasTop3 = activeRounds.some(r => roundRanks[r][p] <= 3);
-      const hasMin = activeRounds.some(r => {
-        const allPts = players.map(pp => roundPoints[r][pp]);
-        return roundPoints[r][p] === Math.min(...allPts);
-      });
-      if (hasMin && hasTop3) earned[p]['feniks'] = true;
-    });
-  }
-
-  // BIEDAK: max punktów w pewnej rundzie i min punktów w innej
-  if (activeRounds.length >= 2) {
-    players.forEach(p => {
-      let hasMax = false, hasMinInOtherRound = false;
-      activeRounds.forEach(r => {
-        const allPts = players.map(pp => roundPoints[r][pp]);
-        if (roundPoints[r][p] === Math.max(...allPts)) hasMax = true;
-        if (roundPoints[r][p] === Math.min(...allPts)) hasMinInOtherRound = true;
-      });
-      if (hasMax && hasMinInOtherRound) earned[p]['biedak'] = true;
-    });
-  }
-
-  // SKOCZEK: największy awans (zmiana miejsca) między dwiema sąsiednimi rundami (do 1/4)
-  if (activeRounds.length >= 2) {
-    const jumpMap = {};
-    players.forEach(p => { jumpMap[p] = 0; });
-
-    for (let i = 0; i < activeRounds.length - 1; i++) {
-      const r1 = activeRounds[i];
-      const r2 = activeRounds[i+1];
+  if (allOver) {
+    // FENIKS: min punktów wśród graczy w pewnej rundzie i top 3 w innej
+    if (completedScoreRounds.length >= 2) {
       players.forEach(p => {
-        const jump = roundRanks[r1][p] - roundRanks[r2][p]; // pozycja maleje = awans
-        if (jump > jumpMap[p]) jumpMap[p] = jump;
+        const hasMin = completedScoreRounds.some(r => {
+          const allPts = players.map(pp => roundPoints[r][pp]);
+          return roundPoints[r][p] === Math.min(...allPts);
+        });
+        const hasTop3 = completedScoreRounds.some(r => roundRanks[r][p] <= 3);
+        if (hasMin && hasTop3) earned[p]['feniks'] = true;
       });
     }
-    const maxJump = Math.max(...players.map(p => jumpMap[p]));
-    if (maxJump > 0) {
-      players.forEach(p => { if (jumpMap[p] === maxJump) earned[p]['skoczek'] = true; });
+
+    // BIEDAK: max punktów wśród graczy w pewnej rundzie i min w innej
+    if (completedScoreRounds.length >= 2) {
+      players.forEach(p => {
+        let hasMax = false, hasMin = false;
+        completedScoreRounds.forEach(r => {
+          const allPts = players.map(pp => roundPoints[r][pp]);
+          if (roundPoints[r][p] === Math.max(...allPts)) hasMax = true;
+          if (roundPoints[r][p] === Math.min(...allPts)) hasMin = true;
+        });
+        if (hasMax && hasMin) earned[p]['biedak'] = true;
+      });
     }
-  }
 
-  // === HAZARDZISTA / SAPER – punkty z x2 (łącznie po wszystkich fazach) ===
-  const x2Points = {};
-  players.forEach(p => { x2Points[p] = 0; });
-
-  let anyX2Used = false;
-  MATCHES.forEach(m => {
-    const w = S.wyniki[m.id];
-    players.forEach(p => {
-      const typ = (S.typy[m.id]||{})[p];
-      if (!typ || !typ.x2) return;
-      const b = ptsBase(typ, w);
-      if (b === null) return;
-      anyX2Used = true;
-      x2Points[p] += (b * 2) - b; // dodatkowe punkty z mnożnika = b*2 - b = b
-    });
-  });
-
-  // Tylko gracze którzy użyli x2 co najmniej raz
-  const x2Users = players.filter(p => {
-    return MATCHES.some(m => {
-      const typ = (S.typy[m.id]||{})[p];
-      return typ && typ.x2;
-    });
-  });
-
-  if (x2Users.length > 0) {
-    const maxX2 = Math.max(...x2Users.map(p => x2Points[p]));
-    const minX2 = Math.min(...x2Users.map(p => x2Points[p]));
-    x2Users.forEach(p => {
-      if (x2Points[p] === maxX2) earned[p]['hazardzista'] = true;
-      if (x2Points[p] === minX2) earned[p]['saper'] = true;
-    });
-  }
-
-  // === ŚLEPIEC ===
-  // Ani razu nie trafił dokładnego wyniku (base=4) przez całą grę
-  players.forEach(p => {
-    const hasExact = resolvedMatches.some(m => {
-      const typ = (S.typy[m.id]||{})[p];
-      const w = S.wyniki[m.id];
-      return ptsBase(typ, w) === 4;
-    });
-    // Ślepiec dostaje odznakę tylko jeśli miał co najmniej jeden typ
-    const hasTips = resolvedMatches.some(m => {
-      const typ = (S.typy[m.id]||{})[p];
-      const w = S.wyniki[m.id];
-      return ptsBase(typ, w) !== null;
-    });
-    if (hasTips && !hasExact) earned[p]['slepiec'] = true;
-  });
-
-  // === OBYWATEL ŚWIATA ===
-  // Trafił kierunek wyniku (base ≥ 2) dla jak największej liczby unikalnych drużyn
-  const worldTeams = {};
-  players.forEach(p => { worldTeams[p] = new Set(); });
-
-  resolvedMatches.forEach(m => {
-    const typ = (S.typy[m.id]||{})[players[0]];
-    players.forEach(p => {
-      const typ2 = (S.typy[m.id]||{})[p];
-      const w = S.wyniki[m.id];
-      const b = ptsBase(typ2, w);
-      if (b !== null && b >= 2) {
-        // Dodaj obie drużyny z meczu
-        worldTeams[p].add(m.hn);
-        worldTeams[p].add(m.an);
+    // SKOCZEK: największy awans między dwiema sąsiednimi zakończonymi rundami
+    if (completedScoreRounds.length >= 2) {
+      const jumpMap = {};
+      players.forEach(p => { jumpMap[p] = 0; });
+      for (let i = 0; i < completedScoreRounds.length - 1; i++) {
+        const r1 = completedScoreRounds[i], r2 = completedScoreRounds[i+1];
+        players.forEach(p => {
+          const jump = roundRanks[r1][p] - roundRanks[r2][p];
+          if (jump > jumpMap[p]) jumpMap[p] = jump;
+        });
       }
+      const maxJump = Math.max(...players.map(p => jumpMap[p]));
+      if (maxJump > 0) players.forEach(p => { if (jumpMap[p] === maxJump) earned[p]['skoczek'] = true; });
+    }
+
+    // HAZARDZISTA / SAPER
+    const x2Points = {};
+    players.forEach(p => { x2Points[p] = 0; });
+    MATCHES.forEach(m => {
+      const w = S.wyniki[m.id];
+      players.forEach(p => {
+        const typ = (S.typy[m.id]||{})[p];
+        if (!typ || !typ.x2) return;
+        const b = ptsBase(typ, w);
+        if (b === null) return;
+        x2Points[p] += b; // dodatkowy zysk/strata z mnożnika = b (bo pts = b*2, normalnie b, extra = b)
+      });
     });
-  });
+    const x2Users = players.filter(p => MATCHES.some(m => { const t=(S.typy[m.id]||{})[p]; return t&&t.x2; }));
+    if (x2Users.length > 0) {
+      const maxX2 = Math.max(...x2Users.map(p => x2Points[p]));
+      const minX2 = Math.min(...x2Users.map(p => x2Points[p]));
+      x2Users.forEach(p => {
+        if (x2Points[p] === maxX2) earned[p]['hazardzista'] = true;
+        if (x2Points[p] === minX2) earned[p]['saper'] = true;
+      });
+    }
 
-  const maxTeams = Math.max(...players.map(p => worldTeams[p].size));
-  if (maxTeams > 0) {
-    players.forEach(p => { if (worldTeams[p].size === maxTeams) earned[p]['obywatel'] = true; });
+    // ŚLEPIEC
+    players.forEach(p => {
+      const hasExact = resolvedMatches.some(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]) === 4);
+      const hasTips = resolvedMatches.some(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]) !== null);
+      if (hasTips && !hasExact) earned[p]['slepiec'] = true;
+    });
+
+    // OBYWATEL ŚWIATA
+    const worldTeams = {};
+    players.forEach(p => { worldTeams[p] = new Set(); });
+    resolvedMatches.forEach(m => {
+      players.forEach(p => {
+        const b = ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]);
+        if (b !== null && b >= 2) { worldTeams[p].add(m.hn); worldTeams[p].add(m.an); }
+      });
+    });
+    const maxTeams = Math.max(...players.map(p => worldTeams[p].size));
+    if (maxTeams > 0) players.forEach(p => { if (worldTeams[p].size === maxTeams) earned[p]['obywatel'] = true; });
+
+    // DOMINATOR
+    const totalAll = players.map(p => ({ p, pts: totalPts(p, null) }));
+    const maxTotal = Math.max(...totalAll.map(x => x.pts));
+    totalAll.forEach(x => { if (x.pts === maxTotal) earned[x.p]['dominator'] = true; });
+
+    // === ODZNAKI GEOGRAFICZNE / TEMATYCZNE ===
+    // Dla każdej grupy: liczba meczów, w których gracz trafił kierunek (base ≥ 2)
+    // Sprawdzamy czy drużyna (hn lub an) należy do grupy
+    Object.entries(GEO_GROUPS).forEach(([badgeId, { teams, threshold }]) => {
+      // Mecze gdzie co najmniej jedna drużyna należy do grupy (szukamy po angielskiej nazwie)
+      const geoMatches = resolvedMatches.filter(m => teams.includes(m.hn) || teams.includes(m.an));
+      players.forEach(p => {
+        let count = 0;
+        geoMatches.forEach(m => {
+          const b = ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]);
+          if (b !== null && b >= 2) count++;
+        });
+        if (count >= threshold) earned[p][badgeId] = true;
+      });
+    });
   }
-
-  // === DOMINATOR ===
-  // Najwięcej punktów łącznie po wszystkich fazach
-  const totalAll = players.map(p => ({ p, pts: totalPts(p, null) }));
-  const maxTotal = Math.max(...totalAll.map(x => x.pts));
-  totalAll.forEach(x => { if (x.pts === maxTotal) earned[x.p]['dominator'] = true; });
 
   return earned;
 }
