@@ -274,10 +274,10 @@ const MATCHES = [
   {id:'r2m02',r:2,g:'B',hn:'Switzerland', an:'Bosnia and Herzegovina',hpl:'Szwajcaria',apl:'Bosnia i Herc.',hf:'CH',af:'BA',date:'2026-06-18',time:'21:00',venue:'Los Angeles'},
   {id:'r2m03',r:2,g:'B',hn:'Canada',      an:'Qatar',          hpl:'Kanada',      apl:'Katar',          hf:'CA', af:'QA',  date:'2026-06-19',time:'00:00',venue:'Vancouver'},
   {id:'r2m04',r:2,g:'A',hn:'Mexico',      an:'South Korea',    hpl:'Meksyk',      apl:'Korea Pd.',      hf:'MX', af:'KR',  date:'2026-06-19',time:'03:00',venue:'Guadalajara'},
-  {id:'r2m05',r:2,g:'D',hn:'United States',an:'Australia',     hpl:'USA',         apl:'Australia',      hf:'US', af:'AU',  date:'2026-06-19',time:'21:00',venue:'Seattle'},
-  {id:'r2m06',r:2,g:'C',hn:'Scotland',    an:'Morocco',        hpl:'Szkocja',     apl:'Maroko',         hf:'SCT',af:'MA',  date:'2026-06-20',time:'00:00',venue:'Boston'},
-  {id:'r2m07',r:2,g:'C',hn:'Brazil',      an:'Haiti',          hpl:'Brazylia',    apl:'Haiti',          hf:'BR', af:'HT',  date:'2026-06-20',time:'02:30',venue:'Philadelphia'},
-  {id:'r2m08',r:2,g:'D',hn:'Türkiye',     an:'Paraguay',       hpl:'Turcja',      apl:'Paragwaj',       hf:'TR', af:'PY',  date:'2026-06-20',time:'05:00',venue:'San Francisco'},
+  {id:'r2m05',r:2,g:'D',hn:'Türkiye',     an:'Paraguay',       hpl:'Turcja',      apl:'Paragwaj',       hf:'TR', af:'PY',  date:'2026-06-19',time:'06:00',venue:'San Francisco'},
+  {id:'r2m06',r:2,g:'D',hn:'United States',an:'Australia',     hpl:'USA',         apl:'Australia',      hf:'US', af:'AU',  date:'2026-06-19',time:'21:00',venue:'Seattle'},
+  {id:'r2m07',r:2,g:'C',hn:'Scotland',    an:'Morocco',        hpl:'Szkocja',     apl:'Maroko',         hf:'SCT',af:'MA',  date:'2026-06-20',time:'00:00',venue:'Boston'},
+  {id:'r2m08',r:2,g:'C',hn:'Brazil',      an:'Haiti',          hpl:'Brazylia',    apl:'Haiti',          hf:'BR', af:'HT',  date:'2026-06-20',time:'02:30',venue:'Philadelphia'},
   {id:'r2m09',r:2,g:'F',hn:'Netherlands', an:'Sweden',         hpl:'Holandia',    apl:'Szwecja',        hf:'NL', af:'SE',  date:'2026-06-20',time:'19:00',venue:'Houston'},
   {id:'r2m10',r:2,g:'E',hn:'Germany',     an:"Côte d'Ivoire",  hpl:'Niemcy',      apl:'WKS',            hf:'DE', af:'CI',  date:'2026-06-20',time:'22:00',venue:'Toronto'},
   {id:'r2m11',r:2,g:'E',hn:'Ecuador',     an:'Curaçao',        hpl:'Ekwador',     apl:'Curacao',        hf:'EC', af:'CW',  date:'2026-06-21',time:'02:00',venue:'Kansas City'},
@@ -515,12 +515,21 @@ function findByEnglishNames(hn, an) {
   };
   const na = s => { const n=norm(s); return ALIAS[n]||n; };
   const h = na(hn), a = na(an);
-  return MATCHES.find(m => {
+
+  // 1) Najpierw szukamy DOKLADNEGO dopasowania obu nazw (pelny string, nie fuzzy)
+  const exact = MATCHES.find(m => na(m.hn) === h && na(m.an) === a);
+  if (exact) return exact;
+
+  // 2) Fallback: fuzzy match po pierwszych 5 znakach, ale tylko gdy jest
+  //    JEDEN jednoznaczny kandydat (unika kolizji typu "South Africa"/"South Korea")
+  const candidates = MATCHES.filter(m => {
     const mh = na(m.hn), ma = na(m.an);
     const matchH = mh===h || mh.startsWith(h.slice(0,5)) || h.startsWith(mh.slice(0,5));
     const matchA = ma===a || ma.startsWith(a.slice(0,5)) || a.startsWith(ma.slice(0,5));
     return matchH && matchA;
-  }) || null;
+  });
+  if (candidates.length === 1) return candidates[0];
+  return null;
 }
 
 function mapSt(s) {
@@ -640,21 +649,21 @@ const BADGE_DEFS = [
   { id:'hazardzista',    icon:'🎲', name:'Hazardzista',           desc:'Najwięcej dodatkowych punktów z x2 na koniec gry (min. 1 użycie)' },
   { id:'saper',          icon:'💣', name:'Saper',                 desc:'Najmniej dodatkowych punktów z x2 na koniec gry (min. 1 użycie)' },
   { id:'slepiec',        icon:'🙈', name:'Ślepiec',               desc:'Ani razu nie trafił dokładnego wyniku przez całą grę' },
-  { id:'obywatel',       icon:'🌍', name:'Obywatel Świata',       desc:'Trafił zwycięzcę wyniku dla największej liczby unikalnych drużyn' },
+  { id:'obywatel',       icon:'🌍', name:'Obywatel Świata',       desc:'Trafił kierunek wyniku dla największej liczby unikalnych drużyn' },
   { id:'dominator',      icon:'🏆', name:'Dominator',             desc:'Najwięcej punktów łącznie po wszystkich fazach' },
   // --- geograficzne / tematyczne (przez całą grę) ---
-  { id:'iberysta',       icon:'🇪🇸', name:'Iberysta',            desc:'Trafił zwycięzcę w 4 meczach Hiszpanii lub Portugalii (łącznie)' },
-  { id:'zakatarzony',    icon:'🤧', name:'Zakatarzony',           desc:'Trafił zwycięzcę w 3 meczach Kataru' },
-  { id:'gospodarz',      icon:'🏠', name:'Gospodarz',             desc:'Trafił zwycięzcę w 5 meczach Kanady, USA lub Meksyku (łącznie)' },
-  { id:'daleki_wschod',  icon:'🌸', name:'Miłośnik Dalekiego Wschodu', desc:'Trafił zwycięzcę w 5 meczach Korei Południowej lub Japonii (łącznie)' },
-  { id:'slowanin',       icon:'🦅', name:'Słowianin',             desc:'Trafił zwycięzcę w 5 meczach Czech, Bośni i Hercegowiny lub Chorwacji (łącznie)' },
-  { id:'skandynaw',      icon:'❄️', name:'Skandynaw',             desc:'Trafił zwycięzcę w 4 meczach Szwecji lub Norwegii (łącznie)' },
-  { id:'wyspiarz',       icon:'🏝️', name:'Wyspiarz',             desc:'Trafił zwycięzcę w 5 meczach Curaçao, Haiti lub Cabo Verde (łącznie)' },
-  { id:'krol_brytyjski', icon:'🎩', name:'Król brytyjski',        desc:'Trafił zwycięzcę w 6 meczach Australii, Anglii, Nowej Zelandii lub Szkocji (łącznie)' },
-  { id:'bialo_czerwony', icon:'🇵🇱', name:'Biało-czerwony',      desc:'Trafił zwycięzcę w 8 meczach Austrii, Szwajcarii, Kanady, Turcji, Tunezji lub Anglii (łącznie)' },
-  { id:'ekstraklasowicz',icon:'⚽', name:'Ekstraklasowicz',       desc:'Trafił zwycięzcę w 6 meczach Iraku, Nowej Zelandii, Bośni lub DR Konga (łącznie)' },
-  { id:'messi',          icon:'🐐', name:'Messi',                 desc:'Trafił zwycięzcę w 5 meczach Argentyny, Hiszpanii lub USA (łącznie)' },
-  { id:'ronaldo',        icon:'🦁', name:'Ronaldo',               desc:'Trafił zwycięzcę w 6 meczach Portugalii, Arabii Saudyjskiej, Anglii lub Hiszpanii (łącznie)' },
+  { id:'iberysta',       icon:'🇪🇸', name:'Iberysta',            desc:'Trafił kierunek w 4 meczach Hiszpanii lub Portugalii (łącznie)' },
+  { id:'zakatarzony',    icon:'🤧', name:'Zakatarzony',           desc:'Trafił kierunek w 3 meczach Kataru' },
+  { id:'gospodarz',      icon:'🏠', name:'Gospodarz',             desc:'Trafił kierunek w 5 meczach Kanady, USA lub Meksyku (łącznie)' },
+  { id:'daleki_wschod',  icon:'🌸', name:'Miłośnik Dalekiego Wschodu', desc:'Trafił kierunek w 5 meczach Korei Południowej lub Japonii (łącznie)' },
+  { id:'slowanin',       icon:'🦅', name:'Słowianin',             desc:'Trafił kierunek w 5 meczach Czech, Bośni i Hercegowiny lub Chorwacji (łącznie)' },
+  { id:'skandynaw',      icon:'❄️', name:'Skandynaw',             desc:'Trafił kierunek w 4 meczach Szwecji lub Norwegii (łącznie)' },
+  { id:'wyspiarz',       icon:'🏝️', name:'Wyspiarz',             desc:'Trafił kierunek w 5 meczach Curaçao, Haiti lub Cabo Verde (łącznie)' },
+  { id:'krol_brytyjski', icon:'🎩', name:'Król brytyjski',        desc:'Trafił kierunek w 6 meczach Australii, Anglii, Nowej Zelandii lub Szkocji (łącznie)' },
+  { id:'bialo_czerwony', icon:'🇵🇱', name:'Biało-czerwony',      desc:'Trafił kierunek w 8 meczach Austrii, Szwajcarii, Kanady, Turcji, Tunezji lub Anglii (łącznie)' },
+  { id:'ekstraklasowicz',icon:'⚽', name:'Ekstraklasowicz',       desc:'Trafił kierunek w 6 meczach Iraku, Nowej Zelandii, Szwecji lub DR Konga (łącznie)' },
+  { id:'messi',          icon:'🐐', name:'Messi',                 desc:'Trafił kierunek w 5 meczach Argentyny, Hiszpanii lub USA (łącznie)' },
+  { id:'ronaldo',        icon:'🦁', name:'Ronaldo',               desc:'Trafił kierunek w 6 meczach Portugalii, Arabii Saudyjskiej, Anglii lub Hiszpanii (łącznie)' },
 ];
 
 // Pomocnicza: mapowanie skrótów angielskich nazw drużyn na grupy geograficzne
@@ -669,7 +678,7 @@ const GEO_GROUPS = {
   wyspiarz:        { teams: ['Curaçao','Haiti','Cabo Verde'], threshold: 5 },
   krol_brytyjski:  { teams: ['Australia','England','New Zealand','Scotland'], threshold: 6 },
   bialo_czerwony:  { teams: ['Austria','Switzerland','Canada','Türkiye','Tunisia','England'], threshold: 8 },
-  ekstraklasowicz: { teams: ['Iraq','New Zealand','Bosnia and Herzegovina','DR Congo'], threshold: 6 },
+  ekstraklasowicz: { teams: ['Iraq','New Zealand','Sweden','DR Congo'], threshold: 6 },
   messi:           { teams: ['Argentina','Spain','United States'], threshold: 5 },
   ronaldo:         { teams: ['Portugal','Saudi Arabia','England','Spain'], threshold: 6 },
 };
@@ -1436,13 +1445,27 @@ window.diagApi = async function() {
     const msg = parsed?.message || parsed?.detail || parsed?.error || '';
     if (r.status === 200) {
       el.style.color = 'var(--acc)';
+      const all = parsed?.matches||[];
+      const unmatched = all
+        .map(m=>{
+          const found = findByEnglishNames(m.homeTeam?.shortName||m.homeTeam?.name||'', m.awayTeam?.shortName||m.awayTeam?.name||'');
+          return { m, found };
+        })
+        .filter(x => !x.found);
       const sample = (parsed?.matches||[]).slice(0,2).map(m=>{
         const ft = m.score?.fullTime;
         const scoreStr = ft ? (ft.home ?? '?')+':'+(ft.away ?? '?') : 'brak score';
         const found = findByEnglishNames(m.homeTeam?.shortName||m.homeTeam?.name||'', m.awayTeam?.shortName||m.awayTeam?.name||'');
         return (m.homeTeam?.name||'?')+' vs '+(m.awayTeam?.name||'?')+' ['+m.status+', '+scoreStr+'] -> dopasowano: '+(found?found.id:'NIE ZNALEZIONO');
       }).join(' | ');
-      el.textContent = 'OK! Status 200. Meczy: ' + matchCount + '. Pierwsze 2: ' + sample;
+      let unmatchedStr = '';
+      if (unmatched.length) {
+        unmatchedStr = ' || NIEDOPASOWANE MECZE (' + unmatched.length + '): ' +
+          unmatched.map(x => (x.m.homeTeam?.name||'?')+' vs '+(x.m.awayTeam?.name||'?')+' [shortName: '+(x.m.homeTeam?.shortName||'-')+' / '+(x.m.awayTeam?.shortName||'-')+']').join(' | ');
+      } else {
+        unmatchedStr = ' || Wszystkie mecze API zostaly dopasowane.';
+      }
+      el.textContent = 'OK! Status 200. Meczy: ' + matchCount + '. Pierwsze 2: ' + sample + unmatchedStr;
     } else {
       el.style.color = 'var(--red)';
       el.textContent = 'Blad HTTP ' + r.status + ': ' + (msg || text.slice(0,200));
