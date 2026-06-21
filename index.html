@@ -273,11 +273,11 @@ const MATCHES = [
   {id:'r2m01',r:2,g:'A',hn:'Czech Republic',an:'South Africa', hpl:'Czechy',      apl:'RPA',            hf:'CZ', af:'ZA',  date:'2026-06-18',time:'18:00',venue:'Atlanta'},
   {id:'r2m02',r:2,g:'B',hn:'Switzerland', an:'Bosnia and Herzegovina',hpl:'Szwajcaria',apl:'Bosnia i Herc.',hf:'CH',af:'BA',date:'2026-06-18',time:'21:00',venue:'Los Angeles'},
   {id:'r2m03',r:2,g:'B',hn:'Canada',      an:'Qatar',          hpl:'Kanada',      apl:'Katar',          hf:'CA', af:'QA',  date:'2026-06-19',time:'00:00',venue:'Vancouver'},
-  {id:'r2m04',r:2,g:'A',hn:'Mexico',      an:'South Korea',    hpl:'Meksyk',      apl:'Korea Pd.',      hf:'MX', af:'KR',  date:'2026-06-19',time:'03:00',venue:'Guadalajara'},
-  {id:'r2m05',r:2,g:'D',hn:'Türkiye',     an:'Paraguay',       hpl:'Turcja',      apl:'Paragwaj',       hf:'TR', af:'PY',  date:'2026-06-19',time:'06:00',venue:'San Francisco'},
-  {id:'r2m06',r:2,g:'D',hn:'United States',an:'Australia',     hpl:'USA',         apl:'Australia',      hf:'US', af:'AU',  date:'2026-06-19',time:'21:00',venue:'Seattle'},
-  {id:'r2m07',r:2,g:'C',hn:'Scotland',    an:'Morocco',        hpl:'Szkocja',     apl:'Maroko',         hf:'SCT',af:'MA',  date:'2026-06-20',time:'00:00',venue:'Boston'},
-  {id:'r2m08',r:2,g:'C',hn:'Brazil',      an:'Haiti',          hpl:'Brazylia',    apl:'Haiti',          hf:'BR', af:'HT',  date:'2026-06-20',time:'02:30',venue:'Philadelphia'},
+  {id:'r2m04',r:2,g:'A',hn:'Mexico',      an:'South Korea',    hpl:'Meksyk',      apl:'Korea Pd.',      hf:'MX', af:'KR',  date:'2026-06-19',time:'03:00',venue:'Guadalajara'}, 
+  {id:'r2m05',r:2,g:'D',hn:'United States',an:'Australia',     hpl:'USA',         apl:'Australia',      hf:'US', af:'AU',  date:'2026-06-19',time:'21:00',venue:'Seattle'},
+  {id:'r2m06',r:2,g:'C',hn:'Scotland',    an:'Morocco',        hpl:'Szkocja',     apl:'Maroko',         hf:'SCT',af:'MA',  date:'2026-06-20',time:'00:00',venue:'Boston'},
+  {id:'r2m07',r:2,g:'C',hn:'Brazil',      an:'Haiti',          hpl:'Brazylia',    apl:'Haiti',          hf:'BR', af:'HT',  date:'2026-06-20',time:'02:30',venue:'Philadelphia'},
+  {id:'r2m08',r:2,g:'D',hn:'Türkiye',     an:'Paraguay',       hpl:'Turcja',      apl:'Paragwaj',       hf:'TR', af:'PY',  date:'2026-06-19',time:'06:00',venue:'San Francisco'},
   {id:'r2m09',r:2,g:'F',hn:'Netherlands', an:'Sweden',         hpl:'Holandia',    apl:'Szwecja',        hf:'NL', af:'SE',  date:'2026-06-20',time:'19:00',venue:'Houston'},
   {id:'r2m10',r:2,g:'E',hn:'Germany',     an:"Côte d'Ivoire",  hpl:'Niemcy',      apl:'WKS',            hf:'DE', af:'CI',  date:'2026-06-20',time:'22:00',venue:'Toronto'},
   {id:'r2m11',r:2,g:'E',hn:'Ecuador',     an:'Curaçao',        hpl:'Ekwador',     apl:'Curacao',        hf:'EC', af:'CW',  date:'2026-06-21',time:'02:00',venue:'Kansas City'},
@@ -508,25 +508,35 @@ function findByEnglishNames(hn, an) {
     .replace(/[^\w\s]/g,'').replace(/\s+/g,' ').trim();
   const ALIAS = {
     'usa':'united states','us':'united states','türkiye':'turkey','turkiye':'turkey',
-    'ir iran':'iran','côte divoire':'ivory coast',"cote divoire":'ivory coast',
-    'ivory coast':'cote divoire','south korea':'south korea','korea republic':'south korea',
+    'ir iran':'iran',
+    'côte divoire':'ivory coast',"cote divoire":'ivory coast', // oba zapisy -> jeden kanoniczny kod
+    'south korea':'south korea','korea republic':'south korea',
     'czechia':'czech republic','bosnia':'bosnia and herzegovina',
-    'dr congo':'dr congo','congo dr':'dr congo'
+    'dr congo':'dr congo','congo dr':'dr congo',
+    'cape verde':'cabo verde','cape verde islands':'cabo verde', // API uzywa "Cape Verde(/ Islands)", u nas "Cabo Verde"
   };
   const na = s => { const n=norm(s); return ALIAS[n]||n; };
   const h = na(hn), a = na(an);
 
-  // 1) Najpierw szukamy DOKLADNEGO dopasowania obu nazw (pelny string, nie fuzzy)
+  // 1) Dokladne dopasowanie (gospodarz=gospodarz, gosc=gosc)
   const exact = MATCHES.find(m => na(m.hn) === h && na(m.an) === a);
   if (exact) return exact;
 
-  // 2) Fallback: fuzzy match po pierwszych 5 znakach, ale tylko gdy jest
-  //    JEDEN jednoznaczny kandydat (unika kolizji typu "South Africa"/"South Korea")
+  // 2) Dokladne dopasowanie odwrocone (API moze podawac gospodarza/gosc inaczej
+  //    niz nasza tabela, np. mecze rewanzowe fazy grupowej w Rundzie 3)
+  const exactRev = MATCHES.find(m => na(m.hn) === a && na(m.an) === h);
+  if (exactRev) return exactRev;
+
+  // 3) Fallback: fuzzy match po pierwszych 5 znakach (w obu kierunkach),
+  //    ale tylko gdy jest JEDEN jednoznaczny kandydat (unika kolizji typu
+  //    "South Africa"/"South Korea" lub "Australia"/"Austria")
   const candidates = MATCHES.filter(m => {
     const mh = na(m.hn), ma = na(m.an);
-    const matchH = mh===h || mh.startsWith(h.slice(0,5)) || h.startsWith(mh.slice(0,5));
-    const matchA = ma===a || ma.startsWith(a.slice(0,5)) || a.startsWith(ma.slice(0,5));
-    return matchH && matchA;
+    const fwd = (mh===h || mh.startsWith(h.slice(0,5)) || h.startsWith(mh.slice(0,5)))
+             && (ma===a || ma.startsWith(a.slice(0,5)) || a.startsWith(ma.slice(0,5)));
+    const rev = (mh===a || mh.startsWith(a.slice(0,5)) || a.startsWith(mh.slice(0,5)))
+             && (ma===h || ma.startsWith(h.slice(0,5)) || h.startsWith(ma.slice(0,5)));
+    return fwd || rev;
   });
   if (candidates.length === 1) return candidates[0];
   return null;
