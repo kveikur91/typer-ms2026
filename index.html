@@ -273,7 +273,7 @@ const MATCHES = [
   {id:'r2m01',r:2,g:'A',hn:'Czech Republic',an:'South Africa', hpl:'Czechy',      apl:'RPA',            hf:'CZ', af:'ZA',  date:'2026-06-18',time:'18:00',venue:'Atlanta'},
   {id:'r2m02',r:2,g:'B',hn:'Switzerland', an:'Bosnia and Herzegovina',hpl:'Szwajcaria',apl:'Bosnia i Herc.',hf:'CH',af:'BA',date:'2026-06-18',time:'21:00',venue:'Los Angeles'},
   {id:'r2m03',r:2,g:'B',hn:'Canada',      an:'Qatar',          hpl:'Kanada',      apl:'Katar',          hf:'CA', af:'QA',  date:'2026-06-19',time:'00:00',venue:'Vancouver'},
-  {id:'r2m04',r:2,g:'A',hn:'Mexico',      an:'South Korea',    hpl:'Meksyk',      apl:'Korea Pd.',      hf:'MX', af:'KR',  date:'2026-06-19',time:'03:00',venue:'Guadalajara'}, 
+  {id:'r2m04',r:2,g:'A',hn:'Mexico',      an:'South Korea',    hpl:'Meksyk',      apl:'Korea Pd.',      hf:'MX', af:'KR',  date:'2026-06-19',time:'03:00',venue:'Guadalajara'},
   {id:'r2m05',r:2,g:'D',hn:'United States',an:'Australia',     hpl:'USA',         apl:'Australia',      hf:'US', af:'AU',  date:'2026-06-19',time:'21:00',venue:'Seattle'},
   {id:'r2m06',r:2,g:'C',hn:'Scotland',    an:'Morocco',        hpl:'Szkocja',     apl:'Maroko',         hf:'SCT',af:'MA',  date:'2026-06-20',time:'00:00',venue:'Boston'},
   {id:'r2m07',r:2,g:'C',hn:'Brazil',      an:'Haiti',          hpl:'Brazylia',    apl:'Haiti',          hf:'BR', af:'HT',  date:'2026-06-20',time:'02:30',venue:'Philadelphia'},
@@ -1004,23 +1004,24 @@ function computeAllBadges() {
     const totalAll = players.map(p => ({ p, pts: totalPts(p, null) }));
     const maxTotal = Math.max(...totalAll.map(x => x.pts));
     totalAll.forEach(x => { if (x.pts === maxTotal) earned[x.p]['dominator'] = true; });
-
-    // === ODZNAKI GEOGRAFICZNE / TEMATYCZNE ===
-    // Dla każdej grupy: liczba meczów, w których gracz trafił kierunek (base ≥ 2)
-    // Sprawdzamy czy drużyna (hn lub an) należy do grupy
-    Object.entries(GEO_GROUPS).forEach(([badgeId, { teams, threshold }]) => {
-      // Mecze gdzie co najmniej jedna drużyna należy do grupy (szukamy po angielskiej nazwie)
-      const geoMatches = resolvedMatches.filter(m => teams.includes(m.hn) || teams.includes(m.an));
-      players.forEach(p => {
-        let count = 0;
-        geoMatches.forEach(m => {
-          const b = ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]);
-          if (b !== null && b >= 2) count++;
-        });
-        if (count >= threshold) earned[p][badgeId] = true;
-      });
-    });
   }
+
+  // === ODZNAKI GEOGRAFICZNE / TEMATYCZNE ===
+  // Liczone NA BIEZACO (nie czekaja na koniec gry) - to progi kumulatywne,
+  // niezalezne od wynikow innych graczy
+  // Dla kazdej grupy: liczba meczow, w ktorych gracz trafil kierunek (base >= 2)
+  Object.entries(GEO_GROUPS).forEach(([badgeId, { teams, threshold }]) => {
+    // Mecze gdzie co najmniej jedna druzyna nalezy do grupy (szukamy po angielskiej nazwie)
+    const geoMatches = resolvedMatches.filter(m => teams.includes(m.hn) || teams.includes(m.an));
+    players.forEach(p => {
+      let count = 0;
+      geoMatches.forEach(m => {
+        const b = ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]);
+        if (b !== null && b >= 2) count++;
+      });
+      if (count >= threshold) earned[p][badgeId] = true;
+    });
+  });
 
   return earned;
 }
