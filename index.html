@@ -49,6 +49,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .pname{font-weight:600}
 .tscore{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700}
 .x2b{display:inline-block;background:var(--acc2);color:#000;font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:middle}
+.penb{display:inline-block;background:var(--sur2);border:1px solid var(--brd);color:var(--txt);font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:middle}
 .pb{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;display:inline-block;padding:2px 8px;border-radius:4px}
 .p4{background:rgba(34,211,168,.15);color:var(--acc)}
 .p3{background:rgba(34,197,94,.12);color:var(--grn)}
@@ -368,6 +369,13 @@ function safeId(name) {
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+// Badge "K: gospodarz/gosc" pokazujacy wskazanego zwyciezce karnych w typie gracza.
+// m to obiekt meczu (do pobrania hpl/apl), typ to obiekt typu gracza ({home,away,x2,pen}).
+function penBadge(typ, m) {
+  if (!typ || !typ.pen || !m) return '';
+  const label = typ.pen === 'home' ? m.hpl : m.apl;
+  return `<span class="penb" title="Wskazany zwyciezca karnych">K: ${escapeHtml(label)}</span>`;
+}
 
 let S = { players:[], typy:{}, wyniki:{}, apiKey:'', proxyUrl:'', koTeams:{} };
 let currentRound = 1;
@@ -469,23 +477,46 @@ async function fetchScores() {
         m.awayTeam?.shortName || m.awayTeam?.name || ''
       );
       if (!match) return;
+
+      // UWAGA na fazy pucharowe (runda >=4): API v4 football-data.org zwraca:
+      //  - score.fullTime  = wynik po 90 min ORAZ dogrywce wlacznie (czyli to wlasnie
+      //                       "wynik do 120 minuty", ktorego potrzebujemy do typowania)
+      //  - score.regularTime = wynik PO SAMYCH 90 minutach (bez dogrywki) - nieuzywane tutaj
+      //  - score.penalties  = wynik rzutow karnych (gdy doszlo do karnych)
+      //  - score.duration   = 'REGULAR' | 'EXTRA_TIME' | 'PENALTY_SHOOTOUT'
       const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
+      const pen = m.score?.penalties;
       const cur = (ft && ft.home !== null && ft.home !== undefined) ? ft
                  : (ht && ht.home !== null && ht.home !== undefined) ? ht
                  : null;
+
+      // Zwyciezca karnych (tylko jesli doszlo do serii i mamy oba wyniki karnych)
+      let penWinner = null;
+      if (pen && pen.home != null && pen.away != null) {
+        if (pen.home > pen.away) penWinner = 'home';
+        else if (pen.away > pen.home) penWinner = 'away';
+      }
+
       const newW = {
         home:   cur && cur.home != null ? cur.home : null,
         away:   cur && cur.away != null ? cur.away : null,
         status: mapSt(m.status),
         minute: m.minute || null,
       };
+      // pen ustawiamy tylko gdy mamy wynik karnych - inaczej nie nadpisujemy
+      // (zachowuje ewentualny recznie wpisany przez admina wynik karnych)
+      if (penWinner) newW.pen = penWinner;
+
       const old = S.wyniki[match.id];
       if (old && old.home !== null && old.away !== null
           && (newW.home === null || newW.away === null)) {
         return;
       }
-      if (!old || old.home!==newW.home || old.away!==newW.away || old.status!==newW.status) {
+      // Zachowaj recznie wpisany 'pen' jesli API go nie podaje w tym odswiezeniu
+      if (!newW.pen && old && old.pen) newW.pen = old.pen;
+
+      if (!old || old.home!==newW.home || old.away!==newW.away || old.status!==newW.status || old.pen!==newW.pen) {
         S.wyniki[match.id] = newW;
         changed = true;
       }
@@ -550,20 +581,10 @@ function mapSt(s) {
   return 'upcoming';
 }
 
-function pts(typ, w) {
-  if (!w||w.home==null||w.away==null||!typ) return null;
-  if (w.status!=='live' && w.status!=='ft') return null;
-  const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
-  let p;
-  if (tH===wH&&tA===wA) p=4;
-  else if (tH-tA===wH-wA) p=3;
-  else if ((tH>tA&&wH>wA)||(tH<tA&&wH<wA)||(tH===tA&&wH===wA)) p=2;
-  else p=-1;
-  return typ.x2 ? p*2 : p;
-}
-
-function ptsBase(typ, w) {
-  // punkty bez mnoznika x2
+// ptsBaseCore: czysty wynik bazowy (4/3/2/-1) BEZ bonusu karnego i BEZ mnoznika x2.
+// To jest jedyna funkcja, na ktorej powinny bazowac ikony i klasy CSS (pokazuja
+// "jak dobrze trafiony byl wynik", niezaleznie od ewentualnego bonusu za karne).
+function ptsBaseCore(typ, w) {
   if (!w||w.home==null||w.away==null||!typ) return null;
   if (w.status!=='live' && w.status!=='ft') return null;
   const wH=w.home, wA=w.away, tH=typ.home, tA=typ.away;
@@ -573,10 +594,44 @@ function ptsBase(typ, w) {
   return -1;
 }
 
+// Bonus za trafienie zwyciezcy karnych (faza pucharowa, runda >=4).
+// Przyznawany TYLKO gdy: wynik gracza byl remisem (typ.home===typ.away),
+// oficjalny wynik 120 min byl remisem (w.home===w.away), oba maja wskazany
+// zwyciezce karnych (typ.pen / w.pen, wartosci 'home'|'away'), i sie zgadzaja.
+// Bonus = +1 (przed mnoznikiem x2, ktory jest stosowany przez funkcje wywolujaca).
+function penBonusBase(typ, w) {
+  if (!typ || !w) return 0;
+  if (typ.home == null || typ.away == null || w.home == null || w.away == null) return 0;
+  if (typ.home !== typ.away) return 0;   // gracz nie typowal remisu - bonus nie dotyczy
+  if (w.home !== w.away) return 0;       // wynik 120 min nie byl remisem - karnych nie bylo
+  if (!typ.pen || !w.pen) return 0;      // brak wskazania zwyciezcy karnych (typ lub wynik)
+  return typ.pen === w.pen ? 1 : 0;
+}
+
+// ptsBase: wynik bazowy + bonus karny, BEZ mnoznika x2.
+// Uzywane WYLACZNIE do liczenia koncowej punktacji (totalPts/pts).
+// Logika odznak uzywa ptsBaseCore() (czysty wynik, bez bonusu karnego),
+// zeby kategoria trafienia (4/3/2/-1) nigdy nie byla zaburzona bonusem.
+function ptsBase(typ, w) {
+  const b = ptsBaseCore(typ, w);
+  if (b === null) return null;
+  return b + penBonusBase(typ, w);
+}
+
+// pts: finalna liczba punktow z mnoznikiem x2 zastosowanym do calosci (wynik+bonus).
+function pts(typ, w) {
+  const b = ptsBase(typ, w);
+  if (b === null) return null;
+  return typ.x2 ? b*2 : b;
+}
+
+// icon/ptsClass operuja WYLACZNIE na czystym wyniku bazowym (ptsBaseCore),
+// niezaleznie od bonusu karnego - tak ikona zawsze odzwierciedla jakosc
+// trafienia samego wyniku, a bonus karny jest osobno widoczny w punktacji.
 function icon(typ, w) {
   if (!w||w.home==null||!typ) return '';
-  const p = pts(typ,w); if (p===null) return '';
-  const base = typ.x2 ? Math.abs(p/2) : Math.abs(p);
+  const base = ptsBaseCore(typ, w);
+  if (base===null) return '';
   if (base===4) return '🟢🎉';
   if (base===3) return '🟢❕';
   if (base===2) return '🟢';
@@ -584,13 +639,12 @@ function icon(typ, w) {
 }
 
 function ptsClass(typ, w) {
-  const p = pts(typ,w); if (p===null) return '';
-  const base = typ?.x2 ? Math.abs(p/2) : Math.abs(p);
+  const base = ptsBaseCore(typ, w);
+  if (base===null) return '';
   if (base===4) return 'p4';
   if (base===3) return 'p3';
   if (base===2) return 'p2';
-  if (p<0) return 'pn';
-  return 'p0';
+  return 'pn';
 }
 
 function totalPts(player, roundFilter) {
@@ -603,18 +657,20 @@ function totalPts(player, roundFilter) {
 
 function curNext() {
   const now = new Date();
-  let live=null, next=null, minD=Infinity;
+  let liveList=[], next=null, minD=Infinity;
   MATCHES.forEach(m => {
     const dt  = new Date(m.date+'T'+m.time+':00');
     const end = new Date(dt.getTime()+115*60000);
     const w   = S.wyniki[m.id];
-    if (w?.status==='live') { live=m; return; }
+    if (w?.status==='live') { liveList.push(m); return; }
     if (w?.status==='ft') return;
-    if (now>=dt && now<=end) { live=m; return; }
+    if (now>=dt && now<=end) { liveList.push(m); return; }
     const d = dt-now;
     if (d>0 && d<minD) { minD=d; next=m; }
   });
-  return {live,next};
+  // Zachowujemy "live" (pojedynczy) dla kompatybilnosci z kodem ktory go uzywa gdzie indziej (renderUpcoming wyklucza tylko 1 id)
+  const live = liveList.length ? liveList[0] : null;
+  return {live, liveList, next};
 }
 
 // =====================================================
@@ -659,21 +715,21 @@ const BADGE_DEFS = [
   { id:'hazardzista',    icon:'🎲', name:'Hazardzista',           desc:'Najwięcej dodatkowych punktów z x2 na koniec gry (min. 1 użycie)' },
   { id:'saper',          icon:'💣', name:'Saper',                 desc:'Najmniej dodatkowych punktów z x2 na koniec gry (min. 1 użycie)' },
   { id:'slepiec',        icon:'🙈', name:'Ślepiec',               desc:'Ani razu nie trafił dokładnego wyniku przez całą grę' },
-  { id:'obywatel',       icon:'🌍', name:'Obywatel Świata',       desc:'Trafił zwycięzcę/remis dla największej liczby unikalnych drużyn' },
+  { id:'obywatel',       icon:'🌍', name:'Obywatel Świata',       desc:'Trafił kierunek wyniku dla największej liczby unikalnych drużyn' },
   { id:'dominator',      icon:'🏆', name:'Dominator',             desc:'Najwięcej punktów łącznie po wszystkich fazach' },
   // --- geograficzne / tematyczne (przez całą grę) ---
-  { id:'iberysta',       icon:'🇪🇸', name:'Iberysta',            desc:'Trafił zwycięzcę w 4 meczach Hiszpanii lub Portugalii (łącznie)' },
-  { id:'zakatarzony',    icon:'🤧', name:'Zakatarzony',           desc:'Trafił zwycięzcę w 3 meczach Kataru' },
-  { id:'gospodarz',      icon:'🏠', name:'Gospodarz',             desc:'Trafił zwycięzcę w 5 meczach Kanady, USA lub Meksyku (łącznie)' },
-  { id:'daleki_wschod',  icon:'🌸', name:'Miłośnik Dalekiego Wschodu', desc:'Trafił zwycięzcę w 5 meczach Korei Południowej lub Japonii (łącznie)' },
-  { id:'slowanin',       icon:'🦅', name:'Słowianin',             desc:'Trafił zwycięzcę w 5 meczach Czech, Bośni i Hercegowiny lub Chorwacji (łącznie)' },
-  { id:'skandynaw',      icon:'❄️', name:'Skandynaw',             desc:'Trafił zwycięzcę w 4 meczach Szwecji lub Norwegii (łącznie)' },
-  { id:'wyspiarz',       icon:'🏝️', name:'Wyspiarz',             desc:'Trafił zwycięzcę w 5 meczach Curaçao, Haiti lub Cabo Verde (łącznie)' },
-  { id:'krol_brytyjski', icon:'🎩', name:'Król brytyjski',        desc:'Trafił zwycięzcę w 6 meczach Australii, Anglii, Nowej Zelandii lub Szkocji (łącznie)' },
-  { id:'bialo_czerwony', icon:'🇵🇱', name:'Biało-czerwony',      desc:'Trafił zwycięzcę w 8 meczach Austrii, Szwajcarii, Kanady, Turcji, Tunezji lub Anglii (łącznie)' },
-  { id:'ekstraklasowicz',icon:'⚽', name:'Ekstraklasowicz',       desc:'Trafił zwycięzcę w 6 meczach Iraku, Nowej Zelandii, Bośni i Hercegowiny lub DR Konga (łącznie)' },
-  { id:'messi',          icon:'🐐', name:'Messi',                 desc:'Trafił zwycięzcę w 5 meczach Argentyny, Hiszpanii lub USA (łącznie)' },
-  { id:'ronaldo',        icon:'🦁', name:'Ronaldo',               desc:'Trafił zwycięzcę w 6 meczach Portugalii, Arabii Saudyjskiej, Anglii lub Hiszpanii (łącznie)' },
+  { id:'iberysta',       icon:'🇪🇸', name:'Iberysta',            desc:'Trafił kierunek w 4 meczach Hiszpanii lub Portugalii (łącznie)' },
+  { id:'zakatarzony',    icon:'🤧', name:'Zakatarzony',           desc:'Trafił kierunek w 3 meczach Kataru' },
+  { id:'gospodarz',      icon:'🏠', name:'Gospodarz',             desc:'Trafił kierunek w 5 meczach Kanady, USA lub Meksyku (łącznie)' },
+  { id:'daleki_wschod',  icon:'🌸', name:'Miłośnik Dalekiego Wschodu', desc:'Trafił kierunek w 5 meczach Korei Południowej lub Japonii (łącznie)' },
+  { id:'slowanin',       icon:'🦅', name:'Słowianin',             desc:'Trafił kierunek w 5 meczach Czech, Bośni i Hercegowiny lub Chorwacji (łącznie)' },
+  { id:'skandynaw',      icon:'❄️', name:'Skandynaw',             desc:'Trafił kierunek w 4 meczach Szwecji lub Norwegii (łącznie)' },
+  { id:'wyspiarz',       icon:'🏝️', name:'Wyspiarz',             desc:'Trafił kierunek w 5 meczach Curaçao, Haiti lub Cabo Verde (łącznie)' },
+  { id:'krol_brytyjski', icon:'🎩', name:'Król brytyjski',        desc:'Trafił kierunek w 6 meczach Australii, Anglii, Nowej Zelandii lub Szkocji (łącznie)' },
+  { id:'bialo_czerwony', icon:'🇵🇱', name:'Biało-czerwony',      desc:'Trafił kierunek w 8 meczach Austrii, Szwajcarii, Kanady, Turcji, Tunezji lub Anglii (łącznie)' },
+  { id:'ekstraklasowicz',icon:'⚽', name:'Ekstraklasowicz',       desc:'Trafił kierunek w 6 meczach Iraku, Nowej Zelandii, Szwecji lub DR Konga (łącznie)' },
+  { id:'messi',          icon:'🐐', name:'Messi',                 desc:'Trafił kierunek w 5 meczach Argentyny, Hiszpanii lub USA (łącznie)' },
+  { id:'ronaldo',        icon:'🦁', name:'Ronaldo',               desc:'Trafił kierunek w 6 meczach Portugalii, Arabii Saudyjskiej, Anglii lub Hiszpanii (łącznie)' },
 ];
 
 // Pomocnicza: mapowanie skrótów angielskich nazw drużyn na grupy geograficzne
@@ -688,7 +744,7 @@ const GEO_GROUPS = {
   wyspiarz:        { teams: ['Curaçao','Haiti','Cabo Verde'], threshold: 5 },
   krol_brytyjski:  { teams: ['Australia','England','New Zealand','Scotland'], threshold: 6 },
   bialo_czerwony:  { teams: ['Austria','Switzerland','Canada','Türkiye','Tunisia','England'], threshold: 8 },
-  ekstraklasowicz: { teams: ['Iraq','New Zealand','Bosnia and Herzegovina','DR Congo'], threshold: 6 },
+  ekstraklasowicz: { teams: ['Iraq','New Zealand','Sweden','DR Congo'], threshold: 6 },
   messi:           { teams: ['Argentina','Spain','United States'], threshold: 5 },
   ronaldo:         { teams: ['Portugal','Saudi Arabia','England','Spain'], threshold: 6 },
 };
@@ -710,7 +766,7 @@ function computeAllBadges() {
     const res = {};
     players.forEach(p => {
       const typ = (S.typy[m.id]||{})[p];
-      res[p] = ptsBase(typ, w);
+      res[p] = ptsBaseCore(typ, w);
     });
     return res;
   }
@@ -769,7 +825,7 @@ function computeAllBadges() {
     players.forEach(p => {
       const typ = (S.typy[m.id]||{})[p];
       if (!typ || !typ.x2) return;
-      if (ptsBase(typ, w) === 4) earned[p]['krol_imprezy'] = true;
+      if (ptsBaseCore(typ, w) === 4) earned[p]['krol_imprezy'] = true;
     });
   });
 
@@ -779,7 +835,7 @@ function computeAllBadges() {
     players.forEach(p => {
       const typ = (S.typy[m.id]||{})[p];
       if (!typ || !typ.x2) return;
-      if (ptsBase(typ, w) === -1) earned[p]['klaun'] = true;
+      if (ptsBaseCore(typ, w) === -1) earned[p]['klaun'] = true;
     });
   });
 
@@ -787,7 +843,7 @@ function computeAllBadges() {
   // Seria 3 kolejnych meczów (tylko te z typem i wynikiem)
   players.forEach(p => {
     const seq = resolvedMatches
-      .map(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]))
+      .map(m => ptsBaseCore((S.typy[m.id]||{})[p], S.wyniki[m.id]))
       .filter(b => b !== null);
     for (let i = 0; i <= seq.length - 3; i++) {
       const trio = seq.slice(i, i+3);
@@ -801,7 +857,7 @@ function computeAllBadges() {
   // wzorzec: (+−+−) lub (−+−+) gdzie + = ≥2, − = <0
   players.forEach(p => {
     const seq = resolvedMatches
-      .map(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]))
+      .map(m => ptsBaseCore((S.typy[m.id]||{})[p], S.wyniki[m.id]))
       .filter(b => b !== null);
     for (let i = 0; i <= seq.length - 4; i++) {
       const q = seq.slice(i, i+4);
@@ -841,7 +897,7 @@ function computeAllBadges() {
       const w = S.wyniki[m.id];
       players.forEach(p => {
         const typ = (S.typy[m.id]||{})[p];
-        const b = ptsBase(typ, w);
+        const b = ptsBaseCore(typ, w);
         if (b === null) return;
         if (b < 0) stats[p].missed++;
         if (b >= 2) stats[p].hit++;
@@ -917,47 +973,61 @@ function computeAllBadges() {
     players.forEach(p => { roundPoints[r][p] = totalPts(p, r); });
   });
 
-  if (allOver) {
-    // FENIKS: min punktów wśród graczy w pewnej rundzie i top 3 w innej
-    if (completedScoreRounds.length >= 2) {
-      players.forEach(p => {
-        const hasMin = completedScoreRounds.some(r => {
-          const allPts = players.map(pp => roundPoints[r][pp]);
-          return roundPoints[r][p] === Math.min(...allPts);
-        });
-        const hasTop3 = completedScoreRounds.some(r => roundRanks[r][p] <= 3);
-        if (hasMin && hasTop3) earned[p]['feniks'] = true;
-      });
-    }
+  // FENIKS / BIEDAK / SKOCZEK: liczone tylko do 1/4 finalu wlacznie (zgodnie ze specyfikacja),
+  // NIE czekaja na zakonczenie calego turnieju - wystarczy, ze sa min. 2 zakonczone rundy
+  // wsrod rund 1-6 (grupowe + 1/16 + 1/8 + 1/4).
 
-    // BIEDAK: max punktów wśród graczy w pewnej rundzie i min w innej
-    if (completedScoreRounds.length >= 2) {
-      players.forEach(p => {
-        let hasMax = false, hasMin = false;
-        completedScoreRounds.forEach(r => {
-          const allPts = players.map(pp => roundPoints[r][pp]);
-          if (roundPoints[r][p] === Math.max(...allPts)) hasMax = true;
-          if (roundPoints[r][p] === Math.min(...allPts)) hasMin = true;
-        });
-        if (hasMax && hasMin) earned[p]['biedak'] = true;
-      });
-    }
-
-    // SKOCZEK: największy awans między dwiema sąsiednimi zakończonymi rundami
-    if (completedScoreRounds.length >= 2) {
-      const jumpMap = {};
-      players.forEach(p => { jumpMap[p] = 0; });
-      for (let i = 0; i < completedScoreRounds.length - 1; i++) {
-        const r1 = completedScoreRounds[i], r2 = completedScoreRounds[i+1];
-        players.forEach(p => {
-          const jump = roundRanks[r1][p] - roundRanks[r2][p];
-          if (jump > jumpMap[p]) jumpMap[p] = jump;
-        });
+  // FENIKS: najpierw byl NAJGORSZY (min punktow w danej rundzie), a w JAKIEJS PO NIM
+  // (chronologicznie pozniejszej) rundzie byl na podium (top 3). Kolejnosc ma znaczenie -
+  // to jest "odrodzenie" (dno -> potem gora), w przeciwienstwie do Biedaka ktory jest symetryczny.
+  if (completedScoreRounds.length >= 2) {
+    players.forEach(p => {
+      // Szukamy: czy istnieje runda rMin (z najnizszym wynikiem dla p) i runda rTop3
+      // pozniejsza chronologicznie (wyzszy numer rundy w completedScoreRounds), gdzie p byl top3.
+      for (let i = 0; i < completedScoreRounds.length; i++) {
+        const rMin = completedScoreRounds[i];
+        const allPtsMin = players.map(pp => roundPoints[rMin][pp]);
+        const wasLastHere = roundPoints[rMin][p] === Math.min(...allPtsMin);
+        if (!wasLastHere) continue;
+        // Sprawdzamy kazda PO NIM (i+1, i+2, ...) czy byl top3
+        for (let j = i + 1; j < completedScoreRounds.length; j++) {
+          const rLater = completedScoreRounds[j];
+          if (roundRanks[rLater][p] <= 3) { earned[p]['feniks'] = true; break; }
+        }
+        if (earned[p]['feniks']) break;
       }
-      const maxJump = Math.max(...players.map(p => jumpMap[p]));
-      if (maxJump > 0) players.forEach(p => { if (jumpMap[p] === maxJump) earned[p]['skoczek'] = true; });
-    }
+    });
+  }
 
+  // BIEDAK: max punktów wśród graczy w pewnej rundzie i min w innej
+  if (completedScoreRounds.length >= 2) {
+    players.forEach(p => {
+      let hasMax = false, hasMin = false;
+      completedScoreRounds.forEach(r => {
+        const allPts = players.map(pp => roundPoints[r][pp]);
+        if (roundPoints[r][p] === Math.max(...allPts)) hasMax = true;
+        if (roundPoints[r][p] === Math.min(...allPts)) hasMin = true;
+      });
+      if (hasMax && hasMin) earned[p]['biedak'] = true;
+    });
+  }
+
+  // SKOCZEK: największy awans między dwiema sąsiednimi zakończonymi rundami
+  if (completedScoreRounds.length >= 2) {
+    const jumpMap = {};
+    players.forEach(p => { jumpMap[p] = 0; });
+    for (let i = 0; i < completedScoreRounds.length - 1; i++) {
+      const r1 = completedScoreRounds[i], r2 = completedScoreRounds[i+1];
+      players.forEach(p => {
+        const jump = roundRanks[r1][p] - roundRanks[r2][p];
+        if (jump > jumpMap[p]) jumpMap[p] = jump;
+      });
+    }
+    const maxJump = Math.max(...players.map(p => jumpMap[p]));
+    if (maxJump > 0) players.forEach(p => { if (jumpMap[p] === maxJump) earned[p]['skoczek'] = true; });
+  }
+
+  if (allOver) {
     // HAZARDZISTA / SAPER
     const x2Points = {};
     players.forEach(p => { x2Points[p] = 0; });
@@ -966,7 +1036,7 @@ function computeAllBadges() {
       players.forEach(p => {
         const typ = (S.typy[m.id]||{})[p];
         if (!typ || !typ.x2) return;
-        const b = ptsBase(typ, w);
+        const b = ptsBaseCore(typ, w);
         if (b === null) return;
         x2Points[p] += b; // dodatkowy zysk/strata z mnożnika = b (bo pts = b*2, normalnie b, extra = b)
       });
@@ -983,8 +1053,8 @@ function computeAllBadges() {
 
     // ŚLEPIEC
     players.forEach(p => {
-      const hasExact = resolvedMatches.some(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]) === 4);
-      const hasTips = resolvedMatches.some(m => ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]) !== null);
+      const hasExact = resolvedMatches.some(m => ptsBaseCore((S.typy[m.id]||{})[p], S.wyniki[m.id]) === 4);
+      const hasTips = resolvedMatches.some(m => ptsBaseCore((S.typy[m.id]||{})[p], S.wyniki[m.id]) !== null);
       if (hasTips && !hasExact) earned[p]['slepiec'] = true;
     });
 
@@ -993,7 +1063,7 @@ function computeAllBadges() {
     players.forEach(p => { worldTeams[p] = new Set(); });
     resolvedMatches.forEach(m => {
       players.forEach(p => {
-        const b = ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]);
+        const b = ptsBaseCore((S.typy[m.id]||{})[p], S.wyniki[m.id]);
         if (b !== null && b >= 2) { worldTeams[p].add(m.hn); worldTeams[p].add(m.an); }
       });
     });
@@ -1016,7 +1086,7 @@ function computeAllBadges() {
     players.forEach(p => {
       let count = 0;
       geoMatches.forEach(m => {
-        const b = ptsBase((S.typy[m.id]||{})[p], S.wyniki[m.id]);
+        const b = ptsBaseCore((S.typy[m.id]||{})[p], S.wyniki[m.id]);
         if (b !== null && b >= 2) count++;
       });
       if (count >= threshold) earned[p][badgeId] = true;
@@ -1070,13 +1140,16 @@ function renderOdznakiPage() {
 // =====================================================
 function render() {
   if (!fbLoaded) return;
-  const {live,next} = curNext();
+  const {liveList,next} = curNext();
   let html = '';
-  if (live) {
-    html += renderHero(live,true);
-    html += renderTypy(live);
+  if (liveList && liveList.length > 0) {
+    const label = liveList.length > 1 ? 'AKTUALNE MECZE' : 'AKTUALNY MECZ';
+    html += `<div class="gap"><div class="slabel">${label}</div>`;
+    liveList.forEach(m => { html += renderHero(m,true,true); });
+    html += `</div>`;
+    liveList.forEach(m => { html += renderTypy(m); });
     html += renderLB(null);
-    html += renderUpcoming(live);
+    html += renderUpcoming(liveList);
   } else {
     html += renderNoMatch(next);
     html += renderLB(null);
@@ -1084,24 +1157,24 @@ function render() {
   document.getElementById('app').innerHTML = html;
 }
 
-function renderHero(m, isLive) {
+function renderHero(m, isLive, skipWrapper) {
   const w = S.wyniki[m.id]||{};
   const hasScore = w.home!=null;
   let badge = '';
   if      (w.status==='live') badge=`<span class="tbadge live">&#128308; LIVE ${w.minute?w.minute+"'":''}  </span>`;
   else if (w.status==='ft')   badge=`<span class="tbadge">FT</span>`;
   else                        badge=`<span class="tbadge">${m.time} CET</span>`;
-  return `<div class="gap"><div class="slabel">AKTUALNY MECZ</div>
-  <div class="mhero">
+  return `<div class="mhero" style="margin-bottom:16px">
     <div class="mmeta"><span class="mgrp">GRUPA ${m.g} &middot; ${m.venue}</span>${badge}</div>
     <div class="mline">
       <div class="tblock"><div class="tflag">${F(m.hf)}</div><div class="tname">${m.hpl}</div></div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
         <div class="score">${hasScore ? w.home+' : '+w.away : '&ndash; : &ndash;'}</div>
+        ${w.pen ? `<div style="font-size:11px;color:var(--mut)">karne: ${w.pen==='home'?m.hpl:m.apl}</div>` : ''}
       </div>
       <div class="tblock"><div class="tflag">${F(m.af)}</div><div class="tname">${m.apl}</div></div>
     </div>
-  </div></div>`;
+  </div>`;
 }
 
 function renderTypy(m) {
@@ -1116,7 +1189,7 @@ function renderTypy(m) {
       ? `<span class="pb ${pc}">${p2>0?'+':''}${p2}</span>`
       : '';
     const ts = typ
-      ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`
+      ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}${penBadge(typ,m)}`
       : '&mdash;';
     return `<tr>
       <td><span class="pname">${p}</span></td>
@@ -1125,7 +1198,7 @@ function renderTypy(m) {
       <td style="text-align:right">${ptsH}</td>
     </tr>`;
   }).join('');
-  return `<div class="gap"><div class="slabel">TYPY</div>
+  return `<div class="gap"><div class="slabel">TYPY &ndash; ${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}</div>
   <div class="card">
     <table class="tt">
       <thead><tr><th>Gracz</th><th>Typ</th><th style="text-align:center">Status</th><th style="text-align:right">Pkt</th></tr></thead>
@@ -1154,8 +1227,12 @@ function renderLB(rf) {
 
 function renderUpcoming(cur) {
   const now = new Date();
+  // cur moze byc: null, pojedynczy obiekt meczu, lub tablica meczow (gdy kilka grane jednoczesnie)
+  const excludeIds = new Set(
+    Array.isArray(cur) ? cur.map(m=>m.id) : (cur ? [cur.id] : [])
+  );
   const list = MATCHES.filter(m=>{
-    if (cur && m.id===cur.id) return false;
+    if (excludeIds.has(m.id)) return false;
     const w = S.wyniki[m.id];
     if (w?.status==='ft') return false;
     return new Date(m.date+'T'+m.time+':00') > now;
@@ -1220,6 +1297,7 @@ function renderMatchDetailPage(matchId) {
         <div class="tblock"><div class="tflag">${F(m.hf)}</div><div class="tname">${m.hpl}</div></div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
           <div class="score">${hasScore ? w.home+' : '+w.away : '&ndash; : &ndash;'}</div>
+          ${w.pen ? `<div style="font-size:11px;color:var(--mut)">karne: ${w.pen==='home'?m.hpl:m.apl}</div>` : ''}
           <div style="font-size:11px;color:var(--mut)">${m.date}</div>
         </div>
         <div class="tblock"><div class="tflag">${F(m.af)}</div><div class="tname">${m.apl}</div></div>
@@ -1231,7 +1309,7 @@ function renderMatchDetailPage(matchId) {
     const ic  = hasScore ? icon(typ,w) : '';
     const pc  = p2!==null ? ptsClass(typ,w) : '';
     const ptsH = p2!==null ? `<span class="pb ${pc}">${p2>0?'+':''}${p2}</span>` : '';
-    const ts = typ ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}` : '&mdash;';
+    const ts = typ ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}${penBadge(typ,m)}` : '&mdash;';
     return `<tr>
       <td><span class="pname">${p}</span></td>
       <td><span class="tscore">${ts}</span></td>
@@ -1314,7 +1392,7 @@ function renderRoundPage(r) {
       const p2  = hasScore ? pts(typ,w) : null;
       const ic  = hasScore ? icon(typ,w) : '&#8987;';
       const ptsH = p2!==null ? `<span class="pb ${ptsClass(typ,w)}" style="font-size:12px">${p2>0?'+':''}${p2}pkt</span>` : '';
-      const ts = `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}`;
+      const ts = `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}${penBadge(typ,m)}`;
       return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--brd)">
         <span style="font-weight:600;font-size:13px;width:80px">${p}</span>
         <span class="tscore" style="font-size:15px">${ts}</span>
@@ -1357,7 +1435,7 @@ function renderTypowaniaPage() {
     const hasTip = typ && typ.home!=null && typ.away!=null;
     const hasRes = w && w.home!=null && w.away!=null;
     if (!hasTip && !hasRes) return '';
-    const ts = hasTip ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}` : '&mdash;';
+    const ts = hasTip ? `${typ.home}:${typ.away}${typ.x2?'<span class="x2b">X2</span>':''}${penBadge(typ,m)}` : '&mdash;';
     const rs = hasRes ? `${w.home}:${w.away}` : '&mdash;';
     const p2 = hasTip&&hasRes ? pts(typ,w) : null;
     const ic = p2!==null ? icon(typ,w) : '';
@@ -1521,12 +1599,15 @@ window.saveWynik = function(id) {
   const h = document.getElementById('wH').value.trim();
   const a = document.getElementById('wA').value.trim();
   const st = document.getElementById('wSt').value;
+  const penEl = document.getElementById('wPen');
+  const pen = penEl ? penEl.value : '';
   S.wyniki[id] = {
     home:   h !== '' && !isNaN(parseInt(h)) ? parseInt(h) : null,
     away:   a !== '' && !isNaN(parseInt(a)) ? parseInt(a) : null,
     status: st,
     minute: null,
   };
+  if (pen === 'home' || pen === 'away') S.wyniki[id].pen = pen;
   fbSave();
   handleHash();
   const btn = document.getElementById('btnWynik_'+id);
@@ -1540,11 +1621,15 @@ window.saveTypy = function(id) {
     const hEl = document.getElementById('th_' + sid);
     const aEl = document.getElementById('ta_' + sid);
     const xEl = document.getElementById('tx_' + sid);
+    const pEl = document.getElementById('tp_' + sid);
     const h = hEl ? hEl.value.trim() : '';
     const a = aEl ? aEl.value.trim() : '';
     const x = xEl ? xEl.checked : false;
+    const pen = pEl ? pEl.value : '';
     if (h !== '' && a !== '' && !isNaN(parseInt(h)) && !isNaN(parseInt(a))) {
-      S.typy[id][p] = { home: parseInt(h), away: parseInt(a), x2: !!x };
+      const entry = { home: parseInt(h), away: parseInt(a), x2: !!x };
+      if (pen === 'home' || pen === 'away') entry.pen = pen;
+      S.typy[id][p] = entry;
     }
   });
   fbSave();
@@ -1578,9 +1663,10 @@ function renderAdminForm(m) {
   const f = document.getElementById('adminForm'); if(!f) return;
   const w = S.wyniki[m.id]||{};
   const ty= S.typy[m.id]||{};
+  const isKO = m.r >= 4; // faza pucharowa - tu dotyczy wynik 120 min + bonus karne
   let html=`<div style="font-size:12px;color:var(--acc);font-weight:600;margin-bottom:8px">${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}</div>`;
-  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Wynik oficjalny (nadpisuje API)</div>
-  <div style="display:flex;align-items:center;gap:5px;margin-bottom:8px">
+  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Wynik oficjalny${isKO?' (do 120 min, nadpisuje API)':' (nadpisuje API)'}</div>
+  <div style="display:flex;align-items:center;gap:5px;margin-bottom:${isKO?'6px':'8px'}">
     <input class="ainp" id="wH" value="${w.home!=null?w.home:''}" placeholder="?" style="width:40px;text-align:center">
     <span style="color:var(--mut)">:</span>
     <input class="ainp" id="wA" value="${w.away!=null?w.away:''}" placeholder="?" style="width:40px;text-align:center">
@@ -1589,13 +1675,23 @@ function renderAdminForm(m) {
       <option value="live"${w.status==='live'?' selected':''}>&#128308; Live</option>
       <option value="ft"${w.status==='ft'?' selected':''}>&#9989; FT</option>
     </select>
-  </div>
-  <button class="abtn" id="btnWynik_${m.id}" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">Zapisz wynik</button>`;
-  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy</div>`;
+  </div>`;
+  if (isKO) {
+    html+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+      <span style="font-size:11px;color:var(--mut);white-space:nowrap">Karne (gdy remis):</span>
+      <select class="asel" id="wPen" style="flex:1">
+        <option value=""${!w.pen?' selected':''}>&mdash; brak/nie dotyczy &mdash;</option>
+        <option value="home"${w.pen==='home'?' selected':''}>${m.hpl} wygral karne</option>
+        <option value="away"${w.pen==='away'?' selected':''}>${m.apl} wygral karne</option>
+      </select>
+    </div>`;
+  }
+  html+=`<button class="abtn" id="btnWynik_${m.id}" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">Zapisz wynik</button>`;
+  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy${isKO?' (wynik do 120 min + opcjonalnie karne)':''}</div>`;
   S.players.forEach(p=>{
     const sid = safeId(p);
     const t=ty[p]||{};
-    html+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px">
+    html+=`<div style="display:flex;align-items:center;gap:4px;margin-bottom:5px;flex-wrap:wrap">
       <span style="width:65px;font-size:12px;overflow:hidden;white-space:nowrap" title="${escapeHtml(p)}">${escapeHtml(p)}</span>
       <input class="ainp" id="th_${sid}" value="${t.home!=null?t.home:''}" placeholder="D" style="width:34px;text-align:center">
       <span style="color:var(--mut)">:</span>
@@ -1603,6 +1699,11 @@ function renderAdminForm(m) {
       <label style="font-size:11px;color:var(--mut);display:flex;align-items:center;gap:3px;cursor:pointer">
         <input type="checkbox" id="tx_${sid}"${t.x2?' checked':''}> X2
       </label>
+      ${isKO ? `<select class="asel" id="tp_${sid}" style="width:auto;font-size:11px;padding:4px 6px">
+        <option value=""${!t.pen?' selected':''}>karne: &mdash;</option>
+        <option value="home"${t.pen==='home'?' selected':''}>karne: ${m.hpl}</option>
+        <option value="away"${t.pen==='away'?' selected':''}>karne: ${m.apl}</option>
+      </select>` : ''}
     </div>`;
   });
   html+=`<button class="abtn" id="btnTypy_${m.id}" onclick="saveTypy('${m.id}')">&#128190; Zapisz typy</button>`;
