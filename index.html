@@ -727,7 +727,7 @@ const BADGE_DEFS = [
   { id:'wyspiarz',       icon:'🏝️', name:'Wyspiarz',             desc:'Trafił zwycięzcę w 5 meczach Curaçao, Haiti lub Cabo Verde (łącznie)' },
   { id:'krol_brytyjski', icon:'🎩', name:'Król brytyjski',        desc:'Trafił zwycięzcę w 6 meczach Australii, Anglii, Nowej Zelandii lub Szkocji (łącznie)' },
   { id:'bialo_czerwony', icon:'🇵🇱', name:'Biało-czerwony',      desc:'Trafił zwycięzcę w 8 meczach Austrii, Szwajcarii, Kanady, Turcji, Tunezji lub Anglii (łącznie)' },
-  { id:'ekstraklasowicz',icon:'⚽', name:'Ekstraklasowicz',       desc:'Trafił zwycięzcę w 6 meczach Iraku, Nowej Zelandii, Szwecji lub DR Konga (łącznie)' },
+  { id:'ekstraklasowicz',icon:'⚽', name:'Ekstraklasowicz',       desc:'Trafił zwycięzcę w 6 meczach Iraku, Nowej Zelandii, Bośni lub DR Konga (łącznie)' },
   { id:'messi',          icon:'🐐', name:'Messi',                 desc:'Trafił zwycięzcę w 5 meczach Argentyny, Hiszpanii lub USA (łącznie)' },
   { id:'ronaldo',        icon:'🦁', name:'Ronaldo',               desc:'Trafił zwycięzcę w 6 meczach Portugalii, Arabii Saudyjskiej, Anglii lub Hiszpanii (łącznie)' },
 ];
@@ -744,7 +744,7 @@ const GEO_GROUPS = {
   wyspiarz:        { teams: ['Curaçao','Haiti','Cabo Verde'], threshold: 5 },
   krol_brytyjski:  { teams: ['Australia','England','New Zealand','Scotland'], threshold: 6 },
   bialo_czerwony:  { teams: ['Austria','Switzerland','Canada','Türkiye','Tunisia','England'], threshold: 8 },
-  ekstraklasowicz: { teams: ['Iraq','New Zealand','Sweden','DR Congo'], threshold: 6 },
+  ekstraklasowicz: { teams: ['Iraq','New Zealand','Bosnia and Herzegovina','DR Congo'], threshold: 6 },
   messi:           { teams: ['Argentina','Spain','United States'], threshold: 5 },
   ronaldo:         { teams: ['Portugal','Saudi Arabia','England','Spain'], threshold: 6 },
 };
@@ -1428,6 +1428,7 @@ function renderTypowaniaPage() {
     { label:'Runda 1', emoji:'📊', filter: m => m.r === 1 },
     { label:'Runda 2', emoji:'📊', filter: m => m.r === 2 },
     { label:'Runda 3', emoji:'📊', filter: m => m.r === 3 },
+    { label:'1/16 finału', emoji:'📊', filter: m => m.r === 4 },
   ];
   function buildMatchRow(m, player) {
     const typ = (S.typy[m.id]||{})[player];
