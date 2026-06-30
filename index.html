@@ -484,7 +484,7 @@ async function fetchScores() {
       //  - score.regularTime = wynik PO SAMYCH 90 minutach (bez dogrywki) - nieuzywane tutaj
       //  - score.penalties  = wynik rzutow karnych (gdy doszlo do karnych)
       //  - score.duration   = 'REGULAR' | 'EXTRA_TIME' | 'PENALTY_SHOOTOUT'
-      const ft  = m.score?.regularTime;
+      const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
       const pen = m.score?.penalties;
       const cur = (ft && ft.home !== null && ft.home !== undefined) ? ft
