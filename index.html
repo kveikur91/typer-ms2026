@@ -509,11 +509,15 @@ async function fetchScores() {
       if (penWinner) newW.pen = penWinner;
 
       const old = S.wyniki[match.id];
+      // Jeśli wynik został ręcznie poprawiony przez admina, API już go nie nadpisuje
+      if (old && old.manual) {
+        return;
+      }
       if (old && old.home !== null && old.away !== null
           && (newW.home === null || newW.away === null)) {
         return;
       }
-      // Zachowaj recznie wpisany 'pen' jesli API go nie podaje w tym odswiezeniu
+      // Zachowaj ręcznie wpisany 'pen' jeśli API go nie podaje w tym odświeżeniu
       if (!newW.pen && old && old.pen) newW.pen = old.pen;
 
       if (!old || old.home!==newW.home || old.away!==newW.away || old.status!==newW.status || old.pen!==newW.pen) {
@@ -1607,6 +1611,7 @@ window.saveWynik = function(id) {
     away:   a !== '' && !isNaN(parseInt(a)) ? parseInt(a) : null,
     status: st,
     minute: null,
+    manual: true,
   };
   if (pen === 'home' || pen === 'away') S.wyniki[id].pen = pen;
   fbSave();
