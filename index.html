@@ -127,6 +127,7 @@ body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;font-s
 .odz-item.locked .odz-name{color:var(--mut)}
 .odz-desc{font-size:10px;color:var(--mut);line-height:1.4;margin-top:2px}
 .odz-item.earned .odz-desc{color:rgba(226,232,240,.6)}
+.lockb{display:inline-block;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);color:var(--gld);font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -478,18 +479,48 @@ async function fetchScores() {
       );
       if (!match) return;
 
+      // Admin recznie zablokowal ten wynik (manual:true) - API nigdy go nie dotyka,
+      // dopoki admin sam nie odblokuje (patrz: panel admina, checkbox "Zablokuj wynik").
+      const oldLocked = S.wyniki[match.id];
+      if (oldLocked && oldLocked.manual) return;
+
       // UWAGA na fazy pucharowe (runda >=4): API v4 football-data.org zwraca:
-      //  - score.fullTime  = wynik po 90 min ORAZ dogrywce wlacznie (czyli to wlasnie
-      //                       "wynik do 120 minuty", ktorego potrzebujemy do typowania)
-      //  - score.regularTime = wynik PO SAMYCH 90 minutach (bez dogrywki) - nieuzywane tutaj
-      //  - score.penalties  = wynik rzutow karnych (gdy doszlo do karnych)
-      //  - score.duration   = 'REGULAR' | 'EXTRA_TIME' | 'PENALTY_SHOOTOUT'
+      //  - score.fullTime  = wynik "koncowy" w sensie kibica: gdy duration===PENALTY_SHOOTOUT,
+      //                       fullTime ZAWIERA W SOBIE bramki z karnych doliczone do wyniku
+      //                       po 120 minutach (czyli NIE jest to czysty wynik do 120 min!).
+      //                       Patrz oficjalna dokumentacja "Dealing with scores":
+      //                       fullTime = regularTime + extraTime (+ penalties, jesli byly karne).
+      //  - score.regularTime = wynik PO SAMYCH 90 minutach (bez dogrywki)
+      //  - score.extraTime   = bramki strzelone WYLACZNIE w dogrywce (0 jesli bez dogrywki)
+      //  - score.penalties   = wynik samej serii rzutow karnych (gdy doszlo do karnych)
+      //  - score.duration    = 'REGULAR' | 'EXTRA_TIME' | 'PENALTY_SHOOTOUT'
+      // Nam zawsze potrzebny jest wynik PO 120 MINUCIE (bez karnych), wiec liczymy go
+      // jawnie z regularTime+extraTime gdy doszlo do dogrywki/karnych, a fullTime uzywamy
+      // tylko gdy mecz zakonczyl sie w regularnym czasie (duration===REGULAR).
+      const duration = m.score?.duration || 'REGULAR';
       const ft  = m.score?.fullTime;
       const ht  = m.score?.halfTime;
+      const rt  = m.score?.regularTime;
+      const et  = m.score?.extraTime;
       const pen = m.score?.penalties;
-      const cur = (ft && ft.home !== null && ft.home !== undefined) ? ft
-                 : (ht && ht.home !== null && ht.home !== undefined) ? ht
-                 : null;
+
+      let cur = null;
+      if (duration === 'EXTRA_TIME' || duration === 'PENALTY_SHOOTOUT') {
+        // Wynik do 120. minuty = 90 min (regularTime) + dogrywka (extraTime)
+        if (rt && rt.home != null && rt.away != null) {
+          const eH = (et && et.home != null) ? et.home : 0;
+          const eA = (et && et.away != null) ? et.away : 0;
+          cur = { home: rt.home + eH, away: rt.away + eA };
+        } else if (ft && ft.home != null) {
+          // Fallback (nie powinno wystapic): brak regularTime, korzystamy z fullTime
+          cur = ft;
+        }
+      } else {
+        // REGULAR (lub mecz wciaz trwajacy w 90 min) -> fullTime to wlasciwy wynik
+        cur = (ft && ft.home != null && ft.home !== undefined) ? ft
+            : (ht && ht.home != null && ht.home !== undefined) ? ht
+            : null;
+      }
 
       // Zwyciezca karnych (tylko jesli doszlo do serii i mamy oba wyniki karnych)
       let penWinner = null;
@@ -509,15 +540,11 @@ async function fetchScores() {
       if (penWinner) newW.pen = penWinner;
 
       const old = S.wyniki[match.id];
-      // Jeśli wynik został ręcznie poprawiony przez admina, API już go nie nadpisuje
-      if (old && old.manual) {
-        return;
-      }
       if (old && old.home !== null && old.away !== null
           && (newW.home === null || newW.away === null)) {
         return;
       }
-      // Zachowaj ręcznie wpisany 'pen' jeśli API go nie podaje w tym odświeżeniu
+      // Zachowaj recznie wpisany 'pen' jesli API go nie podaje w tym odswiezeniu
       if (!newW.pen && old && old.pen) newW.pen = old.pen;
 
       if (!old || old.home!==newW.home || old.away!==newW.away || old.status!==newW.status || old.pen!==newW.pen) {
@@ -1606,14 +1633,16 @@ window.saveWynik = function(id) {
   const st = document.getElementById('wSt').value;
   const penEl = document.getElementById('wPen');
   const pen = penEl ? penEl.value : '';
+  const lockEl = document.getElementById('wLock');
+  const manual = lockEl ? lockEl.checked : false;
   S.wyniki[id] = {
     home:   h !== '' && !isNaN(parseInt(h)) ? parseInt(h) : null,
     away:   a !== '' && !isNaN(parseInt(a)) ? parseInt(a) : null,
     status: st,
     minute: null,
-    manual: true,
   };
   if (pen === 'home' || pen === 'away') S.wyniki[id].pen = pen;
+  if (manual) S.wyniki[id].manual = true;
   fbSave();
   handleHash();
   const btn = document.getElementById('btnWynik_'+id);
@@ -1671,8 +1700,8 @@ function renderAdminForm(m) {
   const ty= S.typy[m.id]||{};
   const isKO = m.r >= 4; // faza pucharowa - tu dotyczy wynik 120 min + bonus karne
   let html=`<div style="font-size:12px;color:var(--acc);font-weight:600;margin-bottom:8px">${F(m.hf)} ${m.hpl} vs ${m.apl} ${F(m.af)}</div>`;
-  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Wynik oficjalny${isKO?' (do 120 min, nadpisuje API)':' (nadpisuje API)'}</div>
-  <div style="display:flex;align-items:center;gap:5px;margin-bottom:${isKO?'6px':'8px'}">
+  html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Wynik oficjalny${isKO?' (do 120 min)':''}</div>
+  <div style="display:flex;align-items:center;gap:5px;margin-bottom:6px">
     <input class="ainp" id="wH" value="${w.home!=null?w.home:''}" placeholder="?" style="width:40px;text-align:center">
     <span style="color:var(--mut)">:</span>
     <input class="ainp" id="wA" value="${w.away!=null?w.away:''}" placeholder="?" style="width:40px;text-align:center">
@@ -1692,6 +1721,9 @@ function renderAdminForm(m) {
       </select>
     </div>`;
   }
+  html+=`<label style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:12px;color:${w.manual?'var(--gld)':'var(--mut)'};cursor:pointer">
+    <input type="checkbox" id="wLock"${w.manual?' checked':''}> &#128274; Zablokuj wynik (API nie bedzie go nadpisywac automatycznym odswiezeniem)
+  </label>`;
   html+=`<button class="abtn" id="btnWynik_${m.id}" style="margin-bottom:10px" onclick="saveWynik('${m.id}')">Zapisz wynik</button>`;
   html+=`<div style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Typy graczy${isKO?' (wynik do 120 min + opcjonalnie karne)':''}</div>`;
   S.players.forEach(p=>{
